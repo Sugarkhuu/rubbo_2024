@@ -1,0 +1,31 @@
+# Replication files - large data and code files
+replication files/
+
+# Large binary data files (in case any end up at root)
+*.mat
+*.xlsx
+*.xls
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.blg
+*.bbl
+*.bcf
+*.run.xml
+*.pdf
+
+# Keep PDFs that are the actual paper
+!rubbo_2024.pdf
+!appendix_website_2.pdf
+!supplemental_revision.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
