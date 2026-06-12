@@ -6,7 +6,10 @@ replication files/
 *.xlsx
 *.xls
 
-# LaTeX build artifacts
+# LaTeX build output folder
+build/
+
+# LaTeX artifacts if they end up at root anyway
 *.aux
 *.log
 *.out
@@ -18,9 +21,9 @@ replication files/
 *.bbl
 *.bcf
 *.run.xml
-*.pdf
 
-# Keep PDFs that are the actual paper
+# Keep PDFs that are the actual paper (not build output)
+rubbo_proofs_and_extension.pdf
 !rubbo_2024.pdf
 !appendix_website_2.pdf
 !supplemental_revision.pdf
