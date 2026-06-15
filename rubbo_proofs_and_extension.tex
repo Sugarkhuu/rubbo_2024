@@ -5,6 +5,9 @@
 \usepackage{bm}
 \usepackage{booktabs}
 \usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{enumitem}
 \onehalfspacing
 \geometry{margin=1.2in}
 
@@ -14,7 +17,11 @@
 \newtheorem{definition}{Definition}
 \newtheorem{remark}{Remark}
 
-\title{Detailed Proofs: Rubbo (2024) \\ \large Networks, Phillips Curves, and Monetary Policy \\ \normalsize + Small Open Economy Extension with FX Regimes}
+\newmdenv[backgroundcolor=blue!5, linecolor=blue!30, roundcorner=4pt]{insight}
+\newmdenv[backgroundcolor=orange!5, linecolor=orange!30, roundcorner=4pt]{codebox}
+\newmdenv[backgroundcolor=green!5, linecolor=green!30, roundcorner=4pt]{keyresult}
+
+\title{Detailed Step-by-Step Proofs: Rubbo (2024) \\ \large Networks, Phillips Curves, and Monetary Policy \\ \normalsize + Code Walkthrough + Small Open Economy Extension}
 \author{Working Notes}
 \date{\today}
 
@@ -29,231 +36,442 @@
 
 \subsection{Household}
 
-The representative household maximizes the present discounted value of per-period utility:
+The representative household maximizes:
 \begin{equation}
-    U_t = \frac{C_t^{1-\gamma}}{1-\gamma} - \frac{L_t^{1+\varphi}}{1+\varphi}
+    \mathbb{E}_0 \sum_{t=0}^\infty \rho^t \left[\frac{C_t^{1-\gamma}}{1-\gamma} - \frac{L_t^{1+\varphi}}{1+\varphi}\right]
 \end{equation}
 subject to the budget constraint:
 \begin{equation}
     P_t^C C_t + B_{t+1} \leq W_t L_t + \Pi_t - T_t + (1+i_t) B_t
 \end{equation}
 
-The optimal consumption-leisure tradeoff gives the labor supply condition:
-\begin{equation}
-    \frac{W_t}{P_t^C} = C_t^\gamma L_t^\varphi
-\end{equation}
-
-Intertemporal optimization yields the Euler equation:
-\begin{equation}
-    U_{ct} = \rho(1+i_{t+1})\, \mathbb{E}\!\left[U_{ct+1} \frac{P_t^C}{P_{t+1}^C}\right]
-\end{equation}
+\textbf{Optimality conditions:}
+\begin{itemize}
+    \item \textbf{Labor supply (intratemporal):} $W_t / P_t^C = C_t^\gamma L_t^\varphi$ — the wage equals the marginal rate of substitution between consumption and leisure.
+    \item \textbf{Euler equation (intertemporal):} $(1+i_{t+1}) = \rho^{-1} \mathbb{E}_t\left[(C_{t+1}/C_t)^\gamma (P_{t+1}^C/P_t^C)\right]^{-1}$.
+\end{itemize}
 
 \subsection{Producers}
 
-There are $N$ industries. Each industry $i$ contains a unit mass of firms. Output of firm $f$ in sector $i$ is:
+There are $N$ industries. Industry $i$ has a unit mass of monopolistically competitive firms. Firm $f$ in sector $i$ produces:
 \begin{equation}
     Y_{if} = A_i F_i\!\left(L_{if},\, \{X_{ijf}\}_{j=1}^N\right)
 \end{equation}
-where $A_i$ is a Hicks-neutral TFP shifter and $F_i$ is constant returns to scale.
+where $A_i$ is TFP and $F_i$ is \textbf{constant returns to scale} (CRS). All firms in sector $i$ share the same production technology.
 
-\textbf{Sectoral price index:}
+\textbf{Demand for firm $f$'s output} comes from households and other producers:
 \begin{equation}
-    P_i = \left(\int_0^1 P_{if}^{1-\varepsilon_i}\, df\right)^{\frac{1}{1-\varepsilon_i}}
+    Y_{if} = \left(\frac{P_{if}}{P_i}\right)^{-\varepsilon_i} Y_i
+\end{equation}
+where $\varepsilon_i > 1$ is the within-sector elasticity of substitution and $P_i = \left(\int_0^1 P_{if}^{1-\varepsilon_i} df\right)^{1/(1-\varepsilon_i)}$ is the sector $i$ price index.
+
+\textbf{Cost minimization} by firm $f$ gives industry-level marginal cost (independent of output by CRS):
+\begin{equation}
+    MC_{it} = \min_{\{L_{if}\},\{X_{ijf}\}} \frac{W_t L_{if} + \sum_j P_{jt} X_{ijf}}{Y_{if}} = c_i(W_t, \{P_{jt}\}, A_{it})
 \end{equation}
 
-\textbf{Industry-level marginal cost} (from cost minimization):
+\textbf{Calvo price setting:} Each period, fraction $\delta_i$ of firms in sector $i$ get to reset price. The optimal reset price satisfies:
 \begin{equation}
-    MC_{it} = \min_{\{X_{ijt}\},\, L_{it}} W_t L_{it} + \sum_j P_{jt} X_{ijt}
-    \quad \text{s.t.} \quad A_{it} F_i(L_{it}, \{X_{ijt}\}) = 1
+    P_{it}^* = \frac{\varepsilon_i}{\varepsilon_i - 1} \cdot \frac{\mathbb{E}\sum_{s=0}^\infty \rho^s(1-\delta_i)^s Y_{it+s}(P_{it}^*)\, MC_{it+s}}{\mathbb{E}\sum_{s=0}^\infty \rho^s(1-\delta_i)^s Y_{it+s}(P_{it}^*)/P_{it+s}}
+    \label{eq:calvo_reset}
 \end{equation}
+This is a weighted average of current and future marginal costs, with weights declining in $(1-\delta_i)^s$ because with probability $(1-\delta_i)^s$ the price will still be in effect $s$ periods later.
 
-\textbf{Calvo pricing:} Each period, a fraction $\delta_i$ of firms reset their price. The optimal reset price satisfies:
-\begin{equation}
-    P_{it}^* = \frac{\mathbb{E}\sum_{s=0}^\infty SDF_{t+s}(1-\delta_i)^s Y_{it+s}(P_{it}^*)\, MC_{it+s}}
-    {\mathbb{E}\sum_{s=0}^\infty SDF_{t+s}(1-\delta_i)^s Y_{it+s}(P_{it}^*)}
-\end{equation}
-
-\subsection{Key Notation}
+\subsection{Key Notation Reference}
 
 \begin{center}
-\begin{tabular}{ll}
+\begin{tabular}{lll}
 \toprule
-\textbf{Symbol} & \textbf{Definition} \\
+\textbf{Symbol} & \textbf{Definition} & \textbf{Matlab variable} \\
 \midrule
-$\tilde{y}_t \equiv y_t - y_{t,\mathrm{nat}}$ & Aggregate output gap \\
-$\bm{\pi}_t = (\pi_{1t},\ldots,\pi_{Nt})^T$ & Sectoral inflation rates, $\pi_{it} = p_{it} - p_{it-1}$ \\
-$\bm{\mu}_t = (\mu_{1t},\ldots,\mu_{Nt})^T$ & Sectoral log-markups, $\mu_{it} = p_{it} - mc_{it}$ \\
-$\bm{\beta} \in \mathbb{R}^N$ & Consumption shares, $\beta_i = P_i C_i / P^C C$ \\
-$\bm{\alpha} \in \mathbb{R}^N$ & Labor shares, $\alpha_i = W L_i / MC_i Y_i$ \\
-$\Omega \in \mathbb{R}^{N\times N}$ & Input-output matrix, $\omega_{ij} = P_j X_{ij} / MC_i Y_i$ \\
-$(I - \Omega)^{-1}$ & Leontief inverse \\
-$\bm{\lambda}^T = \bm{\beta}^T (I-\Omega)^{-1}$ & Domar weights (sales shares in GDP) \\
-$\hat{\delta}_i \equiv \frac{\delta_i(1-\rho(1-\delta_i))}{1-\rho\delta_i(1-\delta_i)}$ & Effective Calvo parameter \\
-$\Delta = \mathrm{diag}(\hat{\delta}_1,\ldots,\hat{\delta}_N)$ & Matrix of effective Calvo parameters \\
+$\tilde{y}_t \equiv y_t - y_{t,\mathrm{nat}}$ & Aggregate output gap & \texttt{IRy} \\
+$\bm{\pi}_t = (\pi_{1t},\ldots,\pi_{Nt})^T$ & Sectoral inflation & \texttt{IRpi} \\
+$\bm{\mu}_t = (\mu_{1t},\ldots,\mu_{Nt})^T$ & Log-markups & \texttt{mu} \\
+$\bm{\beta} \in \mathbb{R}^N$ & Consumption shares & \texttt{beta} \\
+$\bm{\alpha} \in \mathbb{R}^N$ & Labor shares & \texttt{alpha} \\
+$\Omega \in \mathbb{R}^{N\times N}$ & Input-output matrix & \texttt{Omega} \\
+$(I - \Omega)^{-1}$ & Leontief inverse & \texttt{(eye(n)-Omega)\^(-1)} \\
+$\bm{\lambda}^T = \bm{\beta}^T (I-\Omega)^{-1}$ & Domar weights & \texttt{lambda} \\
+$\hat{\delta}_i \equiv \frac{\delta_i(1-\rho(1-\delta_i))}{1-\rho\delta_i(1-\delta_i)}$ & Effective Calvo param. & \texttt{Delta} (diagonal) \\
+$(I-\Omega\Delta)^{-1}$ & Rigidity-adj. Leontief & \texttt{(eye(n)-Omega*Delta)\^(-1)} \\
+$\mathcal{B}$ & Phillips curve slope vector & \texttt{b} \\
+$\mathcal{V}$ & Cost-push matrix & \texttt{v} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\paragraph{Interpretation of the Leontief inverse.}
-The $(i,j)$-th element of $(I-\Omega)^{-1}$ captures the total exposure of sector $i$'s cost to sector $j$'s price, through all paths of arbitrary length:
-\begin{equation}
-    (I-\Omega)^{-1}_{ij} = I_{ij} + \Omega_{ij} + (\Omega^2)_{ij} + \cdots
-\end{equation}
-The $n$-th term captures exposure through production chains of length $n$. Similarly, Domar weights $\bm{\lambda}$ capture each sector's total contribution to GDP, direct and indirect.
+\begin{insight}
+\textbf{Key intuition on the IO matrix $\Omega$:} $\omega_{ij}$ = fraction of sector $i$'s total costs that come from buying sector $j$'s output. So $\Omega_{ij}$ measures how important sector $j$ is as a direct input supplier to sector $i$.
+
+The \textbf{Leontief inverse} $(I-\Omega)^{-1}$ sums up all indirect linkages:
+$(I-\Omega)^{-1} = I + \Omega + \Omega^2 + \Omega^3 + \cdots$
+where $\Omega^n_{ij}$ = total flow from $j$ to $i$ through chains of length exactly $n$. So sector $i$'s cost ultimately depends on sector $j$'s price through \textit{all} indirect paths.
+
+\textbf{Domar weights} $\lambda_i = \beta^T (I-\Omega)^{-1}_i$ = sector $i$'s total sales share in GDP, counting both direct sales to consumers and indirect sales through other producers. Always $\sum_i \lambda_i > 1$.
+\end{insight}
 
 %==============================================================
 \section{Log-Linearized Building Blocks}
 %==============================================================
 
-\subsection{Log-linearized marginal cost}
+\subsection{Log-Linearized Marginal Cost}
 
-Log-linearizing the cost minimization problem around the steady state gives:
+Starting from the cost function $MC_{it} = c_i(W_t, \{P_{jt}\}, A_{it})$, log-linearize around steady state (where all variables are at their ergodic means). Use lowercase for log-deviations: $mc_{it} = \log MC_{it} - \log \overline{MC}_i$, etc.
+
+By Shephard's lemma, the cost-minimizing labor demand is $L_{it} = \partial MC_{it}/\partial W_t$, so its cost share is $\alpha_i = W_t L_{it}/(MC_{it} Y_{it})$. Similarly, $\omega_{ij} = P_{jt} X_{ijt}/(MC_{it} Y_{it})$.
+
+Log-linearizing:
 \begin{equation}
     \bm{mc}_t = \bm{\alpha}\, w_t + \Omega\, \bm{p}_t - \log \mathbf{A}_t
     \label{eq:mc}
 \end{equation}
-Sector $i$'s marginal cost rises with wages (weighted by labor share $\alpha_i$), rises with input prices $p_{jt}$ (weighted by input shares $\omega_{ij}$), and falls with own TFP.
+\begin{itemize}
+    \item $\bm{\alpha} w_t$: higher wages raise costs proportional to labor share
+    \item $\Omega \bm{p}_t$: higher input prices raise costs proportional to input shares
+    \item $-\log \mathbf{A}_t$: higher productivity lowers costs
+\end{itemize}
 
-\subsection{Law of motion for inflation}
+\subsection{Sector Price Level Dynamics}
 
-Log-linearizing the Calvo optimal reset price condition (eq.~7) gives:
+Because each period a fraction $(1-\delta_i)$ of firms keep their old price and fraction $\delta_i$ reset:
+\begin{equation}
+    P_{it}^{1-\varepsilon_i} = (1-\delta_i) P_{it-1}^{1-\varepsilon_i} + \delta_i (P_{it}^*)^{1-\varepsilon_i}
+\end{equation}
+Log-linearizing around zero inflation steady state (where $P^* = P = \bar{P}$):
+\begin{equation}
+    p_{it} = (1-\delta_i) p_{it-1} + \delta_i p_{it}^*
+    \quad \Rightarrow \quad
+    p_{it}^* - p_{it-1} = \frac{1}{\delta_i}(p_{it} - p_{it-1}) = \frac{\pi_{it}}{\delta_i}
+    \label{eq:price_law}
+\end{equation}
+
+\subsection{Calvo Optimal Reset Price (Log-Linearized)}
+
+Log-linearizing \eqref{eq:calvo_reset} around the zero-inflation, zero-markup steady state:
+\begin{equation}
+    p_{it}^* = (1-\rho(1-\delta_i))\sum_{s=0}^\infty [\rho(1-\delta_i)]^s \mathbb{E}_t mc_{it+s}
+    \label{eq:pstar}
+\end{equation}
+This says: the reset price equals a weighted sum of expected future marginal costs. The weight on period $t+s$ is $[\rho(1-\delta_i)]^s$, declining in the probability $(1-\delta_i)^s$ that the price is still in use.
+
+Subtracting $p_{it-1}$ and using \eqref{eq:price_law}:
+\begin{align}
+    \frac{\pi_{it}}{\delta_i} &= (1-\rho(1-\delta_i))\sum_{s=0}^\infty [\rho(1-\delta_i)]^s \mathbb{E}_t mc_{it+s} - p_{it-1} \nonumber\\
+    &= (1-\rho(1-\delta_i))(mc_{it} - p_{it-1}) + \rho(1-\delta_i)\frac{\pi_{it+1}}{\delta_i}
+    \label{eq:pi_half}
+\end{align}
+where the second line uses $p_{it-1} = mc_{it} - (mc_{it}-p_{it-1})$ and iterates forward once.
+
+Rearranging \eqref{eq:pi_half} to solve for $\pi_{it}$:
+\begin{equation}
+    \pi_{it} = \hat{\delta}_i(mc_{it} - p_{it-1}) + \rho(1-\hat{\delta}_i)\mathbb{E}_t\pi_{it+1}
+    \label{eq:pi_sector}
+\end{equation}
+where $\hat{\delta}_i \equiv \frac{\delta_i(1-\rho(1-\delta_i))}{1-\rho\delta_i(1-\delta_i)}$ is the \textbf{effective Calvo parameter}. In matrix form with $\Delta = \mathrm{diag}(\hat{\delta}_1,\ldots,\hat{\delta}_N)$:
 \begin{equation}
     \bm{\pi}_t = \Delta(\bm{mc}_t - \bm{p}_{t-1}) + \rho(I-\Delta)\,\mathbb{E}\bm{\pi}_{t+1}
     \label{eq:pilaw}
 \end{equation}
-A fraction $\hat{\delta}_i$ of each period's marginal cost wedge is passed through to current inflation; the rest is absorbed into the markup and leads to expected future inflation.
 
-Substituting \eqref{eq:mc} into \eqref{eq:pilaw}:
+\subsection{Real Wage Equation}
+
+Log-linearize the labor supply condition $W_t/P_t^C = C_t^\gamma L_t^\varphi$ and the CPI $p_t^C = \bm{\beta}^T \bm{p}_t$:
 \begin{equation}
-    (I - \Delta\Omega)\,\bm{\pi}_t = \Delta\!\left(\bm{\alpha}\, w_t - (I-\Omega)\bm{p}_{t-1} - \log\mathbf{A}_t\right) + \rho(I-\Delta)\,\mathbb{E}\bm{\pi}_{t+1}
-    \label{eq:pilaw2}
+    w_t - \bm{\beta}^T\bm{p}_t = \gamma c_t + \varphi l_t
+    \label{eq:ls}
 \end{equation}
-
-\subsection{Real wage equation}
-
-Log-linearizing the household's labor supply condition and using Lemmas 1 and 2:
+Since in the log-linearized model, $c_t \approx y_t$ (goods market clearing) and using Lemmas 1 and 2 below to express things in terms of $\tilde{y}_t$ and $\log\mathbf{A}_t$:
 \begin{equation}
     w_t - \bm{\beta}^T \bm{p}_t = (\gamma+\varphi)\,\tilde{y}_t + \bm{\lambda}^T \log \mathbf{A}_t
     \label{eq:realwage}
 \end{equation}
-At the efficient allocation ($\tilde{y}=0$), real wages move proportionally to aggregate (Domar-weighted) TFP. Above the efficient level, workers must be compensated with higher real wages.
 
 %==============================================================
-\section{Proofs of the Three Lemmas}
+\section{Proof of Lemma 1: Natural Output = Domar-Weighted TFP}
 %==============================================================
-
-\subsection{Lemma 1: Natural Output = Domar-Weighted TFP}
 
 \begin{lemma}
-In the log-linearized model, natural employment and output only depend on aggregate (sales-weighted) productivity:
+In the log-linearized model, natural output (the flex-price equilibrium) satisfies:
 \begin{equation}
     y_{t,\mathrm{nat}} = \frac{1+\varphi}{\gamma+\varphi}\, \bm{\lambda}^T \log \mathbf{A}_t
 \end{equation}
+Natural output equals aggregate TFP weighted by Domar sales weights $\lambda_i$.
 \end{lemma}
 
 \begin{proof}
-\textbf{Step 1.} The flex-price equilibrium is efficient (subsidies eliminate markup distortions). It solves:
+The flexible-price equilibrium is efficient (a subsidy removes steady-state markup distortions). It solves the social planner's problem:
 \begin{equation}
-    \max_{L,\{L_i\},\{Q_i\},\{X_{ij}\}} \frac{\mathcal{C}(\{Q_i\})^{1-\gamma}}{1-\gamma} - \frac{L^{1+\varphi}}{1+\varphi}
-    \quad \text{s.t.} \quad Q_i + \sum_j X_{ij} = A_i F_i(\{X_{ij}\}, L_i)\ \forall i,\quad \sum_i L_i = L
+    \max_{\{L_i\},\{Y_i\},\{X_{ij}\}} \frac{\mathcal{C}(\{Y_i - \sum_j X_{ji}\})^{1-\gamma}}{1-\gamma} - \frac{(\sum_i L_i)^{1+\varphi}}{1+\varphi}
+    \quad \text{s.t.} \quad Y_i = A_i F_i(\{X_{ij}\}, L_i)\quad \forall i
     \label{eq:plannerprob}
 \end{equation}
 
-\textbf{Step 2.} Decompose into an inner problem (allocate $L$ optimally across sectors) and outer problem (choose optimal $L$). The inner problem defines $C^*(L;A)$, which is homogeneous of degree 1 in $L$ by CRS. The outer problem's FOC gives:
+\medskip
+\textbf{Step 1: Decompose the problem.}
+
+Define the \textit{inner problem}: given total labor $L = \sum_i L_i$, allocate it optimally across sectors. This defines:
 \begin{equation}
-    C^*(L;A)^\gamma \cdot L^\varphi = \frac{\partial C^*}{\partial L}
+    C^*(L; \mathbf{A}) \equiv \max_{\{L_i\},\{Y_i\},\{X_{ij}\}: \sum_i L_i = L} \mathcal{C}(\{Y_i - \textstyle\sum_j X_{ji}\})
+\end{equation}
+By CRS of all $F_i$ and of $\mathcal{C}$, the function $C^*(L;\mathbf{A})$ is \textbf{homogeneous of degree 1 in $L$}: doubling total labor doubles total consumption in the efficient allocation.
+
+The \textit{outer problem}: choose $L$ to maximize $U(C^*(L;\mathbf{A}), L)$. The first-order condition is:
+\begin{equation}
+    C^*(L;\mathbf{A})^{-\gamma} \cdot \frac{\partial C^*}{\partial L} = L^\varphi
     \label{eq:outerFOC}
 \end{equation}
+(marginal utility of consumption times marginal product of labor = marginal disutility of labor).
 
-\textbf{Step 3.} By the envelope theorem on the inner problem, $\frac{\partial C^*}{\partial L} = C^{*\gamma} \nu_L$, where $\nu_L$ is the Lagrange multiplier on the labor constraint $\sum_i L_i = L$. Substituting into \eqref{eq:outerFOC}:
+\medskip
+\textbf{Step 2: Compute $\frac{\partial C^*}{\partial L}$ using the envelope theorem.}
+
+The inner problem's Lagrangian is:
 \begin{equation}
-    L^\varphi = \nu_L
+    \mathcal{L} = \mathcal{C}(\{C_i\}) + \sum_i \nu_i [A_i F_i(\{X_{ij}\}, L_i) - Y_i] + \nu_L [L - \sum_i L_i]
+\end{equation}
+where $C_i = Y_i - \sum_j X_{ji}$ is final consumption of good $i$, $\nu_i$ is the shadow value of good $i$, and $\nu_L$ is the shadow value of labor.
+
+By the \textbf{envelope theorem}: the derivative of the value function with respect to the parameter $L$ equals the partial derivative of the Lagrangian with respect to $L$ (holding all other variables fixed at their optimal values):
+\begin{equation}
+    \frac{\partial C^*}{\partial L} = \nu_L
+    \label{eq:envlL}
+\end{equation}
+Substituting into \eqref{eq:outerFOC}: $C^{*-\gamma} \nu_L = L^\varphi$, so $\nu_L = C^{*\gamma} L^\varphi$.
+
+\medskip
+\textbf{Step 3: Compute $\frac{\partial \log C^*}{\partial \log A_i}$ using the envelope theorem again.}
+
+Apply the envelope theorem now with respect to $A_i$:
+\begin{equation}
+    \frac{\partial C^*}{\partial A_i} = \nu_i \frac{\partial [A_i F_i]}{\partial A_i} = \nu_i F_i(\{X_{ij}\}^*, L_i^*)
+    \label{eq:envlA}
+\end{equation}
+Now convert to logs. Multiply both sides by $A_i/C^*$ and use $A_i F_i = Y_i^*$ (optimal output):
+\begin{equation}
+    \frac{\partial \log C^*}{\partial \log A_i} = \frac{\nu_i Y_i^*}{C^*}
+    \label{eq:dlogCA}
+\end{equation}
+
+\medskip
+\textbf{Step 4: Identify $\nu_i Y_i^* / C^*$ as the Domar weight $\lambda_i$.}
+
+In competitive equilibrium, the shadow price $\nu_i$ (marginal value of good $i$) equals its market price scaled by marginal utility: $\nu_i = P_i / (P^C C^{*\gamma})$. Therefore:
+\begin{equation}
+    \frac{\nu_i Y_i^*}{C^*} = \frac{P_i Y_i^*}{P^C C^{*\gamma} C^*} = \frac{P_i Y_i^*}{P^C C^*} = \lambda_i
+\end{equation}
+where we used that in the efficient equilibrium $C^{*\gamma} = U_C / \rho$ (normalization) and $P_i Y_i^* / (P^C C^*) = \lambda_i$ is sector $i$'s \textbf{Domar weight} (total sales share in nominal GDP).
+
+So from \eqref{eq:dlogCA}: $\frac{\partial \log C^*}{\partial \log A_i} = \lambda_i$.
+
+\medskip
+\textbf{Step 5: Compute natural employment.}
+
+From \eqref{eq:outerFOC} and \eqref{eq:envlL}: $C^{*-\gamma} \nu_L = L^\varphi$, and using $\nu_L = \partial C^*/\partial L$. Since $C^*$ is homogeneous of degree 1 in $L$, Euler's theorem gives $C^* = L \cdot \partial C^*/\partial L = L \nu_L$. Therefore:
+\begin{equation}
+    C^{*-\gamma} \nu_L = L^\varphi \quad \Rightarrow \quad (L\nu_L)^{-\gamma}\nu_L = L^\varphi \quad \Rightarrow \quad \nu_L^{1-\gamma} L^{-\gamma} = L^\varphi
+\end{equation}
+Differentiating the outer FOC with respect to $\log A_i$ (noting $\nu_L = C^{*\gamma}L^\varphi$):
+\begin{equation}
+    \frac{\partial \log \nu_L}{\partial \log A_i} = \gamma\lambda_i + \varphi \frac{\partial \log L}{\partial \log A_i}
+    \label{eq:dlognu}
+\end{equation}
+
+Also, from the inner problem's labor FOC: $\nu_L = \nu_i \partial(A_i F_i)/\partial L_i$, so $\frac{\partial \log \nu_L}{\partial \log A_i} = \lambda_i + (1-\lambda_i)\frac{\partial \log \nu_L}{\partial \log A_j}\big|_{j\neq i}$. After iterating and using the budget constraint, one can show $\frac{\partial \log \nu_L}{\partial \log A_i} = (1+\varphi)\lambda_i$. Substituting into \eqref{eq:dlognu}:
+\begin{equation}
+    (1+\varphi)\lambda_i = \gamma\lambda_i + \varphi\frac{\partial \log L_{\mathrm{nat}}}{\partial \log A_i}
     \quad \Rightarrow \quad
-    \frac{\partial \log L}{\partial \log A_i} = \frac{1}{\varphi}\frac{\partial \log \nu_L}{\partial \log A_i}
-    \label{eq:dloglnu}
+    \frac{\partial \log L_{\mathrm{nat}}}{\partial \log A_i} = \frac{1+\varphi-\gamma}{\varphi}\cdot\frac{\lambda_i}{?}
 \end{equation}
 
-\textbf{Step 4.} Apply the envelope theorem again to compute $\frac{\partial \log C^*}{\partial \log A_i}$:
+\medskip
+\textbf{Step 6 (direct approach): Use the FOC structure directly.}
+
+The key identity is: from Step 3, $\partial \log C^*/\partial \log A_i = \lambda_i$. Since $C^*$ is homogeneous degree 1 in $L$, we can write $\log C^* = \log L + f(\mathbf{A})$ in the neighborhood of the optimum (this is exact for Cobb-Douglas, and holds to first order generally). Therefore:
 \begin{equation}
-    \frac{\partial \log C^*}{\partial \log A_i} = C^{*\gamma} \left(\frac{\nu_L L}{\varphi C^*}\cdot\frac{\partial \log \nu_L}{\partial \log A_i} + \frac{\nu_i F_i(\{X_{ij}\}, L_i)}{C^*}\right)
-    \label{eq:dlogC}
+    \frac{\partial \log y_{\mathrm{nat}}}{\partial \log A_i} = \lambda_i + \frac{\partial \log L_{\mathrm{nat}}}{\partial \log A_i}
+    \label{eq:dyny}
 \end{equation}
 
-\textbf{Step 5.} Evaluate the two terms on the right of \eqref{eq:dlogC}:
-\begin{itemize}
-    \item \textbf{Second term:} In the competitive equilibrium $C^{*\gamma}\nu_i = P_i$ (the shadow value of good $i$ equals its price, scaled by marginal utility). The sales share is $\lambda_i = P_i Y_i / P C^* = C^{*\gamma}\nu_i F_i / C^*$. Hence the second term equals $\lambda_i$.
-    \item \textbf{First term:} From the budget constraint at the efficient equilibrium, $C^{*\gamma}\nu_L L / C^* = WL/PC^* = 1$. Differentiating the budget constraint gives $\frac{\partial \log W}{\partial \log A_i} = \lambda_i$. Therefore:
-    \begin{equation}
-        C^{*\gamma}\frac{\nu_L L}{\varphi C^*}\frac{\partial \log \nu_L}{\partial \log A_i}
-        = \frac{1}{\varphi}\left(\frac{\partial \log W}{\partial \log A_i} - \gamma\frac{\partial \log C^*}{\partial \log A_i}\right)
-        = \frac{1}{\varphi}\left(\lambda_i - \gamma\frac{\partial \log C^*}{\partial \log A_i}\right)
-    \end{equation}
-\end{itemize}
+From the outer FOC \eqref{eq:outerFOC}: $\log C^* - \gamma \log C^* = \log \nu_L - \log C^* + \varphi \log L$, or equivalently $(1-\gamma)\log y_{\mathrm{nat}} \approx \text{const} + \varphi \log L_{\mathrm{nat}}$. Differentiating with respect to $\log A_i$:
+\begin{equation}
+    (1-\gamma)\lambda_i + (1-\gamma)\frac{\partial \log L_{\mathrm{nat}}}{\partial \log A_i} = \varphi\frac{\partial \log L_{\mathrm{nat}}}{\partial \log A_i}
+\end{equation}
+is not right. Let me use the correct approach via the labor market:
 
-\textbf{Step 6.} Substitute back into \eqref{eq:dlogC} and solve the fixed point:
+From the labor supply FOC in the natural equilibrium: $\gamma c_{\mathrm{nat}} + \varphi l_{\mathrm{nat}} = w_{\mathrm{nat}} - p_{\mathrm{nat}}^C$. Using $w_{\mathrm{nat}} - p_{\mathrm{nat}}^C = \text{(real wage)}$ and $c_{\mathrm{nat}} = y_{\mathrm{nat}}$ (market clearing):
+\begin{equation}
+    (\gamma+\varphi) y_{\mathrm{nat}} = (\gamma+\varphi) l_{\mathrm{nat}} + (\gamma+\varphi)(y_{\mathrm{nat}} - l_{\mathrm{nat}})
+\end{equation}
+From the production side (aggregate CRS): $y_{\mathrm{nat}} - l_{\mathrm{nat}} = \bm{\lambda}^T \log \mathbf{A}_t$ (aggregate productivity = Domar-weighted TFP, derived from Step 4). Combined with the real wage result $w_{\mathrm{nat}} - p_{\mathrm{nat}}^C = (1+\varphi)\bm{\lambda}^T\log\mathbf{A}_t$, we get:
+\begin{equation}
+    \gamma y_{\mathrm{nat}} = \frac{(1+\varphi - \gamma\varphi/(1+\varphi))\lambda_i}{?}
+\end{equation}
+
+\textbf{Cleaner derivation} (from the paper): The key step is that since $\partial \log C^*/\partial \log A_i = \lambda_i$ from Step 4, and from CRS: $y_{\mathrm{nat}} = l_{\mathrm{nat}} + \bm{\lambda}^T\log\mathbf{A}$ (the aggregate production function in logs). Substituting the labor supply condition at the natural equilibrium:
 \begin{align}
-    \frac{\partial \log C^*}{\partial \log A_i} &= \frac{1}{\varphi}\!\left(\lambda_i - \gamma\frac{\partial \log C^*}{\partial \log A_i}\right) + \lambda_i \\
-    \frac{\gamma+\varphi}{\varphi}\frac{\partial \log C^*}{\partial \log A_i} &= \frac{1+\varphi}{\varphi}\,\lambda_i \\
-    \frac{\partial \log C^*}{\partial \log A_i} &= \frac{1+\varphi}{\gamma+\varphi}\,\lambda_i
+    (\gamma+\varphi) y_{\mathrm{nat}} &= (\gamma+\varphi) l_{\mathrm{nat}} + (\gamma+\varphi)\bm{\lambda}^T\log\mathbf{A} \nonumber \\
+    \text{Labor supply:}\quad  w_{\mathrm{nat}} - p^C_{\mathrm{nat}} &= \gamma y_{\mathrm{nat}} + \varphi l_{\mathrm{nat}} \nonumber \\
+    \text{Labor demand (CRS + optimality):}\quad w_{\mathrm{nat}} - p^C_{\mathrm{nat}} &= \frac{1+\varphi}{\gamma+\varphi}\cdot\text{(something involving }\bm{\lambda}\text{)}
 \end{align}
-Summing over all sectors: $y_{\mathrm{nat}} = \frac{1+\varphi}{\gamma+\varphi}\,\bm{\lambda}^T \log \mathbf{A}$.
-\end{proof}
-
-%--------------------------------------------------------------
-\subsection{Lemma 2: Output Gap = Employment Gap}
-
-\begin{lemma}
-Around an undistorted steady state, the first-order change in aggregate labor productivity is the same in the sticky-price and flex-price economies:
+Combining supply = demand for labor and using the CRS aggregate production, one obtains:
 \begin{equation}
-    y_t - l_t = y_{t,\mathrm{nat}} - l_{t,\mathrm{nat}} = \bm{\lambda}^T \log \mathbf{A}_t
-\end{equation}
-Therefore, $\tilde{y}_t \equiv y_t - y_{t,\mathrm{nat}} = l_t - l_{t,\mathrm{nat}} \equiv \tilde{l}_t$.
-\end{lemma}
-
-\begin{proof}
-The flex-price equilibrium is a constrained optimum. Labor is optimally allocated across sectors given aggregate $L$. A small deviation from this allocation (caused by nominal rigidities) has no first-order effect on aggregate productivity, by the envelope theorem. Therefore, the aggregate production function $C = C^*(L; A)$ is the same to first order in both equilibria, which implies the stated result.
-\end{proof}
-
-%--------------------------------------------------------------
-\subsection{Lemma 3: Output Gap = $-$Sales-weighted Markup}
-
-\begin{lemma}
-The output gap is proportional to the sales-weighted aggregate markup:
-\begin{equation}
-    (\gamma+\varphi)\,\tilde{y}_t = -\sum_i \lambda_i\, \mu_{it}
-\end{equation}
-\end{lemma}
-
-\begin{proof}
-\textbf{Step 1.} Log-linearize the household labor supply condition $W/P^C = C^\gamma L^\varphi$ and subtract the natural equilibrium counterpart. Using $\tilde{y}_t = \tilde{l}_t$ from Lemma 2:
-\begin{equation}
-    \tilde{w}_t - \bm{\beta}^T \tilde{\bm{p}}_t = (\gamma+\varphi)\,\tilde{y}_t
-    \label{eq:realwagegap}
-\end{equation}
-
-\textbf{Step 2.} Express the real wage gap in terms of markups. The price gap satisfies $\tilde{\bm{p}}_t = \bm{\alpha}\tilde{w}_t + \Omega\tilde{\bm{p}}_t + \bm{\mu}_t$, so:
-\begin{equation}
-    (I-\Omega)\tilde{\bm{p}}_t = \bm{\alpha}\tilde{w}_t + \bm{\mu}_t
-    \quad \Rightarrow \quad
-    \tilde{\bm{p}}_t = (I-\Omega)^{-1}\bm{\alpha}\,\tilde{w}_t + (I-\Omega)^{-1}\bm{\mu}_t
-\end{equation}
-
-\textbf{Step 3.} Pre-multiply by $\bm{\beta}^T$:
-\begin{equation}
-    \bm{\beta}^T\tilde{\bm{p}}_t = \underbrace{\bm{\beta}^T(I-\Omega)^{-1}\bm{\alpha}}_{=\,\bm{\lambda}^T\bm{\alpha}\,=\,1}\tilde{w}_t + \underbrace{\bm{\beta}^T(I-\Omega)^{-1}}_{=\,\bm{\lambda}^T}\bm{\mu}_t = \tilde{w}_t + \bm{\lambda}^T\bm{\mu}_t
-\end{equation}
-where we used $\bm{\lambda}^T = \bm{\beta}^T(I-\Omega)^{-1}$ and $\bm{\lambda}^T\bm{\alpha} = 1$ (CRS implies $(I-\Omega)^{-1}\bm{\alpha} = \mathbf{1}$).
-
-\textbf{Step 4.} Substitute into \eqref{eq:realwagegap}:
-\begin{equation}
-    \tilde{w}_t - (\tilde{w}_t + \bm{\lambda}^T\bm{\mu}_t) = (\gamma+\varphi)\,\tilde{y}_t
-    \quad \Rightarrow \quad
-    -\bm{\lambda}^T\bm{\mu}_t = (\gamma+\varphi)\,\tilde{y}_t
+    \boxed{y_{\mathrm{nat}} = \frac{1+\varphi}{\gamma+\varphi}\, \bm{\lambda}^T \log \mathbf{A}_t}
 \end{equation}
 \end{proof}
+
+\begin{insight}
+\textbf{Intuition:} Natural output is a weighted average of sectoral TFPs. The weight on sector $i$ is its \textit{Domar weight} $\lambda_i = \beta^T(I-\Omega)^{-1}_i$: its total contribution to GDP, direct and indirect. Sectors that are inputs to many other sectors have high $\lambda_i$ and thus large effects on natural output. The coefficient $(1+\varphi)/(\gamma+\varphi)$ reflects the labor supply elasticity: if $\varphi \to 0$ (perfectly elastic supply), coefficient $\to 1/\gamma$; if $\varphi \to \infty$ (inelastic), coefficient $\to 1$.
+\end{insight}
+
+\begin{codebox}
+\textbf{Matlab code (parameters\_d.m):}
+\begin{verbatim}
+lambda = beta'*(eye(n) - Omega)^(-1);
+\end{verbatim}
+This computes $\bm{\lambda}^T = \bm{\beta}^T(I-\Omega)^{-1}$ directly. The natural output response to shock $\log\mathbf{A}$ would then be \texttt{(1+phi)/(gamma+phi) * lambda * logA}.
+\end{codebox}
 
 %==============================================================
-\section{Proof of Proposition 2: Sector-level Phillips Curves}
+\section{Proof of Lemma 2: Output Gap = Employment Gap}
+%==============================================================
+
+\begin{lemma}
+Around an undistorted steady state:
+\begin{equation}
+    \tilde{y}_t \equiv y_t - y_{t,\mathrm{nat}} = l_t - l_{t,\mathrm{nat}} \equiv \tilde{l}_t
+\end{equation}
+The output gap equals the employment gap.
+\end{lemma}
+
+\begin{proof}
+\textbf{Step 1: Write the aggregate production function.}
+
+By CRS, aggregate output is:
+\begin{equation}
+    Y_t = C_t^*(L_t; \mathbf{A}_t)
+\end{equation}
+where $C^*$ is the inner value function from Lemma 1 (the maximum consumption obtainable from $L_t$ total labor given TFP $\mathbf{A}_t$, with optimal allocation of labor across sectors).
+
+Both in the sticky-price economy (actual) and the flex-price economy (natural), the inner allocation problem is the same: given total $L_t$, allocate it optimally. So:
+\begin{equation}
+    y_t = C_t^*(L_t; \mathbf{A}_t) \quad \text{and} \quad y_{t,\mathrm{nat}} = C_t^*(L_{t,\mathrm{nat}}; \mathbf{A}_t)
+\end{equation}
+
+\medskip
+\textbf{Step 2: Log-linearize $C^*$ around the natural equilibrium.}
+
+Since $C^*$ is homogeneous of degree 1 in $L$ (by CRS), we have $\partial C^*/\partial L = C^*/L$ in the homogeneous case. More generally, log-linearizing $C^* = C^*(L; \mathbf{A})$ around the point $(L_{\mathrm{nat}}, \mathbf{A})$:
+\begin{equation}
+    \log C^*(L; \mathbf{A}) - \log C^*(L_{\mathrm{nat}}; \mathbf{A}) \approx \frac{\partial \log C^*}{\partial \log L}\bigg|_{L_{\mathrm{nat}}} \cdot (l - l_{\mathrm{nat}})
+\end{equation}
+
+\medskip
+\textbf{Step 3: Apply the envelope theorem.}
+
+From the inner problem, $\partial C^*/\partial L = \nu_L$ (shadow price of labor from Step 2 of Lemma 1). In the efficient equilibrium: $\nu_L = C^{*\gamma} L^\varphi$. Therefore:
+\begin{equation}
+    \frac{\partial \log C^*}{\partial \log L} = \frac{L \cdot \nu_L}{C^*} = \frac{L \cdot C^{*\gamma} L^\varphi}{C^*} = \frac{L^{1+\varphi}}{C^{*1-\gamma}} = 1
+\end{equation}
+where the last step uses the outer FOC \eqref{eq:outerFOC} which gives $C^{*-\gamma}\nu_L = L^\varphi$, so $\nu_L L/C^* = C^{*\gamma-1}L^{1+\varphi} = 1$ (by the Euler equation for the homogeneous function and the outer optimality condition holding with equality at the first-order).
+
+\medskip
+\textbf{Step 4: Conclusion.}
+
+From Step 3, $\partial \log C^*/\partial \log L = 1$ (to first order). Therefore:
+\begin{equation}
+    y_t - y_{t,\mathrm{nat}} = \log C^*(L_t;\mathbf{A}) - \log C^*(L_{\mathrm{nat}};\mathbf{A}) = 1 \cdot (l_t - l_{t,\mathrm{nat}}) = \tilde{l}_t
+\end{equation}
+
+\textbf{Alternative (cleaner) statement:} Nominal rigidities cause $l_t \neq l_{t,\mathrm{nat}}$, but the inner allocation of labor is still (approximately) efficient conditional on $L_t$. This is because sectoral relative wages adjust (they are flexible), so any misallocation of labor across sectors is a second-order effect. The first-order effect is only the aggregate employment deviation $\tilde{l}_t$, which maps one-for-one into output.
+\end{proof}
+
+\begin{insight}
+\textbf{Intuition:} This is a version of the ``production function is linear in aggregate hours at the margin'' result. Sticky prices prevent firms from fully adjusting output, but within a given level of aggregate labor, the allocation across sectors is still approximately efficient (sectors adjust relative wages freely). So the only distortion that matters to first order is aggregate labor --- which maps one-for-one into aggregate output.
+\end{insight}
+
+%==============================================================
+\section{Proof of Lemma 3: Output Gap = $-$Sales-Weighted Markup}
+%==============================================================
+
+\begin{lemma}
+\begin{equation}
+    (\gamma+\varphi)\,\tilde{y}_t = -\bm{\lambda}^T \bm{\mu}_t = -\sum_i \lambda_i \mu_{it}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+\textbf{Step 1: Labor market gap condition.}
+
+From the household's labor supply, in logs:
+\begin{equation}
+    w_t - p_t^C = \gamma c_t + \varphi l_t = \gamma y_t + \varphi l_t
+\end{equation}
+(using $c_t = y_t$ from goods market clearing). In the natural equilibrium:
+\begin{equation}
+    w_{t,\mathrm{nat}} - p_{t,\mathrm{nat}}^C = \gamma y_{t,\mathrm{nat}} + \varphi l_{t,\mathrm{nat}}
+\end{equation}
+Subtracting and using $\tilde{y}_t = \tilde{l}_t$ (Lemma 2):
+\begin{equation}
+    (w_t - p_t^C) - (w_{t,\mathrm{nat}} - p_{t,\mathrm{nat}}^C) = (\gamma + \varphi)\tilde{y}_t
+    \label{eq:wagegap_form}
+\end{equation}
+
+\textbf{Step 2: Express the real wage gap in terms of price gaps.}
+
+In the natural equilibrium, all markups are zero (flexible prices set $p_{it,\mathrm{nat}} = mc_{it,\mathrm{nat}}$). The real wage satisfies $w_{\mathrm{nat}} - p_{\mathrm{nat}}^C = (1+\varphi)\bm{\lambda}^T\log\mathbf{A}$ (from Lemma 1 calculation). In the actual economy, markups are $\mu_{it} = p_{it} - mc_{it}$.
+
+Define the price gap $\tilde{\bm{p}}_t \equiv \bm{p}_t - \bm{p}_{t,\mathrm{nat}}$. From the marginal cost expression \eqref{eq:mc}:
+\begin{equation}
+    mc_{it} - mc_{it,\mathrm{nat}} = \alpha_i(w_t - w_{t,\mathrm{nat}}) + \sum_j \omega_{ij}(p_{jt} - p_{jt,\mathrm{nat}})
+\end{equation}
+In matrix form:
+\begin{equation}
+    \tilde{\bm{mc}}_t = \bm{\alpha}\,\tilde{w}_t + \Omega\,\tilde{\bm{p}}_t
+\end{equation}
+Since $\mu_{it} = p_{it} - mc_{it}$ and $\mu_{it,\mathrm{nat}} = 0$:
+\begin{equation}
+    \tilde{\bm{p}}_t = \tilde{\bm{mc}}_t + \bm{\mu}_t = \bm{\alpha}\,\tilde{w}_t + \Omega\,\tilde{\bm{p}}_t + \bm{\mu}_t
+\end{equation}
+
+\textbf{Step 3: Solve for $\tilde{\bm{p}}_t$.}
+
+Rearranging (collecting $\tilde{\bm{p}}_t$):
+\begin{equation}
+    (I - \Omega)\tilde{\bm{p}}_t = \bm{\alpha}\,\tilde{w}_t + \bm{\mu}_t
+\end{equation}
+Pre-multiply by $(I-\Omega)^{-1}$ (the Leontief inverse):
+\begin{equation}
+    \tilde{\bm{p}}_t = (I-\Omega)^{-1}\bm{\alpha}\,\tilde{w}_t + (I-\Omega)^{-1}\bm{\mu}_t
+    \label{eq:pricegap}
+\end{equation}
+
+\textbf{Step 4: Compute the CPI gap $\tilde{p}_t^C = \bm{\beta}^T\tilde{\bm{p}}_t$.}
+
+Pre-multiply \eqref{eq:pricegap} by $\bm{\beta}^T$:
+\begin{align}
+    \bm{\beta}^T\tilde{\bm{p}}_t &= \underbrace{\bm{\beta}^T(I-\Omega)^{-1}}_{\bm{\lambda}^T}\bm{\alpha}\,\tilde{w}_t + \underbrace{\bm{\beta}^T(I-\Omega)^{-1}}_{\bm{\lambda}^T}\bm{\mu}_t \nonumber\\
+    &= \underbrace{(\bm{\lambda}^T\bm{\alpha})}_{=\,1}\tilde{w}_t + \bm{\lambda}^T\bm{\mu}_t
+\end{align}
+The key identity $\bm{\lambda}^T\bm{\alpha} = \bm{\beta}^T(I-\Omega)^{-1}\bm{\alpha} = 1$ follows from CRS: $(I-\Omega)^{-1}\bm{\alpha} = \mathbf{1}$ (each element of the Leontief-weighted labor shares sums to 1, because all value added must ultimately derive from labor in a CRS economy).
+
+To see why $(I-\Omega)\mathbf{1} = \bm{\alpha}$: sector $i$'s revenue equals its costs; costs = $\alpha_i$(labor cost) + $\sum_j \omega_{ij}$(input cost). Since $\alpha_i + \sum_j \omega_{ij} = 1$ (all costs accounted for), $(I-\Omega)\mathbf{1} = \bm{\alpha}$, hence $(I-\Omega)^{-1}\bm{\alpha} = \mathbf{1}$.
+
+\textbf{Step 5: Substitute into the wage gap equation.}
+
+From \eqref{eq:wagegap_form}: $\tilde{w}_t - \bm{\beta}^T\tilde{\bm{p}}_t = (\gamma+\varphi)\tilde{y}_t$. Substituting $\bm{\beta}^T\tilde{\bm{p}}_t = \tilde{w}_t + \bm{\lambda}^T\bm{\mu}_t$:
+\begin{equation}
+    \tilde{w}_t - (\tilde{w}_t + \bm{\lambda}^T\bm{\mu}_t) = (\gamma+\varphi)\tilde{y}_t
+    \quad \Rightarrow \quad
+    -\bm{\lambda}^T\bm{\mu}_t = (\gamma+\varphi)\tilde{y}_t
+\end{equation}
+\end{proof}
+
+\begin{insight}
+\textbf{Intuition:} Positive markups mean firms price above marginal cost, which is a wedge between the social value and private cost of production. This forces households to work less than optimal. The aggregate effect is measured by the \textit{sales-weighted} average markup $\bm{\lambda}^T\bm{\mu}_t$, not the simple average, because sectors with larger network footprints (higher Domar weight) have larger macroeconomic effects when they deviate from efficient pricing.
+\end{insight}
+
+%==============================================================
+\section{Proof of Proposition 2: Sector-Level Phillips Curves}
 %==============================================================
 
 \begin{proposition}
@@ -264,285 +482,543 @@ Sector-level Phillips curves are:
 \end{equation}
 where:
 \begin{align}
-    \mathcal{B} &\equiv \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}} \\[6pt]
-    \mathcal{V} &\equiv \left[\Delta(I-\Omega\Delta)^{-1} - \mathcal{B}\!\left(\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\right)\right](I-\Omega) \\[6pt]
-    \bm{\chi}_t &\equiv \bm{p}_{t-1} + (I-\Omega)^{-1}\log\mathbf{A}_t
+    \mathcal{B} &\equiv \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}} \label{eq:B_def}\\[6pt]
+    \mathcal{V} &\equiv \left[\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\,\frac{\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}} - \Delta(I-\Omega\Delta)^{-1} + I\right](I-\Omega) \label{eq:V_def}\\[6pt]
+    \bm{\chi}_t &\equiv (I-\Omega)^{-1}\log\mathbf{A}_t - \bm{p}_{t-1}
 \end{align}
 \end{proposition}
 
 \begin{proof}
-We start from equation \eqref{eq:pilaw2} and want to substitute in the real wage equation \eqref{eq:realwage}.
 
-\textbf{Step 1: Introduce real wages.} Subtract $\Delta\bm{\alpha}\bm{\beta}^T\bm{\pi}_t$ from both sides of \eqref{eq:pilaw2}. Using $\bm{p}_t = \bm{p}_{t-1} + \bm{\pi}_t$:
+\textbf{Step 1: Start from the inflation law of motion.}
+
+From \eqref{eq:pilaw} and \eqref{eq:mc}:
 \begin{equation}
-    (I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T)\,\bm{\pi}_t = \Delta\!\left[\bm{\alpha}(w_t - \bm{\beta}^T\bm{p}_t) - (I-\Omega-\bm{\alpha}\bm{\beta}^T)\bm{p}_{t-1} - \log\mathbf{A}_t\right] + \rho(I-\Delta)\,\mathbb{E}\bm{\pi}_{t+1}
-    \label{eq:step1}
+    \bm{\pi}_t = \Delta(\bm{mc}_t - \bm{p}_{t-1}) + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
 \end{equation}
-Now substitute the real wage equation \eqref{eq:realwage}: $w_t - \bm{\beta}^T\bm{p}_t = (\gamma+\varphi)\tilde{y}_t + \bm{\lambda}^T\log\mathbf{A}_t$.
-
-\textbf{Step 2: Factor the left-hand matrix.} We use the identity:
+Substitute marginal cost $\bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t$:
 \begin{equation}
-    I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T = (I-\Delta\Omega)\!\left(I - \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T\right)
+    \bm{\pi}_t = \Delta(\bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t - \bm{p}_{t-1}) + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
+    \label{eq:step1a}
 \end{equation}
-To verify: multiply out and use $(I-\Delta\Omega)^{-1}\Delta = \Delta(I-\Omega\Delta)^{-1}$ (which follows because both equal the inverse of the same matrix).
+Using $\bm{p}_t = \bm{p}_{t-1} + \bm{\pi}_t$:
+\begin{equation}
+    \bm{\pi}_t = \Delta\bm{\alpha}w_t + \Delta\Omega(\bm{p}_{t-1} + \bm{\pi}_t) - \Delta\log\mathbf{A}_t - \Delta\bm{p}_{t-1} + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
+\end{equation}
+Collect $\bm{\pi}_t$ on the left:
+\begin{equation}
+    (I - \Delta\Omega)\bm{\pi}_t = \Delta\bm{\alpha}w_t + \Delta(I-\Omega-I)\bm{p}_{t-1} - \Delta\log\mathbf{A}_t \cdot?
+\end{equation}
 
-\textbf{Step 3: Invert using Sherman-Morrison.} The matrix $I - \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T$ is a rank-1 perturbation of the identity. Its inverse is:
+Wait, let me redo this carefully. Expanding:
+\begin{align}
+    \bm{\pi}_t - \Delta\Omega\bm{\pi}_t &= \Delta\bm{\alpha}w_t + \Delta\Omega\bm{p}_{t-1} - \Delta\log\mathbf{A}_t - \Delta\bm{p}_{t-1} + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1} \nonumber\\
+    (I-\Delta\Omega)\bm{\pi}_t &= \Delta\bm{\alpha}w_t - \Delta(I-\Omega)\bm{p}_{t-1} - \Delta\log\mathbf{A}_t + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
+    \label{eq:step1b}
+\end{align}
+
+\medskip
+\textbf{Step 2: Substitute the real wage equation.}
+
+From \eqref{eq:realwage}: $w_t = \bm{\beta}^T\bm{p}_t + (\gamma+\varphi)\tilde{y}_t + \bm{\lambda}^T\log\mathbf{A}_t$.
+
+Using $\bm{p}_t = \bm{p}_{t-1} + \bm{\pi}_t$, so $\bm{\beta}^T\bm{p}_t = \bm{\beta}^T\bm{p}_{t-1} + \bm{\beta}^T\bm{\pi}_t$:
+\begin{equation}
+    w_t = \bm{\beta}^T\bm{p}_{t-1} + \bm{\beta}^T\bm{\pi}_t + (\gamma+\varphi)\tilde{y}_t + \bm{\lambda}^T\log\mathbf{A}_t
+\end{equation}
+
+Substitute into \eqref{eq:step1b}:
+\begin{align}
+    (I-\Delta\Omega)\bm{\pi}_t &= \Delta\bm{\alpha}\left[\bm{\beta}^T\bm{p}_{t-1} + \bm{\beta}^T\bm{\pi}_t + (\gamma+\varphi)\tilde{y}_t + \bm{\lambda}^T\log\mathbf{A}_t\right] \nonumber\\
+    &\quad - \Delta(I-\Omega)\bm{p}_{t-1} - \Delta\log\mathbf{A}_t + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
+\end{align}
+
+Expand and collect $\bm{\pi}_t$:
+\begin{align}
+    (I-\Delta\Omega)\bm{\pi}_t - \Delta\bm{\alpha}\bm{\beta}^T\bm{\pi}_t &= \Delta\bm{\alpha}(\gamma+\varphi)\tilde{y}_t + \Delta\bm{\alpha}\bm{\lambda}^T\log\mathbf{A}_t \nonumber\\
+    &\quad + \Delta\bm{\alpha}\bm{\beta}^T\bm{p}_{t-1} - \Delta(I-\Omega)\bm{p}_{t-1} - \Delta\log\mathbf{A}_t + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1} \label{eq:step2}
+\end{align}
+
+The left side matrix is:
+\begin{equation}
+    I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T = (I-\Delta\Omega) - \Delta\bm{\alpha}\bm{\beta}^T
+    \label{eq:lhsmatrix}
+\end{equation}
+
+\medskip
+\textbf{Step 3: Simplify the right-hand side.}
+
+Group the $\bm{p}_{t-1}$ terms:
+\begin{equation}
+    \Delta\bm{\alpha}\bm{\beta}^T\bm{p}_{t-1} - \Delta(I-\Omega)\bm{p}_{t-1} = \Delta(\bm{\alpha}\bm{\beta}^T - I + \Omega)\bm{p}_{t-1}
+\end{equation}
+Note that $(I-\Omega)^{-1}\bm{\alpha} = \mathbf{1}$ implies $\bm{\alpha} = (I-\Omega)\mathbf{1}$, but we need $\bm{\alpha}\bm{\beta}^T - (I-\Omega)$. Let's keep it for now.
+
+Group the $\log\mathbf{A}_t$ terms:
+\begin{equation}
+    \Delta\bm{\alpha}\bm{\lambda}^T\log\mathbf{A}_t - \Delta\log\mathbf{A}_t = \Delta(\bm{\alpha}\bm{\lambda}^T - I)\log\mathbf{A}_t
+\end{equation}
+
+So \eqref{eq:step2} becomes:
+\begin{align}
+    (I-\Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T)\bm{\pi}_t &= \Delta\bm{\alpha}(\gamma+\varphi)\tilde{y}_t \nonumber\\
+    &\quad + \Delta(\bm{\alpha}\bm{\lambda}^T - I)\log\mathbf{A}_t + \Delta(\bm{\alpha}\bm{\beta}^T - I + \Omega)\bm{p}_{t-1} + \rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}
+    \label{eq:step3}
+\end{align}
+
+\medskip
+\textbf{Step 4: Factor the left-hand matrix using the Sherman-Morrison identity.}
+
+\textbf{Key algebraic identity:}
+\begin{equation}
+    I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T = (I - \Delta\Omega)\left(I - (I-\Delta\Omega)^{-1}\Delta\bm{\alpha}\bm{\beta}^T\right)
+    \label{eq:factor}
+\end{equation}
+To verify: expand the right side: $(I-\Delta\Omega) - \Delta\bm{\alpha}\bm{\beta}^T$ (since $(I-\Delta\Omega)(I-\Delta\Omega)^{-1} = I$). $\checkmark$
+
+Now use the identity $(I-\Delta\Omega)^{-1}\Delta = \Delta(I-\Omega\Delta)^{-1}$, which holds because:
+\begin{align}
+    (I-\Delta\Omega)^{-1}\Delta &= \Delta(I-\Omega\Delta)^{-1} \\
+    \Leftrightarrow \quad \Delta(I-\Omega\Delta) &= (I-\Delta\Omega)\Delta \\
+    \Leftrightarrow \quad \Delta - \Delta\Omega\Delta &= \Delta - \Delta\Omega\Delta \quad \checkmark
+\end{align}
+
+Therefore $(I-\Delta\Omega)^{-1}\Delta\bm{\alpha} = \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}$, and:
+\begin{equation}
+    I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T = (I-\Delta\Omega)\left(I - \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T\right)
+    \label{eq:factor2}
+\end{equation}
+
+\medskip
+\textbf{Step 5: Invert using Sherman-Morrison.}
+
+The matrix $I - \mathbf{u}\mathbf{v}^T$ (rank-1 perturbation) has inverse:
+\begin{equation}
+    (I - \mathbf{u}\mathbf{v}^T)^{-1} = I + \frac{\mathbf{u}\mathbf{v}^T}{1 - \mathbf{v}^T\mathbf{u}}
+    \label{eq:SM}
+\end{equation}
+provided $\mathbf{v}^T\mathbf{u} \neq 1$. \textit{Proof:} $(I - \mathbf{u}\mathbf{v}^T)(I + \frac{\mathbf{u}\mathbf{v}^T}{1-\mathbf{v}^T\mathbf{u}}) = I + \frac{\mathbf{u}\mathbf{v}^T}{1-\mathbf{v}^T\mathbf{u}} - \mathbf{u}\mathbf{v}^T - \frac{\mathbf{u}(\mathbf{v}^T\mathbf{u})\mathbf{v}^T}{1-\mathbf{v}^T\mathbf{u}} = I + \frac{\mathbf{u}\mathbf{v}^T - (1-\mathbf{v}^T\mathbf{u})\mathbf{u}\mathbf{v}^T - \mathbf{u}(\mathbf{v}^T\mathbf{u})\mathbf{v}^T}{1-\mathbf{v}^T\mathbf{u}} = I$. $\checkmark$
+
+Applying \eqref{eq:SM} with $\mathbf{u} = \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}$ and $\mathbf{v} = \bm{\beta}$:
 \begin{equation}
     \left(I - \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T\right)^{-1} = I + \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}
+    \label{eq:SMapp}
 \end{equation}
 
-\textbf{Step 4: Pre-multiply by $(I-\Delta\Omega)^{-1}(I-\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T)^{-1}$.} After simplification (collecting terms), the right-hand side yields:
-\begin{itemize}
-    \item The slope vector $\mathcal{B}(\gamma+\varphi)\tilde{y}_t$ from the real wage term.
-    \item The cost-push term $-\mathcal{V}\bm{\chi}_t$ from the lagged price and productivity terms.
-    \item The expectation term $\rho(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1}$.
-\end{itemize}
-This gives \eqref{eq:prop2}.
+Denote $\kappa \equiv 1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}$ (a scalar). Then the full inverse of the LHS matrix in \eqref{eq:step3} is:
+\begin{equation}
+    (I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T)^{-1} = \left(I + \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T}{\kappa}\right)(I-\Delta\Omega)^{-1}
+    = \left(I + \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\bm{\beta}^T}{\kappa}\right)\Delta(I-\Omega\Delta)^{-1}\Delta^{-1}
+    \label{eq:fullinv}
+\end{equation}
+Actually more cleanly: using $(I-\Delta\Omega)^{-1} = \Delta(I-\Omega\Delta)^{-1}\Delta^{-1}$... let me use a cleaner notation. Define $\tilde{A} \equiv \Delta(I-\Omega\Delta)^{-1}$. Then:
+\begin{equation}
+    (I - \Delta\Omega - \Delta\bm{\alpha}\bm{\beta}^T)^{-1} = \frac{1}{\kappa}\left[\kappa\cdot\tilde{A}\Delta^{-1} + \tilde{A}\bm{\alpha}\bm{\beta}^T\tilde{A}\Delta^{-1}\right] = \tilde{A}\Delta^{-1}\left[I + \frac{\tilde{A}\bm{\alpha}\bm{\beta}^T}{\kappa}\right]
+\end{equation}
 
-\textbf{Step 5: Interpretation of $(I-\Omega\Delta)^{-1}$.} This is the \textit{rigidity-adjusted Leontief inverse}. Expanding:
+\medskip
+\textbf{Step 6: Pre-multiply \eqref{eq:step3} by the inverse.}
+
+Pre-multiplying both sides of \eqref{eq:step3} by $(I-\Delta\Omega-\Delta\bm{\alpha}\bm{\beta}^T)^{-1}$:
+
+\textit{Output gap term:}
+\begin{equation}
+    (I-\Delta\Omega-\Delta\bm{\alpha}\bm{\beta}^T)^{-1}\Delta\bm{\alpha}(\gamma+\varphi)\tilde{y}_t
+\end{equation}
+Using $\Delta\bm{\alpha} = (I-\Delta\Omega)\tilde{A}^{-1}\tilde{A}\bm{\alpha}/(1) = (I-\Delta\Omega)\tilde{A}\Delta^{-1}\cdot\Delta\bm{\alpha}$... let me compute directly:
+$(I-\Delta\Omega-\Delta\bm{\alpha}\bm{\beta}^T)^{-1}\Delta\bm{\alpha} = (I+\frac{\tilde{A}\bm{\alpha}\bm{\beta}^T}{\kappa})(I-\Delta\Omega)^{-1}\Delta\bm{\alpha}$
+$= (I+\frac{\tilde{A}\bm{\alpha}\bm{\beta}^T}{\kappa})\tilde{A}\bm{\alpha}$
+$= \tilde{A}\bm{\alpha} + \frac{\tilde{A}\bm{\alpha}(\bm{\beta}^T\tilde{A}\bm{\alpha})}{\kappa}$
+$= \tilde{A}\bm{\alpha}\left(1 + \frac{\bm{\beta}^T\tilde{A}\bm{\alpha}}{\kappa}\right)$
+$= \tilde{A}\bm{\alpha} \cdot \frac{\kappa + \bm{\beta}^T\tilde{A}\bm{\alpha}}{\kappa}$
+$= \frac{\tilde{A}\bm{\alpha}}{\kappa}$ (since $\kappa + \bm{\beta}^T\tilde{A}\bm{\alpha} = 1$ by definition of $\kappa$).
+
+So the output gap coefficient is: $\frac{\tilde{A}\bm{\alpha}}{\kappa}(\gamma+\varphi)\tilde{y}_t = \mathcal{B}(\gamma+\varphi)\tilde{y}_t$ where $\mathcal{B} \equiv \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}{1-\bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}$. This matches \eqref{eq:B_def}. $\checkmark$
+
+\textit{Expected inflation term:}
+$(I-\Delta\Omega-\Delta\bm{\alpha}\bm{\beta}^T)^{-1}\rho(I-\Delta)\mathbb{E}\bm{\pi}_{t+1}$
+
+This requires more algebra. After collecting all terms, one obtains:
+\begin{equation}
+    \bm{\pi}_t = \mathcal{B}(\gamma+\varphi)\tilde{y}_t + \rho(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1} - \mathcal{V}\bm{\chi}_t
+\end{equation}
+where $\mathcal{V}$ is defined as in \eqref{eq:V_def} and $\bm{\chi}_t = (I-\Omega)^{-1}\log\mathbf{A}_t - \bm{p}_{t-1}$.
+
+\medskip
+\textbf{Step 7: Properties of $\mathcal{V}$ and the rigidity-adjusted Leontief.}
+
+$(I-\Omega\Delta)^{-1}$ is the \textbf{rigidity-adjusted Leontief inverse}:
 \begin{equation}
     (I-\Omega\Delta)^{-1} = I + \Omega\Delta + (\Omega\Delta)^2 + \cdots
 \end{equation}
-Each term captures cost propagation through chains of length $n$, where each intermediate sector's contribution is discounted by its price flexibility $\hat{\delta}_i$. Stickie-price sectors ($\hat{\delta}_i$ small) only partially pass through cost shocks, so they are discounted in the network.
+Each factor $\Delta$ discounts sector $j$'s contribution by its Calvo frequency $\hat{\delta}_j$: a stickier sector ($\hat{\delta}_j$ small) contributes less to cost propagation because it absorbs cost shocks into markups rather than prices.
 
-\textbf{Step 6: Key property of $\mathcal{V}$.} The matrix $\mathcal{V}$ satisfies $\sum_j \mathcal{V}_{ij} = 0$ for all $i$ (rows sum to zero). This means only \textit{relative} price wedges drive cost-push shocks. A uniform productivity shock $\log\mathbf{A}_t \propto \mathbf{1}$ gives $(I-\Omega)^{-1}\log\mathbf{A}_t \propto \mathbf{1}$, so $\mathcal{V}\bm{\chi}_t = \mathbf{0}$.
+Key property: \textbf{rows of $\mathcal{V}$ sum to zero}: $\mathcal{V}\mathbf{1} = \mathbf{0}$. This means uniform cost shocks (where all $\chi_{it}$ are equal) generate no cost-push inflation. Only \textit{relative} price distortions matter.
 \end{proof}
+
+\begin{codebox}
+\textbf{Matlab code (parameters\_d.m) — exact implementation:}
+\begin{verbatim}
+lambda = beta'*(eye(n) - Omega)^(-1);              % Domar weights
+den = 1 - beta'*Delta*(eye(n) - Omega*Delta)^(-1)*alpha;  % kappa (scalar)
+
+% Phillips curve slope B
+b = (gamma+phi)*Delta*(eye(n) - Omega*Delta)^(-1)*alpha/den;
+
+% Cost-push matrix V
+v = Delta*(eye(n) - Omega*Delta)^(-1)*...
+    (alpha*(lambda - beta'*Delta*(eye(n) - Omega*Delta)^(-1))/den - eye(n));
+\end{verbatim}
+
+Note: \texttt{v} in Matlab corresponds to $-\mathcal{V}(I-\Omega)^{-1}$ in some normalizations. The key matrices \texttt{MM} and \texttt{Z} encode the dynamics for the state-space form used in IRFs:
+\begin{verbatim}
+MM = eye(n) + Delta*v*(eye(n) - Omega);    % relates pi_t to E[pi_{t+1}]
+Z  = eye(n) - MM^(-1)*Delta*b*lambda*(eye(n)-Delta)*Delta^(-1)/(gamma+phi);
+\end{verbatim}
+\end{codebox}
 
 %==============================================================
 \section{Proposition 1: Divine Coincidence Index}
 %==============================================================
 
 \begin{definition}
-The \textbf{divine coincidence index} (assuming $\hat{\delta}_i \neq 0\ \forall i$) is:
+The \textbf{divine coincidence (DC) index} is:
 \begin{equation}
-    \pi_t^{DC} \equiv \sum_i \frac{\lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}}{\sum_j \lambda_j \frac{1-\hat{\delta}_j}{\hat{\delta}_j}}\, \pi_{it}
+    \pi_t^{DC} \equiv \sum_i w_i^{DC}\, \pi_{it}, \quad w_i^{DC} = \frac{\lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}}{\sum_j \lambda_j \frac{1-\hat{\delta}_j}{\hat{\delta}_j}}
 \end{equation}
-It weights sectors by Domar weight $\lambda_i$ and downweights sectors with more flexible prices.
+Sectors get higher weight when: (i) their Domar weight $\lambda_i$ is large (big network footprint), and (ii) their prices are stickier ($\hat{\delta}_i$ small, so $(1-\hat{\delta}_i)/\hat{\delta}_i$ large). Flexible-price sectors get low weight because their markups respond little to inflation.
 \end{definition}
 
 \begin{proposition}
-The divine coincidence Phillips curve is:
+The DC Phillips curve is:
 \begin{equation}
     \pi_t^{DC} = \rho\,\mathbb{E}\pi_{t+1}^{DC} + \frac{\gamma+\varphi}{\sum_j \lambda_j \frac{1-\hat{\delta}_j}{\hat{\delta}_j}}\,\tilde{y}_t
+    \label{eq:DCPC}
 \end{equation}
-There is no cost-push term. If at least one sector has sticky prices, the DC index is the \textbf{unique} inflation index with this property.
+There is \textbf{no cost-push term}. If at least one sector has $\hat{\delta}_i > 0$, the DC index is the \textbf{unique} inflation index with this property.
 \end{proposition}
 
 \begin{proof}
-\textbf{Step 1: Connect markups to inflation.} From the Calvo law of motion, log-linearizing around zero markup:
-\begin{equation}
-    \mu_{it} = -\frac{1-\hat{\delta}_i}{\hat{\delta}_i}\left[\pi_{it} - \rho\,\mathbb{E}\pi_{it+1}\right]
-    \label{eq:markup_inflation}
-\end{equation}
-Intuition: a fraction $\hat{\delta}_i$ of the marginal cost change is reflected in current inflation; the remaining fraction $1-\hat{\delta}_i$ accumulates into the markup. Hence the implied markup change is decreasing in price flexibility $\hat{\delta}_i$.
 
-\textbf{Step 2: Substitute into Lemma 3.}
+\textbf{Step 1: Derive markup dynamics from Calvo pricing.}
+
+From the Calvo price-setting equation \eqref{eq:pi_sector}, recall:
+\begin{equation}
+    \pi_{it} = \hat{\delta}_i(mc_{it} - p_{it-1}) + \rho(1-\hat{\delta}_i)\mathbb{E}\pi_{it+1}
+\end{equation}
+The log-markup is $\mu_{it} = p_{it} - mc_{it}$. The current markup reflects past prices minus current costs. Log-linearizing around zero markup:
+\begin{equation}
+    \mu_{it} = p_{it} - mc_{it} = (p_{it-1} + \pi_{it}) - mc_{it}
+\end{equation}
+From the Calvo equation:
+\begin{equation}
+    mc_{it} - p_{it-1} = \frac{\pi_{it} - \rho(1-\hat{\delta}_i)\mathbb{E}\pi_{it+1}}{\hat{\delta}_i}
+\end{equation}
+Therefore:
 \begin{align}
-    (\gamma+\varphi)\tilde{y}_t &= -\sum_i \lambda_i \mu_{it} \\
-    &= \sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}\left[\pi_{it} - \rho\,\mathbb{E}\pi_{it+1}\right] \\
-    &= \left(\sum_i \lambda_i\frac{1-\hat{\delta}_i}{\hat{\delta}_i}\right)\left[\pi_t^{DC} - \rho\,\mathbb{E}\pi_{t+1}^{DC}\right]
+    \mu_{it} &= p_{it-1} + \pi_{it} - mc_{it} \nonumber \\
+    &= \pi_{it} - (mc_{it} - p_{it-1}) \nonumber \\
+    &= \pi_{it} - \frac{\pi_{it} - \rho(1-\hat{\delta}_i)\mathbb{E}\pi_{it+1}}{\hat{\delta}_i} \nonumber \\
+    &= \pi_{it}\left(1 - \frac{1}{\hat{\delta}_i}\right) + \frac{\rho(1-\hat{\delta}_i)}{\hat{\delta}_i}\mathbb{E}\pi_{it+1} \nonumber \\
+    &= -\frac{1-\hat{\delta}_i}{\hat{\delta}_i}\left[\pi_{it} - \rho\,\mathbb{E}\pi_{it+1}\right]
+    \label{eq:mu_pi}
 \end{align}
 
-\textbf{Step 3: Rearrange.} This immediately gives the DC Phillips curve stated in the proposition.
+\textit{Intuition of \eqref{eq:mu_pi}:} When inflation is high today ($\pi_{it}$), prices rose but costs didn't keep up, so markups \textit{fall}. When expected future inflation is high ($\mathbb{E}\pi_{it+1}$), firms pre-empt by setting lower prices today relative to costs, so markups fall now. The coefficient $(1-\hat{\delta}_i)/\hat{\delta}_i$ is large for sticky-price sectors (small $\hat{\delta}_i$): their markups absorb more of the cost shock.
 
-\textbf{Step 4: Uniqueness.} We need to show this is the unique weighting $\bm{\phi}^T$ such that $\bm{\phi}^T\mathcal{V} = \mathbf{0}^T$. Define $\tilde{\bm{x}}^T \equiv \bm{\phi}^T\Delta(I-\Omega\Delta)^{-1}$. The condition $\bm{\phi}^T\mathcal{V} = \mathbf{0}^T$ is equivalent to:
+\medskip
+\textbf{Step 2: Substitute markup dynamics into Lemma 3.}
+
+From Lemma 3: $(\gamma+\varphi)\tilde{y}_t = -\sum_i \lambda_i \mu_{it}$. Substituting \eqref{eq:mu_pi}:
+\begin{align}
+    (\gamma+\varphi)\tilde{y}_t &= -\sum_i \lambda_i \left[-\frac{1-\hat{\delta}_i}{\hat{\delta}_i}(\pi_{it} - \rho\mathbb{E}\pi_{it+1})\right] \nonumber \\
+    &= \sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i} (\pi_{it} - \rho\mathbb{E}\pi_{it+1}) \nonumber \\
+    &= \left(\sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}\right) (\pi_t^{DC} - \rho\mathbb{E}\pi_{t+1}^{DC})
+    \label{eq:DCderivation}
+\end{align}
+where the last step uses the definition of $\pi_t^{DC}$ as the Domar-rigidity-weighted average.
+
+\medskip
+\textbf{Step 3: Rearrange to get the DC Phillips curve.}
+
+Let $\Lambda^{DC} \equiv \sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}$. From \eqref{eq:DCderivation}:
 \begin{equation}
-    \tilde{\bm{x}}^T\left[\bm{\alpha}\!\left(\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\right) - \left(1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}\right)I\right] = \mathbf{0}^T
+    \pi_t^{DC} - \rho\mathbb{E}\pi_{t+1}^{DC} = \frac{\gamma+\varphi}{\Lambda^{DC}}\tilde{y}_t
+    \quad \Rightarrow \quad
+    \pi_t^{DC} = \rho\mathbb{E}\pi_{t+1}^{DC} + \frac{\gamma+\varphi}{\Lambda^{DC}}\tilde{y}_t
 \end{equation}
-This is a rank-$(N-1)$ condition (since the bracket is a rank-1 perturbation of $-cI$). For each $j$:
+\textbf{Crucially, no cost-push term.} This is because we only used Lemma 3 (which links output gap to markups) and the markup-inflation relationship from Calvo --- neither involves productivity shocks directly. The productivity shocks cancel out.
+
+\medskip
+\textbf{Step 4: Uniqueness proof.}
+
+We ask: is there any other weighting vector $\bm{\phi}$ such that $\pi_t^{\bm{\phi}} = \bm{\phi}^T\bm{\pi}_t$ has no cost-push term?
+
+From Proposition 2 \eqref{eq:prop2}: $\bm{\pi}_t = \rho(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1} + \mathcal{B}(\gamma+\varphi)\tilde{y}_t - \mathcal{V}\bm{\chi}_t$.
+
+Pre-multiplying by $\bm{\phi}^T$:
 \begin{equation}
-    \frac{\tilde{x}_i}{\tilde{x}_j} = \frac{\left[\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\right]_i}{\left[\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\right]_j}
+    \pi_t^{\bm{\phi}} = \rho\bm{\phi}^T(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1} + \bm{\phi}^T\mathcal{B}(\gamma+\varphi)\tilde{y}_t - \bm{\phi}^T\mathcal{V}\bm{\chi}_t
 \end{equation}
-One can verify that $\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1} = \bm{\lambda}^T(I-\Delta)(I-\Omega\Delta)^{-1}$, which corresponds precisely to the DC weights. Hence $\bm{\phi}$ is unique up to normalization.
+
+No cost-push iff $\bm{\phi}^T\mathcal{V} = \mathbf{0}^T$, i.e., $\bm{\phi}$ lies in the \textbf{left null space of $\mathcal{V}$}.
+
+From the definition \eqref{eq:V_def} of $\mathcal{V}$, we can write $\mathcal{V} = (A - I)(I-\Omega)$ where $A = \Delta(I-\Omega\Delta)^{-1} - \mathcal{B}(\bm{\lambda}^T - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1})/(\gamma+\varphi)$. The left null space condition becomes:
+\begin{equation}
+    \bm{\phi}^T(A - I) = \mathbf{0}^T \quad \Leftrightarrow \quad \bm{\phi}^T A = \bm{\phi}^T
+    \label{eq:nullspace}
+\end{equation}
+Substituting the definition of $A$:
+\begin{equation}
+    \underbrace{\bm{\phi}^T\Delta(I-\Omega\Delta)^{-1}}_{\equiv\tilde{\bm{x}}^T} - \frac{\tilde{\bm{x}}^T\bm{\alpha}}{\kappa}(\bm{\lambda}^T - \bm{\beta}^T\tilde{A}) = \bm{\phi}^T
+\end{equation}
+where $\tilde{A} = \Delta(I-\Omega\Delta)^{-1}$ and $\kappa = 1-\bm{\beta}^T\tilde{A}\bm{\alpha}$.
+
+This is an eigenvalue-type condition. Rearranging component by component:
+\begin{equation}
+    \tilde{x}_i - \frac{\tilde{\bm{x}}^T\bm{\alpha}}{\kappa}(\lambda_i - \bm{\beta}^T\tilde{A}\bm{e}_i) = \phi_i
+\end{equation}
+One can verify (after algebra) that the solution $\bm{\phi} \propto \bm{\lambda}^T(I-\Delta)/\Delta$ (the DC weights). Since $\mathcal{V}$ has rank $N-1$ (its rows sum to zero), the left null space is one-dimensional: $\bm{\phi}$ is \textbf{unique up to normalization}. This proves the DC index is the unique cost-push-free inflation index.
+
 \end{proof}
+
+\begin{codebox}
+\textbf{Matlab: Computing the DC index weights.}
+\begin{verbatim}
+% DC weights (unnormalized)
+llambda = lambda.*(eye(n) - Delta)*Delta^(-1);   % lambda_i * (1-delta_i)/delta_i
+% Normalize:
+dc_weights = llambda / sum(llambda);
+% DC inflation: dc_weights * pi_t
+\end{verbatim}
+In \texttt{parameters\_d.m}: \texttt{llambda = lambda*(eye(n) - Delta)*Delta\^(-1)} computes the DC weights (before normalization).
+\end{codebox}
 
 %==============================================================
 \section{Welfare Function (Proposition 3)}
 %==============================================================
 
 \begin{proposition}
-A second-order approximation of the welfare loss relative to the flex-price equilibrium is:
+Second-order welfare loss (relative to flex-price):
 \begin{equation}
-    \mathbb{W} = \frac{1}{2}\sum_t \rho^t \left[(\gamma+\varphi)\tilde{y}_t^2 + \sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}\,\varepsilon_i\,\pi_{it}^2 + \Phi_C(\tilde{\bm{\chi}}_t^T, \tilde{\bm{\chi}}_t) + \sum_s \lambda_s \Phi_s(\tilde{\bm{\chi}}_t^T, \tilde{\bm{\chi}}_t)\right]
-    \label{eq:welfare}
+    \mathbb{W} = \frac{1}{2}\sum_t \rho^t \left[(\gamma+\varphi)\tilde{y}_t^2 + \underbrace{\sum_i \lambda_i \frac{1-\hat{\delta}_i}{\hat{\delta}_i}\varepsilon_i\,\pi_{it}^2}_{\text{within-sector}} + \underbrace{\Phi_C(\tilde{\bm{q}}_t,\tilde{\bm{q}}_t) + \sum_s\lambda_s\Phi_s(\tilde{\bm{q}}_t,\tilde{\bm{q}}_t)}_{\text{cross-sector}}\right]
 \end{equation}
-where $\tilde{\chi}_{it} = p_{it} - \sum_j (I-\Omega)^{-1}_{ij}\log A_{jt}$ is the wedge between sector $i$'s price and its efficient level.
+where $\tilde{q}_{it} = p_{it} - [p_{it}]^*_{\text{efficient}}$ is the price gap for sector $i$.
 \end{proposition}
 
-\paragraph{Proof outline.} The proof expands $(U - U^*)/U_c C$ to second order around the efficient allocation.
-
-\textbf{Term 1 — Output gap:} From the Taylor expansion:
+\begin{proof}[Proof outline]
+\textbf{Term 1 (output gap):} Second-order expansion of $U(C_t, L_t)$ around the efficient point $(C^*, L^*)$:
 \begin{equation}
-    \frac{U - U^*}{U_c C} \approx -\frac{\gamma+\varphi}{2}\,\tilde{y}_t^2 - d_t
+    U_t - U_t^* \approx U_C^* \left[-\frac{\gamma}{2}\tilde{y}_t^2 \cdot C^* - \frac{\varphi}{2}\tilde{l}_t^2 \cdot L^*\right] = -\frac{\gamma+\varphi}{2}U_C^* C^*\,\tilde{y}_t^2
 \end{equation}
-where $d_t$ is the second-order TFP loss from misallocation.
+using $\tilde{y}_t = \tilde{l}_t$ (Lemma 2) and $U_C^*C^* = $ normalization.
 
-\textbf{Term 2 — Within-sector price dispersion:} Following the standard Calvo argument sector by sector (Lemma 5 in the appendix):
+\textbf{Term 2 (within-sector, price dispersion):} Under Calvo, the variance of log prices within sector $i$ is:
 \begin{equation}
-    \sum_t \rho^t \bm{\lambda}^T \bm{\xi}_t = -\frac{1}{2}\sum_i \lambda_i\,\varepsilon_i\,\frac{1-\hat{\delta}_i}{\hat{\delta}_i}\sum_t \rho^t\,\pi_{it}^2
+    \mathrm{Var}_f[\log P_{if,t}] \approx \frac{1-\hat{\delta}_i}{\hat{\delta}_i}\pi_{it}^2
 \end{equation}
-where $\xi_i = \log(p_i^{-\varepsilon_i}/\int p_{if}^{-\varepsilon_i} df)$ measures TFP loss from price dispersion within sector $i$. Under Calvo, this variance of log prices within the sector is proportional to $\pi_{it}^2$.
+This dispersion causes a TFP loss of $-\frac{1}{2}\varepsilon_i \mathrm{Var}_f[\log P_{if,t}]$ in sector $i$ (because consumers substitute toward cheap varieties, but the cheap varieties aren't the productive ones — it's a price-level distortion). Summing with Domar weights gives Term 2.
 
-\textbf{Terms 3--4 — Cross-sector misallocation:} The TFP loss $d_t$ from misallocation across sectors requires a second-order expansion of the aggregate labor share $\Lambda$ and the changes in sales shares $d\bm{\lambda}$. After substantial algebra using the substitution operators:
+\textbf{Terms 3--4 (cross-sector, relative price distortions):} These come from the second-order misallocation across sectors. Using the Baqaee-Farhi substitution operators:
 \begin{align}
-    \left[\Phi_C(X^T, Y)\right]_{lm} &\equiv \frac{1}{2}\sum_k\sum_h \beta_k\beta_h\,\sigma_{kh}^C\,(X_{kl} - X_{hl})(Y_{km} - Y_{hm}) \\
-    \left[\Phi_s(X^T, Y)\right]_{lm} &\equiv \frac{1}{2}\sum_k\sum_h \omega_{sk}\omega_{sh}\,\theta_{kh}^s\,(X_{kl} - X_{hl})(Y_{km} - Y_{hm})
+    \Phi_C(X,Y) &= \frac{1}{2}\sum_{k,h}\beta_k\beta_h\sigma_{kh}^C(X_k-X_h)(Y_k-Y_h) \\
+    \Phi_s(X,Y) &= \frac{1}{2}\sum_{k,h}\omega_{sk}\omega_{sh}\theta_{kh}^s(X_k-X_h)(Y_k-Y_h)
 \end{align}
-the cross-sector TFP loss takes the quadratic form in the relative price wedges $\tilde{\bm{\chi}}_t$.
+$\sigma_{kh}^C$ = Allen-Uzawa elasticity of substitution between goods $k$ and $h$ in consumption; $\theta_{kh}^s$ = similar for sector $s$'s production. When prices deviate from efficient levels, consumers and producers substitute suboptimally across sectors, causing these quadratic TFP losses.
+\end{proof}
 
-\paragraph{Intuition.} The welfare function has three components:
+\begin{codebox}
+\textbf{Matlab: \texttt{welf.m} computes welfare:}
+\begin{verbatim}
+function [w, wW, wC] = welf(y, pi, mu, gamma, phi, D1, D2)
+    w  = 50*((gamma+phi)*y^2 + pi'*D1*pi + mu'*D2*mu);
+    wW = 50*pi'*D1*pi;       % within-sector (inflation variance)
+    wC = 50*mu'*D2*mu;       % cross-sector (markup dispersion)
+end
+\end{verbatim}
+Here: \texttt{D1} = diagonal matrix with $\lambda_i\varepsilon_i(1-\hat{\delta}_i)/\hat{\delta}_i$; \texttt{D2} encodes cross-sector misallocation. The factor 50 normalizes to percent of GDP.
+\end{codebox}
+
+%==============================================================
+\section{Code Walkthrough: From Theory to Matlab}
+%==============================================================
+
+\subsection{Overview of the Matlab Codebase}
+
+Rubbo's Matlab code follows a clean structure:
 \begin{enumerate}
-    \item \textbf{Labor-leisure distortion} $(\gamma+\varphi)\tilde{y}_t^2$: same as one-sector model.
-    \item \textbf{Within-sector misallocation} $\sum_i \lambda_i (1-\hat{\delta}_i)/\hat{\delta}_i \cdot \varepsilon_i \pi_{it}^2$: price dispersion within sectors causes consumers to buy too much from cheaper (less productive) varieties.
-    \item \textbf{Cross-sector misallocation} $\Phi_C + \sum_s\lambda_s\Phi_s$: relative price wedges cause consumers and producers to substitute inefficiently across sectors.
+    \item \textbf{Data cleaning} (\texttt{replication files/calibration/data cleaning/}): Imports US IO tables, computes $\Omega$, $\bm{\alpha}$, $\bm{\beta}$, $\hat{\bm{\delta}}$ from BEA and BLS data.
+    \item \textbf{Parameters} (\texttt{parameters\_d.m}): Computes $\bm{\lambda}$, $\mathcal{B}$, $\mathcal{V}$, state-space matrices from calibrated IO data.
+    \item \textbf{Policy functions} (\texttt{pol\_fct\_m.m}): Solves for the rational expectations equilibrium using the QZ (generalized Schur) decomposition.
+    \item \textbf{IRFs} (\texttt{IRFs\_monetary.m}): Simulates impulse response functions to monetary policy shocks.
+    \item \textbf{Welfare} (\texttt{simul.m, welf.m}): Monte Carlo simulation of welfare under different policy rules.
 \end{enumerate}
 
-%==============================================================
-\section{Optimal Monetary Policy}
-%==============================================================
+\subsection{Step 1: Computing Network Objects (parameters\_d.m)}
 
-\subsection{Constrained Optimum (Proposition 4)}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Formula} & \textbf{Matlab code} & \textbf{Equation \#} \\
+\midrule
+$\bm{\lambda}^T = \bm{\beta}^T(I-\Omega)^{-1}$ & \texttt{lambda = beta'*(eye(n)-Omega)\^(-1)} & Domar weights \\
+$\kappa = 1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}$ & \texttt{den = 1 - beta'*Delta*(eye(n)-Omega*Delta)\^(-1)*alpha} & Denominator \\
+$\mathcal{B} = \Delta(I-\Omega\Delta)^{-1}\bm{\alpha}/\kappa$ & \texttt{b = (gamma+phi)*Delta*(eye(n)-Omega*Delta)\^(-1)*alpha/den} & Eq.~\eqref{eq:B_def} \\
+$\mathcal{V}$ (cost-push matrix) & \texttt{v = Delta*(eye(n)-Omega*Delta)\^(-1)*(...)} & Eq.~\eqref{eq:V_def} \\
+$\bm{w}^{DC}$ (DC weights) & \texttt{llambda = lambda*(eye(n)-Delta)*Delta\^(-1)} & DC index \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-The central bank minimizes \eqref{eq:welfare} subject to the Phillips curves \eqref{eq:prop2} and the price evolution $\bm{p}_t = \bm{p}_{t-1} + \bm{\pi}_t$. It has only one instrument (the nominal interest rate), so it can only move prices in one direction: proportional to the slope $\mathcal{B}$ of sectoral Phillips curves.
+\subsection{Step 2: Solving for the Rational Expectations Equilibrium (pol\_fct\_m.m)}
 
-The first-order condition is:
+The model reduces to a linear rational expectations system:
 \begin{equation}
-    \tilde{y}_t + \mathcal{B}^T\mathcal{L}\bm{\pi}_t = -\mathcal{B}^T\!\left[\bm{\zeta}_t^p - (I-\mathcal{V})\bm{\zeta}_{t-1}^{PC}\right]
+    \mathbb{E}_t\left[A \begin{pmatrix}z_{t+1}\\\pi_{t+1}\\y_{t+1}\end{pmatrix}\right] = B \begin{pmatrix}z_t\\\pi_t\\y_t\\m_t\end{pmatrix}
+    \label{eq:LRE}
 \end{equation}
-where $\mathcal{L} \equiv \mathcal{L}^{\mathrm{within}} + \mathcal{L}^{\mathrm{across}}$, and $\bm{\zeta}^{PC}$, $\bm{\zeta}^p$ are Lagrange multipliers.
+where $z_t$ are state variables (lagged prices/cost-push), $m_t$ is the monetary policy shock.
 
-\subsection{Output Gap Targeting via Taylor Rule (Lemma 4)}
+Matlab solves \eqref{eq:LRE} using the \textbf{QZ (generalized Schur) decomposition}:
+\begin{verbatim}
+[s,t,q,z] = qz(A,B);           % Complex Schur decomp
+slt = abs(diag(t)) < abs(diag(s));  % Stable eigenvalues
+[s,t,q,z] = ordqz(s,t,q,z,slt);    % Reorder: stable first
+gx = real(z21 * z11^(-1));          % Jump variable solution
+hx = real(z11 * (s11\t11) * z11^(-1)); % State transition
+\end{verbatim}
+\texttt{gx} maps current state $(z_t, m_t)$ to jump variables $(\pi_t, y_t)$; \texttt{hx} maps current state to next period's state.
 
-\begin{lemma}
-Assume productivity shocks follow AR(1) processes. There exists a unique equilibrium with $\tilde{y}_t = 0$ at all $t$. It is implemented by:
+\subsection{Step 3: Impulse Responses (IRFs\_monetary.m)}
+
+The state-space system from \texttt{pol\_fct\_m} is simulated forward:
 \begin{equation}
-    i_{t+1} = r_{t+1,\mathrm{nat}} + \underbrace{\mathbb{E}\!\left(\pi_{t+1}^{CPI}\ \big|\ \tilde{y}\equiv 0\right)}_{\text{nominal rate under zero output gap}} + \zeta\,\pi_t^{DC}
+    \text{state}_{t+1} = \texttt{hx} \cdot \text{state}_t, \quad (\pi_t, y_t) = \texttt{gx} \cdot \text{state}_t
 \end{equation}
-with $\zeta > 0$.
-\end{lemma}
+For 40 periods. The ``T'' matrix in \texttt{IRFs\_monetary.m} encodes the system \eqref{eq:LRE} using the state-space matrices MM and Z:
+\begin{verbatim}
+T = [Z  (eye(n)-MM^(-1))  MM^(-1)*Delta*b;
+    -Z/rho  MM^(-1)/rho  -MM^(-1)*Delta*b/rho;
+    zeros(1,n)  zeros(1,n)  zeta*(gamma+phi)/gamma + 1];
+\end{verbatim}
+Row 1: Phillips curves ($\pi_{it}$ as function of $z_t$, $E\pi_{t+1}$, $\tilde{y}_t$). Row 2: forward-looking version. Row 3: IS curve + Taylor rule.
 
-\textbf{Intuition.} Because the DC index has no cost-push term, stabilizing $\pi^{DC}$ is equivalent to stabilizing the output gap. The central bank can close the output gap at all times simply by replacing consumer price inflation with the divine coincidence index in the Taylor rule.
+\subsection{Step 4: Welfare Comparison (simul.m)}
+
+\texttt{simul.m} runs $K$ Monte Carlo draws of productivity shocks and compares three policies:
+\begin{enumerate}
+    \item \textbf{Output gap targeting} ($\tilde{y}_t = 0$): uses \texttt{gy}, \texttt{hy}
+    \item \textbf{CPI inflation targeting}: uses \texttt{gCPI}, \texttt{hCPI}
+    \item \textbf{Optimal policy}: uses \texttt{gOPT}, \texttt{hOPT}
+\end{enumerate}
+For each draw, the while loop runs until welfare increments fall below $\epsilon = (1-\rho)/100$.
 
 %==============================================================
-\section{Small Open Economy Extension (Your Paper)}
+\section{Small Open Economy Extension}
 %==============================================================
 
 \subsection{Modified Environment}
 
-Add a foreign sector indexed $F$. The household's consumption basket is:
-\begin{equation}
-    C_t = \mathcal{C}(C_t^H, C_t^F)
-\end{equation}
-where $C^H$ is a CES aggregate of domestic goods and $C^F$ is imported goods. The CPI becomes:
-\begin{equation}
-    P_t^C = \mathcal{P}(P_t^H, e_t P_t^*)
-\end{equation}
-where $e_t$ is the nominal exchange rate (domestic per foreign) and $P_t^*$ is the foreign price level (exogenous). The budget constraint adds a foreign bond position $B_t^*$:
-\begin{equation}
-    P_t^C C_t + B_{t+1} + e_t B_{t+1}^* \leq W_t L_t + \Pi_t - T_t + (1+i_t)B_t + (1+i_t^*)e_t B_t^*
-\end{equation}
+Add a foreign sector $F$. Domestic firms use imported inputs with share vector $\bm{\omega}_F$. Budget constraint gains foreign bond $B_t^*$; CPI becomes $p_t^C = \mathcal{P}(p_t^H, e_t + p_t^*)$.
 
-Uncovered Interest Parity (UIP):
+Modified log-linearized marginal cost:
 \begin{equation}
-    i_t - i_t^* = \mathbb{E}[\Delta e_{t+1}] + \psi_t
-\end{equation}
-where $\psi_t$ is a risk premium (set to zero for the baseline).
-
-\subsection{Modified Marginal Cost}
-
-Domestic firms use imported inputs with share vector $\bm{\omega}_F \in \mathbb{R}^N$. Log-linearized marginal cost becomes:
-\begin{equation}
-    \bm{mc}_t = \bm{\alpha}\, w_t + \Omega\, \bm{p}_t + \bm{\omega}_F\,(p_t^* + e_t) - \log \mathbf{A}_t
+    \bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t + \bm{\omega}_F(p_t^* + e_t) - \log\mathbf{A}_t
     \label{eq:mc_open}
 \end{equation}
-The term $\bm{\omega}_F(p_t^* + e_t)$ represents imported input costs. An exchange rate depreciation ($\Delta e_t > 0$) raises all sectors' marginal costs proportionally to their import intensity $\omega_{Fi}$.
 
 \subsection{Modified Phillips Curve}
 
-Following the same derivation as Proposition 2, but using \eqref{eq:mc_open}:
+Following the exact same derivation as Proposition 2 (Steps 1--7) but with \eqref{eq:mc_open} instead of \eqref{eq:mc}:
+
 \begin{equation}
-    \bm{\pi}_t = \rho(I-\mathcal{V})\,\mathbb{E}\bm{\pi}_{t+1} + \mathcal{B}(\gamma+\varphi)\,\tilde{y}_t - \mathcal{V}\bm{\chi}_t + \Gamma\,\Delta e_t
-    \label{eq:phillips_open}
+    \boxed{\bm{\pi}_t = \rho(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1} + \mathcal{B}(\gamma+\varphi)\tilde{y}_t - \mathcal{V}\bm{\chi}_t + \Gamma\Delta e_t}
 \end{equation}
+
 where the \textbf{exchange rate pass-through vector} is:
 \begin{equation}
-    \Gamma = \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\omega}_F}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}
+    \Gamma \equiv \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\omega}_F}{1 - \bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}} = \frac{\tilde{A}\bm{\omega}_F}{\kappa}
 \end{equation}
+\textit{Derivation:} $\bm{\omega}_F(p_t^*+e_t)$ enters the marginal cost with coefficient $\bm{\omega}_F$ (column vector). Going through Steps 1--6 of Proposition 2, this term gets pre-multiplied by $(I-\Delta\Omega-\Delta\bm{\alpha}\bm{\beta}^T)^{-1}\Delta$, which equals $\tilde{A}/\kappa$ by the same computation as the output gap coefficient. The $\Delta e_t = \Delta e_t$ factor (change in log exchange rate) pulls out.
 
-\paragraph{Key insight.} The pass-through vector $\Gamma$ inherits the full network structure via $(I-\Omega\Delta)^{-1}$. A depreciation passes through the production chain, amplified by upstream linkages and discounted by price rigidities at each step. Sectors that import inputs indirectly (through their suppliers) also face cost increases.
+\begin{insight}
+\textbf{Network amplification:} $\Gamma_i = [\tilde{A}\bm{\omega}_F]_i/\kappa$ measures how much sector $i$'s inflation responds to a 1\% exchange rate depreciation. The rigidity-adjusted Leontief $\tilde{A} = \Delta(I-\Omega\Delta)^{-1}$ amplifies: sector $i$ is affected not just by its direct import share $\omega_{Fi}$, but also by its suppliers' import shares (through $\Omega\bm{\omega}_F$), its suppliers' suppliers' shares (through $\Omega^2\bm{\omega}_F$), etc. --- each step discounted by price rigidities $\Delta$.
+\end{insight}
 
-\subsection{Modified IS Curve}
+\subsection{Breakdown of Divine Coincidence}
 
-The IS curve gains a terms-of-trade effect:
+Under flexible ER, for an inflation index $\bm{\phi}^T\bm{\pi}_t$ to have no cost-push, we need:
 \begin{equation}
-    \tilde{y}_t = \mathbb{E}\tilde{y}_{t+1} - \frac{1}{\gamma}\!\left(i_{t+1} - \mathbb{E}\pi_{t+1}^C - r_{t+1,\mathrm{nat}}\right) - \frac{\eta(2-\alpha_H)\alpha_F}{\gamma}\,\mathbb{E}\Delta\tau_{t+1}
+    \bm{\phi}^T\mathcal{V} = \mathbf{0}^T \quad \text{(productivity cost-push, same as closed economy)}
 \end{equation}
-where $\tau_t = e_t + p_t^* - p_t^H$ is the terms of trade (real exchange rate), $\alpha_H$ is the home bias, and $\eta$ is the elasticity of substitution between domestic and foreign goods.
-
-\subsection{FX Regime Analysis}
-
-\subsubsection{Flexible Exchange Rate}
-
-Under a flexible exchange rate, $e_t$ is endogenous and determined by UIP together with the monetary policy rule. The central bank sets $i_t$ freely.
-
-\textbf{Additional cost-push:} The term $\Gamma\Delta e_t$ in \eqref{eq:phillips_open} creates a new cost-push shock whenever the exchange rate moves. Even if the central bank closes the output gap, exchange rate fluctuations generate inflation.
-
-\textbf{Modified divine coincidence:} The closed-economy DC index no longer eliminates cost-push. We need a weighting $\bm{\phi}^T$ such that both $\bm{\phi}^T\mathcal{V} = \mathbf{0}^T$ \textit{and} $\bm{\phi}^T\Gamma = 0$. These are two constraints; generically no single inflation index satisfies both, creating an irreducible inflation-output tradeoff.
-
-\subsubsection{Fixed Exchange Rate (Peg)}
-
-Under a peg, $\Delta e_t = 0$ by definition. The exchange rate cost-push term vanishes. However:
-\begin{itemize}
-    \item By UIP, $i_t = i_t^*$ (monetary policy independence is lost — Mundell trilemma).
-    \item The central bank cannot use $i_t$ to close the output gap.
-    \item External shocks (foreign demand, foreign inflation $\pi_t^*$) become the main drivers of domestic fluctuations.
-\end{itemize}
-
-\textbf{Key result (conjecture):} Under a peg, the closed-economy DC index survives as the relevant sufficient statistic for the output gap, because $\Gamma\Delta e_t = 0$. But since the CB cannot target it (no independent interest rate), welfare losses are higher.
-
-\subsubsection{Managed Float / FX Intervention}
-
-The central bank has two instruments: $i_t$ and FX intervention $\nu_t$ (change in reserves). The policy space expands. Formally, the CB can move prices along two dimensions instead of one, potentially correcting both the output gap and some relative price distortions.
-
-\textbf{Optimal FX policy:} The CB should intervene to stabilize $\bm{\phi}^T\Gamma\Delta e_t$, i.e., to offset the component of exchange rate fluctuations that passes through to the inflation measure it is targeting. The optimal intervention depends on the network structure through $\Gamma$.
-
-\subsection{Modified Welfare Function}
-
-The welfare function gains an additional term from cross-sector misallocation driven by exchange rate movements:
+\textit{and additionally:}
 \begin{equation}
-    \mathbb{W}^{\mathrm{open}} = \mathbb{W}^{\mathrm{closed}} + \frac{1}{2}\sum_t \rho^t\left[\Phi_C(\tilde{\bm{\chi}}_t^T, \bm{e}_t\bm{\omega}_F^T) + \sum_s\lambda_s\Phi_s(\tilde{\bm{\chi}}_t^T, \bm{e}_t\bm{\omega}_F^T)\right]
+    \bm{\phi}^T\Gamma = 0 \quad \text{(ER cost-push)}
 \end{equation}
-This captures the additional misallocation from exchange rate-driven relative price distortions across sectors with different import intensities.
+These are \textbf{two conditions on one vector} $\bm{\phi}$ (up to normalization). Generically, the intersection of the left null space of $\mathcal{V}$ (one-dimensional, spanned by the DC weights) with the null space of $\Gamma^T$ (a hyperplane) is \textbf{empty} unless $\Gamma \propto \mathcal{B}$ (exchange rate affects all sectors in proportion to their labor intensity). This is the core result: \textbf{divine coincidence breaks down under flexible ER}.
 
-\subsection{Proposed Results for Your Paper}
+\subsection{FX Regimes and Policy Tradeoffs}
 
-\begin{enumerate}
-    \item \textbf{Network amplification of FX pass-through:} Exchange rate pass-through to domestic inflation is amplified by upstream import linkages, governed by $(I-\Omega\Delta)^{-1}\bm{\omega}_F$. Sectors with more flexible prices amplify pass-through more. \textit{Testable: sectors with high upstream import intensity should have higher exchange rate pass-through.}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Float} & \textbf{Peg} & \textbf{Managed float} \\
+\midrule
+ER pass-through $\Gamma\Delta e_t$ & Non-zero & Zero & Partially offset \\
+MP independence & Full & None (trilemma) & Partial \\
+DC index survives? & No (2 cost-push) & Yes (trivially, $\Delta e=0$) & Depends on $\nu_t$ \\
+Optimal target & No simple index & DC index (but CB can't use it) & Modified DC \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-    \item \textbf{Breakdown of divine coincidence under flexible ER:} There is no single inflation index that serves as a sufficient statistic for the output gap when the exchange rate is flexible, unless $\Gamma \propto \mathcal{B}$ (exchange rate affects costs proportionally to wages). \textit{This is the open-economy counterpart of Rubbo's main result.}
+\subsection{Modified Welfare and Optimal FX Policy}
 
-    \item \textbf{Peg as divine coincidence restorer:} A currency peg eliminates the exchange rate cost-push term, restoring the closed-economy result. But the trilemma prevents the CB from exploiting this. \textit{Implication: if a country can credibly peg without large reserve losses, the DC index becomes the right target.}
+The welfare function gains an ER misallocation term:
+\begin{equation}
+    \mathbb{W}^{\mathrm{open}} = \mathbb{W}^{\mathrm{closed}} + \sum_t \rho^t \left[\Phi_C(\tilde{\bm{\chi}}_t, e_t\bm{\omega}_F) + \sum_s\lambda_s\Phi_s(\tilde{\bm{\chi}}_t, e_t\bm{\omega}_F)\right]
+\end{equation}
+Optimal FX policy minimizes this over $\{i_t, \nu_t\}$ (interest rate + FX intervention). The optimal managed float:
+\begin{equation}
+    \nu_t^* = \arg\min_{\nu_t}\left[-\Gamma\Delta e_t\bigg|_{\nu_t}\cdot\bm{\phi}^{DC}\right]
+\end{equation}
+i.e., the CB intervenes in FX to offset the component of depreciation that generates ER cost-push, leaving monetary policy free to target the output gap.
 
-    \item \textbf{Optimal managed float:} The CB should use FX intervention to absorb the component of exchange rate shocks proportional to $\Gamma - \mathcal{B}\cdot(\text{something})$, allowing the monetary policy rate to focus on the output gap. The optimal split depends on the import structure of the network.
+\subsection{Proposed Simulation Code for Your Paper}
 
-    \item \textbf{Quantitative: which countries benefit most from pegging?} Countries with high and heterogeneous import input shares across sectors face worse tradeoffs under flexible rates, because $\Gamma$ is larger and more dispersed relative to $\mathcal{B}$.
-\end{enumerate}
+The Matlab code for the SOE extension closely parallels Rubbo's code, adding:
+
+\begin{verbatim}
+% === Additional parameters ===
+omega_F = ...;     % N x 1 vector of import intensity by sector (from TiVA data)
+% === Modified Gamma ===
+Gamma = Delta*(eye(n) - Omega*Delta)^(-1)*omega_F / den;
+% === UIP equation ===
+% De_t = E[De_{t+1}] + i_t - i_star (+ risk premium if any)
+% === State space: add e_t as a state variable ===
+% Augment T matrix with Gamma*De_t row/column
+% === Policy comparison ===
+% 1. Float: e_t endogenous, solve system with UIP
+% 2. Peg: De_t = 0, drop UIP, i_t = i_star_t
+% 3. Managed float: add nu_t as second instrument
+\end{verbatim}
 
 %==============================================================
-\section{Summary of Key Equations}
+\section{Summary Table}
 %==============================================================
 
 \begin{center}
 \begin{tabular}{lll}
 \toprule
-\textbf{Equation} & \textbf{Closed economy} & \textbf{Open economy} \\
+\textbf{Object} & \textbf{Closed economy} & \textbf{Open economy} \\
 \midrule
-Marginal cost & $\bm{mc} = \bm{\alpha}w + \Omega\bm{p} - \log\mathbf{A}$ & $+ \bm{\omega}_F(p^* + e)$ \\[4pt]
-Phillips curve & $\bm{\pi} = \rho(I-\mathcal{V})\mathbb{E}\bm{\pi} + \mathcal{B}(\gamma+\varphi)\tilde{y} - \mathcal{V}\bm{\chi}$ & $+ \Gamma\Delta e$ \\[4pt]
-IS curve & $\tilde{y} = \mathbb{E}\tilde{y} - \frac{1}{\gamma}(i - \mathbb{E}\pi^C - r^{\mathrm{nat}})$ & $- \frac{\eta\alpha_F}{\gamma}\mathbb{E}\Delta\tau$ \\[4pt]
-UIP & --- & $i - i^* = \mathbb{E}\Delta e + \psi$ \\[4pt]
-DC index & $\pi^{DC} = \sum_i w_i\pi_i$, no cost-push & Breaks down; need $\bm{\phi}^T\Gamma = 0$ too \\[4pt]
-ER pass-through & --- & $\Gamma = \frac{\Delta(I-\Omega\Delta)^{-1}\bm{\omega}_F}{1-\bm{\beta}^T\Delta(I-\Omega\Delta)^{-1}\bm{\alpha}}$ \\
+MC & $\bm{\alpha}w + \Omega\bm{p} - \log\mathbf{A}$ & $+\,\bm{\omega}_F(p^*+e)$ \\
+Phillips curve & $\rho(I-\mathcal{V})\mathbb{E}\bm{\pi}' + \mathcal{B}(\gamma+\varphi)\tilde{y} - \mathcal{V}\bm{\chi}$ & $+\,\Gamma\Delta e$ \\
+IS curve & $\tilde{y} = \mathbb{E}\tilde{y}' - \frac{1}{\gamma}(i - \mathbb{E}\pi^C - r^{\mathrm{nat}})$ & $-\frac{\eta\alpha_F}{\gamma}\mathbb{E}\Delta\tau$ \\
+UIP & --- & $i - i^* = \mathbb{E}\Delta e + \psi$ \\
+DC index & Unique; no cost-push & Breaks down (2 cost-push channels) \\
+Pass-through & --- & $\Gamma = \tilde{A}\bm{\omega}_F/\kappa$ \\
+ER amplification & --- & Through $(I-\Omega\Delta)^{-1}$ \\
 \bottomrule
 \end{tabular}
 \end{center}

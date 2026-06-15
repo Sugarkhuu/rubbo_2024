@@ -23,7 +23,6 @@ build/
 *.run.xml
 
 # Keep PDFs that are the actual paper (not build output)
-rubbo_proofs_and_extension.pdf
 !rubbo_2024.pdf
 !appendix_website_2.pdf
 !supplemental_revision.pdf
