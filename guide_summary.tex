@@ -1,0 +1,418 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{parskip}
+
+\geometry{margin=1.1in}
+\onehalfspacing
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{gray!8},
+  frame=single,
+  framerule=0.4pt,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  keepspaces=true,
+  columns=fullflexible,
+}
+
+\newmdenv[backgroundcolor=blue!5,linecolor=blue!25,roundcorner=4pt,skipabove=6pt,skipbelow=6pt]{insight}
+\newmdenv[backgroundcolor=orange!6,linecolor=orange!30,roundcorner=4pt,skipabove=6pt,skipbelow=6pt]{keybox}
+
+\title{\textbf{Production Networks \& Monetary Policy}\\
+\large A Complete Guide: From Scratch to Rubbo (2024) to SOE Extension\\[4pt]
+\normalsize Companion document to \texttt{production\_network\_guide.m}}
+\author{Working Notes}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=================================================================
+\section{What the Matlab file contains}
+%=================================================================
+
+The file \texttt{production\_network\_guide.m} is a single runnable Matlab script
+(run section by section with \texttt{Ctrl+Enter}) that covers three topics:
+
+\begin{enumerate}
+  \item \textbf{Part 1}: Production networks from scratch
+  \item \textbf{Part 2}: Rubbo (2024) formula $\to$ code, line by line
+  \item \textbf{Part 3}: Small open economy extension (your paper)
+\end{enumerate}
+
+Every formula is explained in plain English \emph{before} the code appears.
+The file also contains three utility functions at the end:
+\texttt{soe\_parameters()}, \texttt{optimal\_fx\_intervention()}, and
+\texttt{plot\_welfare\_decomposition()}.
+
+%=================================================================
+\section{Part 1 — Production Networks from Scratch}
+%=================================================================
+
+\subsection{The IO matrix $\Omega$}
+
+The economy is a web of industries. The input-output (IO) matrix $\Omega$
+encodes who buys from whom:
+\[
+  \Omega_{ij} = \text{fraction of sector } i\text{'s total costs spent on sector } j\text{'s goods}
+\]
+Each row of $\Omega$ is sector $i$'s ``shopping basket'' for intermediate inputs.
+The rest of sector $i$'s costs go to workers: the \textbf{labor share} is
+$\alpha_i = 1 - \sum_j \Omega_{ij}$.
+
+\begin{keybox}
+\textbf{Cost identity:} for every sector $i$,
+$\alpha_i + \sum_j \Omega_{ij} = 1$
+(all revenue goes to either labor or intermediate inputs).
+\end{keybox}
+
+\subsection{The Leontief inverse}
+
+If Energy prices rise by 1\%, Manufacturing's costs go up not just by
+$\Omega_{\text{Manuf,Energy}}$ (direct effect), but also through indirect chains:
+Manufacturing buys Services which uses Energy; those Services firms raise their
+prices, which feeds back into Manufacturing's costs, and so on.
+
+The \textbf{Leontief inverse} $(I-\Omega)^{-1}$ captures \emph{all} rounds:
+\[
+  (I-\Omega)^{-1} = I + \Omega + \Omega^2 + \Omega^3 + \cdots
+\]
+where $\Omega^k_{ij}$ is the $k$-step indirect input flow from sector $j$ to sector $i$.
+
+\begin{lstlisting}[caption={Matlab: Leontief inverse}]
+L = inv(eye(n) - Omega);          % exact
+L_approx = eye(n) + Omega + Omega^2 + Omega^3 + ...;  % geometric series
+\end{lstlisting}
+
+\subsection{Domar weights}
+
+The \textbf{Domar weight} of sector $i$ is its total sales as a fraction of GDP,
+counting both direct sales to consumers and indirect sales through other producers:
+\[
+  \lambda^T = \beta^T(I-\Omega)^{-1}
+\]
+Key property: $\sum_i \lambda_i > 1$ always, because Domar weights measure
+\emph{gross} output, not value added.
+
+\begin{lstlisting}[caption={Matlab: Domar weights}]
+lambda = beta' * inv(eye(n) - Omega);    % 1 x N row vector
+\end{lstlisting}
+
+\begin{insight}
+\textbf{Why Domar weights matter for MP:}
+The output gap equals minus the Domar-weighted average markup (Rubbo Lemma 3):
+$(\gamma+\varphi)\tilde{y}_t = -\sum_i \lambda_i \mu_{it}$.
+An upstream sector (large $\lambda_i$) causes more macroeconomic damage when it
+prices above marginal cost than a downstream sector of the same direct size.
+\end{insight}
+
+\subsection{TFP propagation through the network (Lemma 1)}
+
+Natural output is Domar-weighted TFP:
+\[
+  y_{\text{nat}} = \frac{1+\varphi}{\gamma+\varphi}\,\lambda^T \log \mathbf{A}
+\]
+A 1\% TFP gain in sector $i$ raises natural output by
+$\frac{1+\varphi}{\gamma+\varphi}\lambda_i$, which is \emph{larger} than
+$\frac{1+\varphi}{\gamma+\varphi}\beta_i$ because $\lambda_i > \beta_i$:
+the network amplifies the effect of upstream sectors.
+
+%=================================================================
+\section{Part 2 — Rubbo (2024): Formula to Matlab, Line by Line}
+%=================================================================
+
+\subsection{Effective Calvo parameters $\hat\delta_i$}
+
+In the Calvo model, sector $i$ resets its price with probability $\delta_i$ per
+period. The log-linearized model uses a slightly adjusted parameter:
+\[
+  \hat\delta_i = \frac{\delta_i(1-\rho(1-\delta_i))}{1-\rho\,\delta_i(1-\delta_i)}
+\]
+For $\rho \approx 1$ this is very close to $\delta_i$. In matrix form,
+$\Delta = \mathrm{diag}(\hat\delta_1,\ldots,\hat\delta_N)$.
+
+\begin{lstlisting}[caption={Matlab: effective Calvo parameters}]
+hat_delta = delta .* (1 - rho*(1-delta)) ./ (1 - rho*delta.*(1-delta));
+Delta = diag(hat_delta);
+\end{lstlisting}
+
+\subsection{The rigidity-adjusted Leontief $(I-\Omega\Delta)^{-1}$}
+
+This is the \textbf{central object} in Rubbo's Phillips curve. Compare:
+\begin{align*}
+  \text{Standard Leontief:}\quad &(I-\Omega)^{-1} = I + \Omega + \Omega^2 + \cdots\\
+  \text{Rigidity-adjusted:}\quad &(I-\Omega\Delta)^{-1} = I + \Omega\Delta + (\Omega\Delta)^2 + \cdots
+\end{align*}
+Each round of the supply chain is now weighted by $\Delta$: a sticky-price sector
+(small $\hat\delta_j$) absorbs cost shocks into its markup rather than passing them on,
+so the cost ripple through the network is attenuated.
+
+The key intermediate matrix appearing everywhere in Rubbo's formulas:
+\[
+  \widetilde{A} \equiv \Delta(I-\Omega\Delta)^{-1}
+\]
+
+\begin{lstlisting}[caption={Matlab: rigidity-adjusted Leontief and key intermediate}]
+L_rigid = inv(eye(n) - Omega*Delta);
+A_tilde = Delta * L_rigid;
+kappa   = 1 - beta'*A_tilde*alpha;    % GE normalization scalar
+\end{lstlisting}
+
+\subsection{Phillips curve slope $\mathbf{b}$ (Proposition 2)}
+
+The sector-level Phillips curves are (Proposition 2):
+\[
+  \boldsymbol\pi_t = \rho(I-\mathcal{V})\,\mathbb{E}\boldsymbol\pi_{t+1}
+    + \mathcal{B}(\gamma+\varphi)\,\tilde{y}_t - \mathcal{V}\boldsymbol\chi_t
+\]
+The Phillips curve slope $\mathcal{B}$ (vector):
+\[
+  \mathcal{B} = \frac{\widetilde{A}\,\boldsymbol\alpha}{\kappa}
+  \qquad \text{where }\kappa = 1 - \beta^T\widetilde{A}\boldsymbol\alpha
+\]
+$\mathcal{B}_i$ = how much sector $i$'s inflation rises per unit output gap.
+Larger when: (a) prices are flexible (large $\hat\delta_i$, captured in $\Delta$);
+(b) labor costs are important (large $\alpha_i$); (c) the sector's suppliers
+also have (a) and (b) (captured by $(I-\Omega\Delta)^{-1}$).
+
+\begin{lstlisting}[caption={Matlab: Phillips curve slope (matches parameters\_d.m)}]
+b = (gamma+phi) * A_tilde * alpha / kappa;    % N x 1 vector
+\end{lstlisting}
+
+\subsection{Cost-push matrix $\mathbf{v}$ (Proposition 2)}
+
+The cost-push matrix $\mathcal{V}$ (called \texttt{v} in Rubbo's code) multiplies
+the cost-push state $\boldsymbol\chi_t = (I-\Omega)^{-1}\log\mathbf{A}_t - \mathbf{p}_{t-1}$:
+\[
+  \mathcal{V} = \widetilde{A}\!\left(\boldsymbol\alpha\,
+    \frac{\lambda^T - \beta^T\widetilde{A}}{\kappa} - I\right)
+\]
+
+\textbf{Key property}: rows of $\mathcal{V}(I-\Omega)$ sum to zero.
+This means \emph{uniform} cost shocks (all sectors equally productive) generate
+zero cost-push inflation — only \emph{relative} price distortions matter.
+
+\begin{lstlisting}[caption={Matlab: cost-push matrix (matches parameters\_d.m)}]
+v = A_tilde * (alpha*(lambda - beta'*A_tilde)/kappa - eye(n));
+% Verification: v*(I-Omega)*ones should be zero
+disp(v*(eye(n)-Omega)*ones(n,1))
+\end{lstlisting}
+
+\subsection{Divine Coincidence index weights (Proposition 1)}
+
+The DC index $\pi^{DC}_t = (\mathbf{w}^{DC})^T\boldsymbol\pi_t$ is the \textbf{unique}
+inflation measure satisfying a cost-push-free Phillips curve:
+\[
+  \pi^{DC}_t = \rho\,\mathbb{E}\pi^{DC}_{t+1} + \frac{\gamma+\varphi}{\Lambda^{DC}}\,\tilde{y}_t
+\]
+DC weights (unnormalized): $w^{DC}_i = \lambda_i\,\dfrac{1-\hat\delta_i}{\hat\delta_i}$
+
+Sectors get higher DC weight when: (i) $\lambda_i$ is large (big network footprint);
+(ii) $\hat\delta_i$ is small (sticky prices $\Rightarrow$ markups respond more to inflation).
+
+\begin{lstlisting}[caption={Matlab: DC index weights (matches parameters\_d.m)}]
+llambda    = lambda * (eye(n)-Delta) * inv(Delta);   % 1 x N, unnormalized
+dc_weights = llambda / sum(llambda);                  % normalize
+phi_DC     = (gamma+phi) / sum(llambda);              % DC Phillips slope
+\end{lstlisting}
+
+\subsection{System matrices MM and QZ solution}
+
+After assembling all equations, the model becomes a linear RE system
+$A\,\mathbb{E}[x_{t+1}] = B\,x_t$. Rubbo builds the system matrix using:
+\[
+  MM = I + \Delta\,\mathtt{v}\,(I-\Omega)
+\]
+and solves via the QZ (generalized Schur) decomposition. The solution:
+\[
+  \text{(jump variables)}_t = \mathtt{gx} \cdot \text{state}_t, \qquad
+  \text{state}_{t+1} = \mathtt{hx} \cdot \text{state}_t
+\]
+
+\begin{lstlisting}[caption={Matlab: system matrix and QZ solve}]
+MM = eye(n) + Delta*v*(eye(n)-Omega);
+[S,T,Q,Z] = qz(A,B);             % QZ decomposition
+slt = abs(diag(T)) < abs(diag(S));% stable eigenvalues
+[S,T,Q,Z] = ordqz(S,T,Q,Z,slt);  % reorder: stable first
+gx = real(Z21 * Z11^(-1));        % jump variables = gx * state
+hx = real(Z11 * (S11\T11) * Z11^(-1));  % state transition
+\end{lstlisting}
+
+%=================================================================
+\section{Part 3 — Small Open Economy Extension}
+%=================================================================
+
+\subsection{Modified marginal cost}
+
+Domestic firms now also use imported inputs with cost share $\omega_{Fi}$.
+Import costs = world price $p^*$ + log exchange rate $e$ (depreciation $\Rightarrow e$ rises
+$\Rightarrow$ imports more expensive). Modified marginal cost:
+\[
+  \boldsymbol{mc}_t = \boldsymbol\alpha\,w_t + \Omega\,\mathbf{p}_t
+    + \boldsymbol\omega_F(p^*_t + e_t) - \log\mathbf{A}_t
+\]
+\textbf{Same model, one new term.} Everything else follows identically.
+
+\subsection{Exchange rate pass-through vector $\Gamma$}
+
+Going through Steps 1--7 of Proposition 2 with the modified $mc$ gives:
+\[
+  \boxed{\boldsymbol\pi_t = \rho(I-\mathcal{V})\,\mathbb{E}\boldsymbol\pi_{t+1}
+    + \mathcal{B}(\gamma+\varphi)\,\tilde{y}_t - \mathcal{V}\boldsymbol\chi_t
+    + \Gamma\,\Delta e_t}
+\]
+where $\Delta e_t = e_t - e_{t-1}$ (depreciation) and:
+\[
+  \Gamma = \frac{\widetilde{A}\,\boldsymbol\omega_F}{\kappa}
+\]
+\textbf{Same formula as $\mathcal{B}$, but $\boldsymbol\omega_F$ replaces $\boldsymbol\alpha$}.
+This is the key: the derivation is identical because $\omega_F(p^*+e)$ enters $mc$
+in exactly the same position as $\alpha\,w$ — it's just a different cost component.
+
+\begin{lstlisting}[caption={Matlab: ER pass-through vector (SOE extension)}]
+Gamma = A_tilde * omega_F / kappa;    % N x 1
+% Interpretation: Gamma_i = sector i's inflation per 1% depreciation
+% Gamma_i > omega_F_i because indirect import exposure through supply chains
+\end{lstlisting}
+
+\begin{insight}
+\textbf{Network amplification of ER pass-through:}
+$\Gamma_i > \omega_{Fi}$ because the rigidity-adjusted Leontief
+$(I-\Omega\Delta)^{-1}$ captures indirect import exposure:
+sector $i$ is affected not just by its direct import share $\omega_{Fi}$,
+but also by its suppliers' import shares (through $\Omega\boldsymbol\omega_F$),
+its suppliers' suppliers (through $\Omega^2\boldsymbol\omega_F$), and so on,
+each step discounted by price rigidities along the chain.
+\end{insight}
+
+\subsection{Breakdown of divine coincidence}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Condition for no cost-push} & \textbf{Closed economy} & \textbf{Open + float}\\
+\midrule
+No productivity cost-push: $\boldsymbol\phi^T\mathcal{V} = \mathbf{0}^T$ & Required & Required\\
+No ER cost-push: $\boldsymbol\phi^T\Gamma = 0$ & n/a & \textbf{Also required}\\
+\midrule
+Number of conditions on $\boldsymbol\phi$ & 1 & \textbf{2}\\
+Solution & Unique DC index & Generically \textbf{none}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The left null space of $\mathcal{V}$ is one-dimensional (spanned by the DC weights).
+The constraint $\boldsymbol\phi^T\Gamma=0$ is a hyperplane in $\mathbb{R}^N$.
+Generically these do not intersect, so \textbf{no single inflation index eliminates
+both cost-push channels under a float}.
+
+\textbf{Exception}: if $\Gamma \propto \mathcal{B}$ (ER affects sectors in exact proportion
+to their labor intensity), divine coincidence survives. With real TiVA data: no.
+
+\subsection{Three FX regimes}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{Float} & \textbf{Peg} & \textbf{Managed float}\\
+\midrule
+ER cost-push $\Gamma\Delta e_t$ & Non-zero & Zero ($\Delta e=0$) & Partially offset\\
+MP independence & Full & None (trilemma) & Partial\\
+DC index survives? & No (2 cost-push channels) & Yes (trivially) & Modified DC\\
+Optimal target & No simple index & DC index (but no MP instrument) & Use both $i_t$ and $\nu_t$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under \textbf{managed float}, the CB uses FX intervention $\nu_t$ as a second instrument.
+Modified UIP: $i_t - i^*_t = \mathbb{E}[\Delta e_{t+1}] + \psi_t + \nu_t$.
+The optimal intervention neutralizes the ER cost-push on DC inflation:
+\[
+  \nu_t^* = (\mathbf{w}^{DC})^T\Gamma \cdot \Delta e_t
+\]
+This restores a \textbf{modified divine coincidence}: with $\nu_t^*$, the CB can
+independently target the output gap (via $i_t$) and eliminate ER cost-push (via $\nu_t$).
+
+\subsection{UIP and IS curve (open economy)}
+
+\textbf{UIP:}
+\[
+  i_t - i^*_t = \mathbb{E}_t[\Delta e_{t+1}] + \psi_t + \nu_t
+\]
+
+\textbf{IS curve} (modified from closed economy):
+\[
+  \tilde{y}_t = \mathbb{E}_t\tilde{y}_{t+1} - \frac{1}{\gamma}(i_t - \beta^T\mathbb{E}_t\boldsymbol\pi_{t+1} - r^{\text{nat}}_t)
+    - \frac{\alpha_F}{\gamma}\,\mathbb{E}_t[\Delta e_{t+1}]
+\]
+where $\alpha_F = \beta^T\boldsymbol\omega_F$ is the import share in the CPI.
+The last term: expected ER depreciation $\Rightarrow$ expected rise in import costs
+$\Rightarrow$ fall in real consumption $\Rightarrow$ lower output gap.
+
+%=================================================================
+\section{Formula-to-Code Quick Reference}
+%=================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{ll}
+\toprule
+\textbf{Formula} & \textbf{Matlab code}\\
+\midrule
+$L = (I-\Omega)^{-1}$ & \texttt{L = inv(eye(n)-Omega)}\\
+$\boldsymbol\lambda^T = \boldsymbol\beta^T(I-\Omega)^{-1}$ & \texttt{lambda = beta'*inv(eye(n)-Omega)}\\
+$\hat\delta_i = \delta_i(1-\rho(1-\delta_i))/(1-\rho\delta_i(1-\delta_i))$ & \texttt{hat\_d = delta.*(1-rho*(1-delta))./(1-rho*delta.*(1-delta))}\\
+$\Delta = \mathrm{diag}(\hat\delta)$ & \texttt{Delta = diag(hat\_delta)}\\
+$(I-\Omega\Delta)^{-1}$ & \texttt{inv(eye(n)-Omega*Delta)}\\
+$\widetilde{A} = \Delta(I-\Omega\Delta)^{-1}$ & \texttt{A\_tilde = Delta*inv(eye(n)-Omega*Delta)}\\
+$\kappa = 1 - \boldsymbol\beta^T\widetilde{A}\boldsymbol\alpha$ & \texttt{kappa = 1 - beta'*A\_tilde*alpha}\\
+$\mathcal{B} = (\gamma+\varphi)\widetilde{A}\boldsymbol\alpha/\kappa$ & \texttt{b = (gamma+phi)*A\_tilde*alpha/kappa}\\
+$\mathtt{v} = \widetilde{A}(\boldsymbol\alpha(\boldsymbol\lambda^T - \boldsymbol\beta^T\widetilde{A})/\kappa - I)$ & \texttt{v = A\_tilde*(alpha*(lambda-beta'*A\_tilde)/kappa - eye(n))}\\
+$\mathbf{w}^{DC} \propto \lambda_i(1-\hat\delta_i)/\hat\delta_i$ & \texttt{llambda = lambda*(eye(n)-Delta)*inv(Delta)}\\
+$MM = I + \Delta\,\mathtt{v}(I-\Omega)$ & \texttt{MM = eye(n) + Delta*v*(eye(n)-Omega)}\\
+\midrule
+\multicolumn{2}{c}{\textit{SOE extension (new objects)}}\\
+\midrule
+$\Gamma = \widetilde{A}\,\boldsymbol\omega_F/\kappa$ & \texttt{Gamma = A\_tilde*omega\_F/kappa}\\
+$\alpha_F = \boldsymbol\beta^T\boldsymbol\omega_F$ & \texttt{alpha\_F = beta'*omega\_F}\\
+$(\mathbf{w}^{DC})^T\Gamma \neq 0 \Rightarrow$ DC breaks down & \texttt{dc\_Gamma = dc\_weights*Gamma}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%=================================================================
+\section{Closed vs.\ Open Economy: Summary Table}
+%=================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{Object} & \textbf{Closed economy} & \textbf{Open economy}\\
+\midrule
+Marginal cost & $\boldsymbol\alpha w + \Omega\mathbf{p} - \log\mathbf{A}$ & $+\,\boldsymbol\omega_F(p^*+e)$\\
+Phillips curve & $\rho(I-\mathcal{V})\mathbb{E}\boldsymbol\pi' + \mathcal{B}(\gamma+\varphi)\tilde{y} - \mathcal{V}\boldsymbol\chi$ & $+\,\Gamma\Delta e_t$\\
+ER pass-through $\Gamma$ & n/a & $\widetilde{A}\boldsymbol\omega_F/\kappa$\\
+IS curve & $\tilde{y} = \mathbb{E}\tilde{y}' - (i-\mathbb{E}\pi^C - r^{\text{nat}})/\gamma$ & $-\,(\alpha_F/\gamma)\mathbb{E}[\Delta e']$\\
+New equation & --- & UIP: $i - i^* = \mathbb{E}[\Delta e'] + \psi + \nu$\\
+Divine coincidence & Unique DC index (no cost-push) & Breaks down under float\\
+Pass-through amplifier & --- & $(I-\Omega\Delta)^{-1}$\\
+Optimal FX policy & --- & $\nu_t^* = (\mathbf{w}^{DC})^T\Gamma\cdot\Delta e_t$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
