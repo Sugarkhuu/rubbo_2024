@@ -1,0 +1,492 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{setspace}
+\onehalfspacing
+\geometry{margin=1.2in}
+
+\title{Literature Survey: Production Networks, Exchange Rates, and Monetary Policy}
+\author{Working Notes for SOE Extension of Rubbo (2024)}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%==============================================================
+\section{Production Networks and Monetary Policy (Closed Economy)}
+%==============================================================
+
+\subsection{Rubbo (2024) --- Networks, Phillips Curves, and Monetary Policy}
+
+\textbf{Citation:} Rubbo, E. (2024). Networks, Phillips Curves, and Monetary Policy. \textit{Econometrica}, 92(3).
+
+\textbf{Question:} How do input-output production networks shape the transmission of monetary policy, the structure of Phillips curves, and optimal inflation targeting in a multi-sector New Keynesian economy?
+
+\textbf{Model:} $N$-sector economy with Calvo price-setting, heterogeneous price stickiness $\hat{\delta}_i$, and an arbitrary IO matrix $\Omega$. Households supply labor and consume a CES basket. Firms buy intermediate inputs from other sectors. The model is log-linearized around a zero-inflation, zero-markup steady state.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Lemma 1 (Natural output):} Natural output equals Domar-weighted TFP: $y_{\mathrm{nat}} = \frac{1+\varphi}{\gamma+\varphi}\bm{\lambda}^T\log\mathbf{A}$, where $\bm{\lambda}^T = \bm{\beta}^T(I-\Omega)^{-1}$ are Domar weights (total sales shares including indirect linkages).
+    \item \textbf{Proposition 2 (Sector Phillips curves):} Each sector's inflation satisfies $\bm{\pi}_t = \rho(I-\mathcal{V})\mathbb{E}\bm{\pi}_{t+1} + \mathcal{B}(\gamma+\varphi)\tilde{y}_t - \mathcal{V}\bm{\chi}_t$, where $\mathcal{B}$ is the network-adjusted Phillips curve slope and $\mathcal{V}$ is a cost-push matrix whose rows sum to zero. The rigidity-adjusted Leontief $(I-\Omega\Delta)^{-1}$ mediates how cost shocks propagate: stickier upstream sectors dampen propagation because they absorb shocks into markups.
+    \item \textbf{Proposition 1 (Divine Coincidence):} There exists a unique inflation index $\pi^{DC} = \sum_i w_i^{DC}\pi_{it}$ with weights $w_i^{DC} \propto \lambda_i(1-\hat{\delta}_i)/\hat{\delta}_i$ (Domar weight $\times$ stickiness) such that $\pi_t^{DC} = \rho\mathbb{E}\pi_{t+1}^{DC} + \kappa_{DC}\tilde{y}_t$ --- no cost-push term. Targeting $\pi^{DC}$ simultaneously closes the output gap.
+    \item \textbf{Proposition 3 (Welfare):} The welfare loss decomposes into: (i) output gap $(\gamma+\varphi)\tilde{y}_t^2$, (ii) within-sector price dispersion $\sum_i \lambda_i\frac{1-\hat{\delta}_i}{\hat{\delta}_i}\varepsilon_i\pi_{it}^2$, and (iii) cross-sector relative price misallocation (Baqaee-Farhi operators). CPI targeting can generate welfare losses of 2.9--3.8\% of GDP relative to optimal even in the closed economy.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The direct parent. We add an import sector and UIP, which introduces a second cost-push channel $\Gamma\Delta e_t$ into the Phillips curves. The divine coincidence breaks down because two conditions ($\bm{\phi}^T\mathcal{V}=0$ and $\bm{\phi}^T\Gamma=0$) must hold simultaneously but generically cannot.
+
+%--------------------------------------------------------------
+\subsection{La'O and Tahbaz-Salehi (2022) --- Optimal Monetary Policy in Production Networks}
+
+\textbf{Citation:} La'O, J. and Tahbaz-Salehi, A. (2022). Optimal Monetary Policy in Production Networks. \textit{Econometrica}, 90(3), 1295--1336.
+
+\textbf{Question:} What is the optimal monetary policy in a production network economy, characterized without restricting to log-linearized approximations? Is the welfare-maximizing policy always implementable by a simple inflation target?
+
+\textbf{Model:} Multi-sector economy with monopolistic competition and menu costs (not Calvo). Derives optimal policy from first principles using sufficient statistics. The approach is non-parametric in the network structure, so results apply to arbitrary $\Omega$.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Sufficient statistics:} Optimal monetary policy depends on the economy only through a small set of statistics: sectoral sales shares (Domar weights), demand elasticities, and the degree of strategic complementarities in pricing.
+    \item \textbf{Optimal target is not CPI:} The optimal inflation index weights sectors by their Domar weight and inverse markup sensitivity, not by consumption shares. This is the continuous-time / menu-cost analogue of Rubbo's DC index.
+    \item \textbf{Pecuniary externalities in networks:} With strategic complementarities (each firm's optimal price depends on competitors' prices), the network amplifies monetary non-neutrality and creates pecuniary externalities that a planner can exploit.
+    \item \textbf{Role of network centrality:} Sectors that are more upstream (higher Domar weight, more total linkages) have disproportionate welfare relevance. Monetary policy should insulate these sectors' markups from cost shocks.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The most direct theoretical complement to Rubbo. Their approach is non-parametric (sufficient statistics), while Rubbo's (and ours) is log-linear. The open-economy extension requires identifying the new sufficient statistics that enter when exchange rates and foreign shocks are present.
+
+%--------------------------------------------------------------
+\subsection{Pasten, Schoenle and Weber (2020) --- MP Propagation in a Heterogeneous Production Economy}
+
+\textbf{Citation:} Pasten, E., Schoenle, R. and Weber, M. (2020). The Propagation of Monetary Policy Shocks in a Heterogeneous Production Economy. \textit{Journal of Monetary Economics}, 116, 37--52.
+
+\textbf{Question:} How does heterogeneity in price stickiness across sectors, combined with input-output linkages, shape the real effects of monetary policy shocks?
+
+\textbf{Model:} Calibrated multi-sector NK model with US IO data and sector-level Calvo frequencies from Nakamura-Steinsson (2008). Computes IRFs to a monetary policy shock and decomposes the real output response by sector characteristics.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Network amplification of MP:} A monetary policy shock has much larger real effects in the networked economy than in an equivalent one-sector model. The network amplifies the real effect by a factor of roughly 2--3x in the US calibration.
+    \item \textbf{Sticky-price sectors are disproportionately important:} Sectors with more rigid prices (low $\hat{\delta}_i$) contribute more to the aggregate output response, both because they move less in response to the shock and because their stickiness propagates upstream and downstream through the network.
+    \item \textbf{Domar-weighted stickiness:} The key sufficient statistic for the real effect of MP is not average stickiness but Domar-weighted stickiness $\sum_i \lambda_i(1-\hat{\delta}_i)/\hat{\delta}_i$ --- exactly the denominator of the DC index in Rubbo.
+    \item \textbf{Services as amplifiers:} Service sectors (sticky, high Domar weight) account for a large share of network amplification despite being downstream, because their stickiness prevents cost shocks from dissipating.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Motivates why network structure matters for MP even with simple (one-instrument) policy. In the open economy, the Domar-weighted stickiness sufficient statistic governs how much the $\Gamma\Delta e_t$ term matters for welfare --- sectors with high $\lambda_i(1-\hat{\delta}_i)/\hat{\delta}_i$ are also those most vulnerable to ER pass-through.
+
+%--------------------------------------------------------------
+\subsection{Bigio and La'O (2020) --- Distortions in Production Networks}
+
+\textbf{Citation:} Bigio, S. and La'O, J. (2020). Distortions in Production Networks. \textit{Review of Economic Studies}, 87(5), 2212--2246.
+
+\textbf{Question:} How do wedges (taxes, markups, financial frictions) that distort individual sectors' decisions aggregate up through production networks to affect macroeconomic outcomes?
+
+\textbf{Model:} Static multi-sector economy with an arbitrary IO network. Each sector faces an idiosyncratic distortion (wedge) on labor or intermediate inputs. Derives closed-form expressions for how wedges in one sector translate into aggregate TFP loss.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Network-weighted distortion index:} Aggregate output loss from a set of distortions $\{\tau_i\}$ equals $\sum_i \lambda_i \tau_i$ to first order, where $\lambda_i$ are Domar weights. More upstream sectors (higher $\lambda_i$) have larger aggregate effects per unit of distortion.
+    \item \textbf{Nonlinear amplification:} Beyond first order, the network introduces complementarities: a distortion in a central sector reduces downstream sectors' productivity, which feeds back through the network. These second-order effects require knowing the full IO matrix.
+    \item \textbf{Financial frictions as network distortions:} The paper applies the framework to financial frictions (credit constraints that show up as wedges on intermediate input use). Network centrality determines which sectors' credit constraints are most macroeconomically damaging.
+    \item \textbf{Misallocation decomposition:} Total TFP loss decomposes into: direct effect of each distortion + indirect effects through network linkages. The Leontief inverse $(I-\Omega)^{-1}$ fully characterizes the indirect effects.
+\end{enumerate}
+
+\textbf{Relation to this paper:} In the open economy, exchange rate movements create distortions (wedges on import costs) that are heterogeneous across sectors by their import intensity $\omega_{Fi}$. The Bigio-La'O framework formalizes how such heterogeneous wedges aggregate: the welfare cost is roughly $\bm{\lambda}^T(\bm{\omega}_F \cdot \Delta e)$, amplified by network linkages through the Leontief inverse.
+
+%--------------------------------------------------------------
+\subsection{Carvalho (2006) --- Heterogeneity in Price Stickiness and Real Effects of MP}
+
+\textbf{Citation:} Carvalho, C. (2006). Heterogeneity in Price Stickiness and the Real Effects of Monetary Shocks. \textit{B.E. Journal of Macroeconomics (Frontiers)}, 6(3).
+
+\textbf{Question:} How does heterogeneity in price-setting frequencies across sectors affect the aggregate real effects of monetary policy, absent production network linkages?
+
+\textbf{Model:} Multi-sector Calvo model with no intermediate inputs (pure labor economy). Calibrates sectoral Calvo frequencies and computes aggregate impulse responses.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Sticky-sector dominance:} In a heterogeneous-sector economy, the aggregate real effect of a monetary shock is determined primarily by the stickiest sectors. Even a small mass of very sticky sectors can generate large and persistent real effects.
+    \item \textbf{Composition matters more than average:} Two economies with the same average Calvo frequency can have very different real effects if the distribution of stickiness differs. A fat tail of sticky sectors generates more real effects than a homogeneous economy with the same mean.
+    \item \textbf{Supersector aggregation:} One can define a ``super sector'' whose stickiness equals the aggregate-output-weighted harmonic mean of sectoral stickiness --- a precursor to the DC index idea in Rubbo.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Establishes the importance of heterogeneous price stickiness for MP transmission, without network linkages. Pasten-Schoenle-Weber (2020) adds networks on top. In the open economy, heterogeneous stickiness also determines the distribution of $\Gamma_i$ (ER pass-through by sector), so countries with more heterogeneous stickiness face harder tradeoffs.
+
+%==============================================================
+\section{Network Microeconomics: Foundations}
+%==============================================================
+
+\subsection{Acemoglu, Carvalho, Ozdaglar and Tahbaz-Salehi (2012) --- Network Origins of Aggregate Fluctuations}
+
+\textbf{Citation:} Acemoglu, D., Carvalho, V. M., Ozdaglar, A. and Tahbaz-Salehi, A. (2012). The Network Origins of Aggregate Fluctuations. \textit{Econometrica}, 80(5), 1977--2016.
+
+\textbf{Question:} Can idiosyncratic microeconomic shocks to individual sectors aggregate up to non-trivial macroeconomic fluctuations, and if so, what network structures allow this?
+
+\textbf{Model:} Static competitive economy with $N$ sectors and arbitrary IO matrix $\Omega$. Each sector hit by an idiosyncratic TFP shock. Asks: what is the rate at which aggregate output variance declines as $N \to \infty$?
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Diversification argument fails with networks:} Without IO linkages, by the law of large numbers, idiosyncratic shocks average out at rate $1/\sqrt{N}$. With networks, if some sectors are very central (high outdegree/Domar weight), shocks to those sectors propagate widely and do not average out.
+    \item \textbf{Domar weight distribution determines aggregation:} If the distribution of Domar weights has a fat tail (e.g., power law), aggregate volatility declines at rate slower than $1/\sqrt{N}$ --- possibly $O(1/N^{1-1/\xi})$ where $\xi$ is the tail index. ``Hubs'' in the IO network amplify shocks.
+    \item \textbf{Empirical application:} Calibrated to US IO data from BEA, shows that the most central sectors (manufacturing, energy, finance) account for a disproportionate share of aggregate fluctuations. The network effect alone can explain a substantial fraction of business cycle variance.
+    \item \textbf{Hulten's theorem connection:} To first order, aggregate output response to sector $i$'s shock is exactly $\lambda_i$ (Domar weight), recovering Hulten's (1978) theorem. Higher-order effects depend on the full network topology.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Foundational for understanding why Domar weights appear everywhere in the network macro literature. In our model, $\lambda_i$ governs both natural output (Lemma 1) and the output gap-markup relation (Lemma 3). In the open economy, the sector-level ER pass-through $\Gamma_i$ is also Domar-weighted through $(I-\Omega\Delta)^{-1}\bm{\omega}_F$.
+
+%--------------------------------------------------------------
+\subsection{Baqaee and Farhi (2019) --- The Macroeconomic Impact of Microeconomic Shocks: Beyond Hulten's Theorem}
+
+\textbf{Citation:} Baqaee, D. R. and Farhi, E. (2019). The Macroeconomic Impact of Microeconomic Shocks: Beyond Hulten's Theorem. \textit{Econometrica}, 87(4), 1155--1203.
+
+\textbf{Question:} What are the second-order (and higher) effects of microeconomic productivity shocks on aggregate output, beyond the first-order approximation given by Hulten's theorem ($\Delta \log Y \approx \sum_i \lambda_i \Delta \log A_i$)?
+
+\textbf{Model:} General equilibrium with arbitrary IO network, variable elasticities of substitution (not necessarily Cobb-Douglas), and monopolistic competition. Develops a nonlinear theory using the ABCD representation of production networks.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Hulten's theorem as first order:} To first order, $\Delta \log Y = \sum_i \lambda_i \Delta \log A_i$, regardless of the network structure. Network topology only matters at second order and beyond.
+    \item \textbf{Second-order correction involves substitution:} The second-order term depends on how households and firms substitute between sectors when relative prices change. Non-unitary elasticities of substitution ($\sigma \neq 1$) create additional effects through the network: a TFP improvement in sector $i$ changes relative prices, which induces reallocation with second-order welfare effects.
+    \item \textbf{Aggregate TFPR versus TFPQ:} The paper distinguishes revenue-based TFP (TFPR, measured from prices) from quantity-based TFP (TFPQ, measured from real output). Network effects show up differently in each, with implications for how to measure aggregate productivity from IO data.
+    \item \textbf{Nonlinear network amplification:} In the presence of complementarities (low elasticities), network effects amplify shocks nonlinearly. A sector at the hub of a complementary production structure faces much larger second-order effects than predicted by Hulten.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Establishes that the Domar-weight aggregation (used throughout Rubbo and our extension) is exact only to first order. Our log-linearized analysis is exactly at this first-order level. The $\Phi_C$ and $\Phi_s$ operators in Rubbo's welfare function (Proposition 3) are precisely the Baqaee-Farhi second-order substitution terms. In the open economy, exchange rate movements create second-order welfare costs through these operators.
+
+%--------------------------------------------------------------
+\subsection{Baqaee and Farhi (2020) --- Productivity and Misallocation in General Equilibrium}
+
+\textbf{Citation:} Baqaee, D. R. and Farhi, E. (2020). Productivity and Misallocation in General Equilibrium. \textit{Quarterly Journal of Economics}, 135(1), 105--163.
+
+\textbf{Question:} How do distortions (markups, taxes, wedges) affect aggregate productivity in a general equilibrium production network? What is the optimal policy that corrects for misallocation?
+
+\textbf{Model:} General equilibrium production network with variable markups (endogenous to firm behavior or exogenously imposed). Develops a ``ABCD'' decomposition of aggregate output into direct effects and network-mediated effects of distortions.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Misallocation via network:} A markup wedge $\mu_i$ in sector $i$ reduces aggregate output by $\lambda_i \mu_i$ to first order (Domar-weighted), but the network amplifies this through indirect linkages: downstream sectors face higher input costs, which reduces their output and feeds back.
+    \item \textbf{Sufficient statistics for welfare:} The welfare cost of misallocation depends on only a few observable statistics: sectoral Domar weights, demand elasticities, and the structure of markups. The full IO matrix matters for second-order effects.
+    \item \textbf{Reallocation effects:} Unlike the static misallocation literature (Restuccia-Rogerson, Hsieh-Klenow), in a network model, correcting a distortion in one sector has general equilibrium reallocation effects throughout the network. These can be quantified using the Baqaee-Farhi operators.
+    \item \textbf{Complementarity between sectors matters:} When sectors are complements in production or consumption, misallocation is more costly because firms and households cannot easily substitute away from the distorted sector.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The welfare function in Rubbo (Proposition 3) directly uses the Baqaee-Farhi $\Phi$ operators for the cross-sector misallocation term. In our open economy, exchange rate movements introduce an additional misallocation term $\Phi_C(\tilde{\bm{\chi}}_t, e_t\bm{\omega}_F)$ because different sectors face different import cost shocks, distorting relative prices.
+
+%--------------------------------------------------------------
+\subsection{Carvalho and Tahbaz-Salehi (2019) --- Production Networks: A Primer}
+
+\textbf{Citation:} Carvalho, V. M. and Tahbaz-Salehi, A. (2019). Production Networks: A Primer. \textit{Annual Review of Economics}, 11, 635--663.
+
+\textbf{Question:} A survey article reviewing the key tools and results from the production networks literature --- Leontief inverses, Domar weights, propagation of shocks, and the empirical measurement of network structures.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Taxonomy of propagation mechanisms:} Reviews upstream propagation (a shock to supplier raises buyer's costs), downstream propagation (a shock to buyer reduces supplier's revenue), and horizontal propagation (through labor markets or household demand).
+    \item \textbf{Domar weights as sufficient statistics:} Under Cobb-Douglas production and preferences (log-linear case), Domar weights $\lambda_i = \beta^T(I-\Omega)^{-1}e_i$ are the exact sufficient statistic for how sector $i$'s TFP shock affects aggregate output (Hulten's theorem).
+    \item \textbf{Measurement:} Discusses how to measure IO matrices from National Accounts (BEA, OECD), the difference between domestic IO tables and global value chain data (WIOD, TiVA), and common pitfalls in using these data.
+    \item \textbf{Heterogeneous agents in networks:} Reviews the literature connecting network models to empirical facts about firm size, granularity, and the micro origins of aggregate fluctuations.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Essential reference for the notation and concepts we use (Domar weights, Leontief inverse, IO matrix). The discussion of TiVA data for measuring $\bm{\omega}_F$ (import shares by sector) is directly relevant to our quantitative calibration.
+
+%==============================================================
+\section{International Production Networks and Exchange Rate Pass-Through}
+%==============================================================
+
+\subsection{Auer, Levchenko and Sauré (2019) --- International Inflation Spillovers Through IO Linkages}
+
+\textbf{Citation:} Auer, R., Levchenko, A. A. and Sauré, P. (2019). International Inflation Spillovers Through Input-Output Linkages. \textit{Review of Economics and Statistics}, 101(3), 507--521.
+
+\textbf{Question:} How do producer price inflation shocks in one country transmit to other countries through international production linkages (global value chains)?
+
+\textbf{Empirical approach:} Uses international IO data (WIOD) for 40 countries and 35 sectors. Estimates a panel regression of sectoral PPI inflation on lagged foreign inflation, weighted by bilateral IO exposures. Constructs a ``network-weighted foreign inflation'' measure.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Network spillovers are large and significant:} A 1\% increase in a trading partner's PPI, weighted by the IO exposure, raises domestic PPI by 0.15--0.25\% on average. These effects are above and beyond standard trade-weighted exchange rate effects.
+    \item \textbf{Upstream linkages matter more than downstream:} Pass-through from foreign suppliers (upstream) to domestic sectors is larger than from foreign buyers (downstream), consistent with cost-based propagation through marginal cost.
+    \item \textbf{Global value chains amplify pass-through:} Countries more integrated into GVCs (higher gross trade/value-added ratio) experience stronger spillovers. This is the empirical counterpart of the $(I-\Omega)^{-1}$ amplification in the theory.
+    \item \textbf{PPI, not CPI:} The spillovers are stronger at the producer price level. CPI spillovers are smaller because consumption baskets are less exposed to tradable intermediates.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Direct empirical motivation for the $\Gamma\Delta e_t$ term in our Phillips curve. The Auer-Levchenko-Sauré findings imply that $\Gamma$ (our network-amplified pass-through vector) is empirically large and heterogeneous across sectors. The paper also motivates why using TiVA data (as we do) to measure $\bm{\omega}_F$ is important --- gross trade shares miss the upstream IO amplification.
+
+%--------------------------------------------------------------
+\subsection{Amiti, Itskhoki and Konings (2014) --- Importers, Exporters, and Exchange Rate Disconnect}
+
+\textbf{Citation:} Amiti, M., Itskhoki, O. and Konings, J. (2014). Importers, Exporters, and Exchange Rate Disconnect. \textit{American Economic Review}, 104(7), 1942--1978.
+
+\textbf{Question:} Why is exchange rate pass-through to export prices so low in the data? How does a firm's simultaneous import and export status affect its sensitivity to exchange rate movements?
+
+\textbf{Model and data:} Firm-level data from Belgium matched with import and export records. Theory: firms with high import intensity (share of imported inputs) have a ``natural hedge'' --- when the domestic currency depreciates, their costs also rise (through imported inputs), partially offsetting the incentive to lower export prices.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Import intensity reduces pass-through:} A firm that imports 50\% of its inputs passes through only 50\% of an exchange rate movement to its export prices (versus 100\% for a pure exporter). Import intensity is the key sufficient statistic for incomplete pass-through.
+    \item \textbf{Variable markups amplify the effect:} Large (dominant) firms with market power adjust markups in response to cost changes, further reducing pass-through. The combination of import intensity + market power explains most of the observed disconnect.
+    \item \textbf{Heterogeneous pass-through across firms:} Even within a narrowly defined industry, firms differ enormously in pass-through because they differ in import intensity and market share. Aggregate pass-through is thus a mix of very heterogeneous firm-level responses.
+    \item \textbf{Empirical magnitude:} Moving from no imports to 100\% import intensity reduces exchange rate pass-through to export prices from roughly 0.9 to 0.2.
+\end{enumerate}
+
+\textbf{Relation to this paper:} In our model, $\omega_{Fi}$ (sector-level import input share) is the key parameter governing the direct component of ER pass-through. This paper establishes that, at the firm level, import intensity is the key driver of pass-through --- consistent with our model's prediction that $\Gamma_i \propto \omega_{Fi}$ (amplified by the network).
+
+%--------------------------------------------------------------
+\subsection{Gopinath and Itskhoki (2022) --- Dominant Currency Paradigm}
+
+\textbf{Citation:} Gopinath, G. and Itskhoki, O. (2022). Dominant Currency Paradigm: A Review. In G. Gopinath, E. Helpman and K. Rogoff (eds.), \textit{Handbook of International Economics}, Vol. 6. Elsevier.
+
+\textbf{Question:} Why do most international trade invoices use the US dollar (a third-party currency for non-US trade)? What are the macroeconomic implications of dominant currency pricing (DCP) versus local currency pricing (LCP) or producer currency pricing (PCP)?
+
+\textbf{Model:} A two-country model where firms choose the currency in which they invoice exports (dollar, local, or producer). DCP arises in equilibrium when US demand is large or when dollar provides a better hedge. Reviews empirical evidence and theoretical implications.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Most trade invoiced in dollars:} Around 40--60\% of world trade (excluding the US) is invoiced in USD, far more than the US share in trade. This holds across both developed and emerging markets.
+    \item \textbf{DCP implies asymmetric pass-through:} Under DCP, a bilateral exchange rate movement (e.g., euro/yuan) has no direct effect on dollar-invoiced trade flows. Pass-through to import prices is primarily through USD/local-currency bilateral rate, not bilateral rates between trading partners.
+    \item \textbf{Monetary policy implications:} Under DCP, a domestic currency depreciation raises import prices in local currency (cost-push), but does not improve competitiveness in dollar-denominated export markets as much as under PCP. This creates stagflation-like tradeoffs for small open economies.
+    \item \textbf{International spillovers:} US monetary policy has disproportionate global spillovers because the dollar is the dominant invoicing currency. A Fed tightening appreciates the dollar and simultaneously raises import costs for all countries.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Raises an important extension question for our model: we assume producer-currency pricing (PCP), where import prices in domestic currency are $p^* + e_t$. Under DCP, a fraction of imports would be priced in dollars, altering the $\bm{\omega}_F(p^* + e_t)$ term in marginal cost. The network amplification structure ($\Gamma$) would change depending on the invoicing currency mix, which is an important extension noted in the paper.
+
+%--------------------------------------------------------------
+\subsection{Bems and Johnson (2017) --- Demand for Value Added and Value-Added Exchange Rates}
+
+\textbf{Citation:} Bems, R. and Johnson, R. C. (2017). Demand for Value Added and Value-Added Exchange Rates. \textit{American Economic Journal: Macroeconomics}, 9(4), 45--90.
+
+\textbf{Question:} How should we measure effective exchange rates (REERs) when production is organized in global value chains? Standard trade-weighted REERs are a poor guide to competitiveness in a GVC world.
+
+\textbf{Model and data:} Develops a theory of ``value-added exchange rates'' (VAREERs) using multi-country IO tables (WIOD). Shows that gross trade weights (used in standard REERs) are a biased measure of how exchange rates affect competitiveness when trade is in intermediates.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{VAREERs versus gross-trade REERs:} Because much of gross trade consists of intermediates that cross borders multiple times, gross trade weights overweight countries that are ``assembly hubs'' in GVCs. VAREERs, weighted by value-added content, are more relevant for measuring competitiveness.
+    \item \textbf{IO linkages reshape ER sensitivity:} A country's VAREER depends not just on bilateral exchange rates with its direct trading partners, but on the full matrix of IO linkages through the global network. A yuan appreciation affects German competitiveness indirectly (through German use of Chinese intermediates).
+    \item \textbf{Quantitative differences are large:} For many countries (especially GVC hubs like South Korea, Taiwan), the VAREER differs substantially from the standard REER. Using the wrong measure can lead to misleading assessments of competitiveness.
+    \item \textbf{Time variation in IO structure:} As GVC integration deepened post-2000, the divergence between VAREERs and standard REERs widened.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Motivates the use of TiVA data and the explicit IO structure in calibrating $\bm{\omega}_F$. The VAREER concept is essentially the empirical counterpart of our $\Gamma = \Delta(I-\Omega\Delta)^{-1}\bm{\omega}_F/\kappa$ --- it maps the multi-country IO structure to exchange rate sensitivity. Countries like South Korea (candidate for our quantitative analysis) have large gaps between gross-trade and value-added measures.
+
+%--------------------------------------------------------------
+\subsection{di Giovanni, Levchenko and Méjean (2018) --- The Micro Origins of International Business Cycle Comovement}
+
+\textbf{Citation:} di Giovanni, J., Levchenko, A. A. and Méjean, I. (2018). The Micro Origins of International Business Cycle Comovement. \textit{American Economic Review}, 108(1), 82--108.
+
+\textbf{Question:} Why do countries' business cycles comove? How much of international comovement is driven by common shocks versus bilateral trade and IO linkages?
+
+\textbf{Model and data:} Uses matched firm-level data from France with information on firms' bilateral trading relationships with specific foreign firms/countries. Decomposes the covariance of GDP growth between France and its trading partners into: (i) common shocks, (ii) trade linkages (demand and supply), (iii) IO linkages.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Firm-level linkages explain comovement:} A large fraction (30--50\%) of France-partner comovement is explained by direct firm-to-firm trade relationships, not common aggregate shocks. Large firms that trade with many partners transmit shocks broadly.
+    \item \textbf{Supply chain linkages are as important as demand:} Upstream IO linkages (cost shocks from suppliers) contribute roughly as much to comovement as downstream demand linkages. Both directions matter.
+    \item \textbf{Granularity:} A small number of ``granular'' firms (very large, well-connected) account for a disproportionate share of international comovement --- consistent with Acemoglu et al. (2012) for the closed economy.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Empirical motivation that IO linkages are a quantitatively important channel for international shock transmission --- the mechanism our model formalizes with $\bm{\omega}_F$ and $\Gamma$.
+
+%==============================================================
+\section{FX Policy and Monetary Policy in Open Economies}
+%==============================================================
+
+\subsection{Galí and Monacelli (2005) --- MP and Exchange Rate Volatility in a Small Open Economy}
+
+\textbf{Citation:} Galí, J. and Monacelli, T. (2005). Monetary Policy and Exchange Rate Volatility in a Small Open Economy. \textit{Review of Economic Studies}, 72(3), 707--734.
+
+\textbf{Question:} What is the optimal monetary policy for a small open economy? Is CPI inflation or domestic inflation the right target, and what is the optimal degree of exchange rate flexibility?
+
+\textbf{Model:} Two-country NK model (SOE + large foreign economy). Domestic households consume both domestic and foreign goods; domestic firms use only labor (no intermediate inputs). Law of one price + complete financial markets. Compares three regimes: (i) domestic inflation targeting, (ii) CPI targeting, (iii) exchange rate peg.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Divine coincidence holds in baseline:} Under domestic PPI targeting, the output gap is zero at all times --- divine coincidence holds, as in the one-sector closed economy NK model. Flexible exchange rate acts as an automatic stabilizer.
+    \item \textbf{CPI targeting is suboptimal:} Targeting CPI instead of PPI introduces a tradeoff because CPI includes imported goods whose prices change with the exchange rate. CPI targeting forces the CB to partially stabilize the ER, creating output gap volatility.
+    \item \textbf{Peg is welfare-inferior under productivity shocks:} Under a peg, the CB loses monetary policy independence (Mundell trilemma). Output gaps open up in response to domestic productivity shocks that would otherwise be accommodated by exchange rate adjustment.
+    \item \textbf{Terms of trade channel:} Exchange rate depreciation improves the terms of trade for the SOE, stimulating demand. Under domestic PPI targeting, the ER moves optimally to provide this stimulus.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The benchmark SOE NK model that we extend. Galí-Monacelli have no production network (one sector, no intermediate inputs), so their ``divine coincidence'' is the standard one-sector result. We show that adding (i) multiple sectors with heterogeneous stickiness and IO linkages (Rubbo) and (ii) import inputs in production ($\bm{\omega}_F > 0$) breaks their divine coincidence result even under a float.
+
+%--------------------------------------------------------------
+\subsection{Corsetti, Dedola and Leduc (2010) --- Optimal Monetary Policy in Open Economies}
+
+\textbf{Citation:} Corsetti, G., Dedola, L. and Leduc, S. (2010). Optimal Monetary Policy in Open Economies. In B. M. Friedman and M. Woodford (eds.), \textit{Handbook of Monetary Economics}, Vol. 3B. Elsevier.
+
+\textbf{Question:} Survey article covering the theory of optimal monetary policy in open economies, ranging from the baseline Galí-Monacelli model to richer environments with pricing-to-market, incomplete markets, and multiple sectors.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Targeting domestic PPI is optimal under PCP and complete markets:} In the baseline SOE model, domestic PPI targeting achieves the efficient allocation (zero output gap, zero price dispersion). This generalizes the one-sector divine coincidence to the open economy under specific conditions.
+    \item \textbf{LCP and pricing-to-market break the result:} When firms price-to-market (charge different prices in domestic vs. foreign markets, local currency pricing), optimal policy involves a more complex tradeoff between inflation and terms of trade stabilization.
+    \item \textbf{Incomplete markets add a terms-of-trade externality:} With incomplete risk sharing, the planner wants to use monetary policy to manipulate the terms of trade in addition to stabilizing inflation. This is a beggar-thy-neighbor motive that can lead to international policy conflicts.
+    \item \textbf{International coordination:} Cooperative monetary policy across countries can improve welfare by internalizing the terms-of-trade externality. Non-cooperative equilibria can involve excessive exchange rate volatility.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Reviews the conditions under which divine coincidence holds in open economies --- helping identify where our contribution adds novelty. The production network channel (our $\Gamma$ term) is absent from all models surveyed here. We show this adds a new dimension to the optimal MP problem.
+
+%--------------------------------------------------------------
+\subsection{Fanelli and Straub (2021) --- A Theory of Foreign Exchange Interventions}
+
+\textbf{Citation:} Fanelli, S. and Straub, L. (2021). A Theory of Foreign Exchange Interventions. \textit{Review of Economic Studies}, 88(6), 2857--2885.
+
+\textbf{Question:} When should a central bank intervene in the foreign exchange market (buy/sell foreign reserves) in addition to setting the interest rate? What is the optimal intervention rule?
+
+\textbf{Model:} SOE with a standard UIP condition, but where the CB can affect the exchange rate through sterilized intervention (purchasing foreign bonds, financing with domestic bonds). Develops a theory of optimal intervention that distinguishes between real and financial frictions.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Two instruments for two targets:} With only the interest rate, the CB faces a Tinbergen problem: one instrument cannot simultaneously achieve the output gap target and the inflation target (especially if they conflict). FX intervention as a second instrument allows independent targeting.
+    \item \textbf{Optimal intervention leans against misalignment:} The CB should intervene to reduce the component of exchange rate movements that causes inefficient real effects, while allowing the component that reflects fundamentals to pass through.
+    \item \textbf{Reserve accumulation as insurance:} Holding foreign reserves gives the CB the option to intervene in crises (when UIP breaks down due to risk premia). The option value of reserves justifies precautionary accumulation.
+    \item \textbf{UIP risk premia:} The model allows for time-varying UIP premia (deviations from standard UIP), and shows that optimal intervention is larger when risk premia are higher and more volatile.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The micro-foundation for our ``managed float'' regime. Our model has a standard UIP equation ($i_t - i_t^* = \mathbb{E}_t\Delta e_{t+1}$) and treats FX intervention as a second instrument $\nu_t$ that reduces $\Delta e_t$. Fanelli-Straub provide the formal theory of why and how much to intervene. Our contribution is showing that the optimal intervention amount depends on $\Gamma$ (the network-amplified pass-through) --- a new structural determinant they do not consider.
+
+%--------------------------------------------------------------
+\subsection{Schmitt-Grohé and Uribe (2016) --- Downward Nominal Wage Rigidity, Currency Pegs, and Involuntary Unemployment}
+
+\textbf{Citation:} Schmitt-Grohé, S. and Uribe, M. (2016). Downward Nominal Wage Rigidity, Currency Pegs, and Involuntary Unemployment. \textit{Journal of Political Economy}, 124(5), 1466--1514.
+
+\textbf{Question:} Why do currency pegs tend to generate large and persistent unemployment during external crises? Is the standard Mundell trilemma argument sufficient to explain the severity of peg collapses?
+
+\textbf{Model:} SOE with a currency peg and \textit{downward nominal wage rigidity} (DNW): nominal wages cannot fall. When a negative external shock (terms of trade, foreign demand) requires a real depreciation, under a peg this must occur through lower nominal wages --- which DNW prevents. Result: involuntary unemployment.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{DNW amplifies peg costs:} Under a float, the ER adjusts and wages can stay stable nominally. Under a peg with DNW, the only adjustment is employment, leading to large and persistent unemployment spells.
+    \item \textbf{Quantitative magnitude:} Calibrated to peripheral European countries (Greece, Spain), the model generates unemployment increases of 10--20 percentage points following a current account reversal --- close to the observed 2008--2013 data.
+    \item \textbf{Managed float dominates:} A managed float (with a crawling peg or exchange rate band) performs much better than a hard peg because it allows some nominal adjustment, reducing the DNW friction.
+    \item \textbf{Internal devaluation is slow:} Even if wages can adjust downward slowly, the adjustment is too slow relative to the speed of external shocks. Only exchange rate flexibility provides sufficiently fast adjustment.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Our model has fully flexible wages (the labor market clears each period). Schmitt-Grohé-Uribe's model suggests that adding DNW would make pegs even more costly than our baseline welfare comparison shows --- reinforcing the case for exchange rate flexibility (or managed float). A natural robustness check for our quantitative results.
+
+%--------------------------------------------------------------
+\subsection{Obstfeld and Rogoff (2000) --- New Directions for Stochastic Open Economy Models}
+
+\textbf{Citation:} Obstfeld, M. and Rogoff, K. (2000). New Directions for Stochastic Open Economy Models. \textit{Journal of International Economics}, 50(1), 117--153.
+
+\textbf{Question:} How should we model uncertainty and welfare in stochastic two-country models? Develops the ``Redux'' model of international macroeconomics with monopolistic competition and nominal rigidities.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Redux model:} Two-country economy with sticky prices (one-period pre-set), monopolistic competition, and complete asset markets. Shows that exchange rate movements optimally allocate demand across countries in response to productivity shocks.
+    \item \textbf{Beggar-thy-neighbor:} In the Redux model, a domestic monetary expansion raises domestic output but reduces foreign output (beggar-thy-neighbor effect). The terms of trade improve for the inflating country.
+    \item \textbf{Expenditure switching:} Exchange rate depreciations stimulate exports and reduce imports. With sticky prices, the expenditure-switching effect is the key real channel of exchange rate adjustment.
+    \item \textbf{Foundation for open economy NK models:} Provides the foundations that Galí-Monacelli (2005) and subsequent SOE NK models build on.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Historical context. The one-sector ``Redux'' model has no production network --- the single-sector assumption means there is no heterogeneous pass-through by sector. Our paper shows that the expenditure-switching mechanism of Obstfeld-Rogoff is differentiated by sector through the IO matrix, with implications for which sectors are most stabilized by exchange rate flexibility.
+
+%==============================================================
+\section{Calvo Pricing, Price Stickiness, and Measurement}
+%==============================================================
+
+\subsection{Nakamura and Steinsson (2008) --- Five Facts about Prices}
+
+\textbf{Citation:} Nakamura, E. and Steinsson, J. (2008). Five Facts about Prices: A Reevaluation of Menu Cost Models. \textit{Quarterly Journal of Economics}, 123(4), 1415--1464.
+
+\textbf{Question:} What are the empirical regularities of price changes in the US? Do these facts favor Calvo (random price adjustment) or menu-cost (state-dependent) models?
+
+\textbf{Data:} BLS price microdata underlying the CPI, covering hundreds of product categories from 1988--2005. Measures frequency, size, and distribution of price changes at the item level.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Frequency varies enormously:} The median frequency of price change ranges from less than 10\% per month (many services) to over 50\% per month (gasoline, fresh food). This heterogeneity is large and systematic.
+    \item \textbf{Excluding sales changes conclusions:} If temporary sales (promotions) are excluded, the median frequency of ``regular'' price changes falls substantially (to around 10--15\% per month), and heterogeneity remains. This distinction matters for monetary policy because sales-driven price changes may not reflect true price stickiness.
+    \item \textbf{Calvo model needs sector-level calibration:} A one-sector Calvo model calibrated to average frequency dramatically underestimates price stickiness. The heterogeneous Calvo model (as in Rubbo) with sector-level $\hat{\delta}_i$ fits much better.
+    \item \textbf{Price changes are large:} The median absolute size of a regular price change is about 8--10\%, suggesting that firms face nontrivial menu costs (they don't change prices every period). This is consistent with state-dependent pricing being relevant.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Primary source for calibrating the sector-level Calvo frequencies $\hat{\delta}_i$ in both Rubbo and our extension. In the quantitative section, we map Nakamura-Steinsson sectors to TiVA sectors to calibrate $\hat{\bm{\delta}}$ for the countries in our sample. The large heterogeneity in $\hat{\delta}_i$ they document is what drives the difference between DC and CPI weights in the model.
+
+%--------------------------------------------------------------
+\subsection{Calvo (1983) --- Staggered Prices in a Utility-Maximizing Framework}
+
+\textbf{Citation:} Calvo, G. A. (1983). Staggered Prices in a Utility-Maximizing Framework. \textit{Journal of Monetary Economics}, 12(3), 383--398.
+
+\textbf{Question:} How can we model staggered price-setting in a utility-maximizing general equilibrium framework? Proposes the now-standard Calvo mechanism.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Calvo mechanism:} Each period, a fraction $1-\delta$ of firms cannot change their price (a Poisson arrival process). The fraction $\delta$ that can change prices sets a forward-looking optimal reset price. This delivers a tractable linear Phillips curve.
+    \item \textbf{Forward-looking PC:} The aggregate price level follows $\pi_t = \beta\mathbb{E}_t\pi_{t+1} + \kappa mc_t$, where $\kappa = \delta(1-\beta(1-\delta))/(1-(1-\delta)\beta\delta)$ and $mc_t$ is log-deviation of marginal cost. The PC is purely forward-looking --- no backward-looking terms in the baseline.
+    \item \textbf{Within-sector price dispersion:} Because some firms have stale prices, the distribution of prices within a sector is dispersed. This dispersion causes an efficiency loss even at zero aggregate inflation.
+    \item \textbf{Monetary non-neutrality:} The Calvo mechanism generates persistent real effects of monetary policy because the price level adjusts gradually (only $\delta$ fraction of firms adjust each period).
+\end{enumerate}
+
+\textbf{Relation to this paper:} The pricing mechanism used in Rubbo and our model. The key parameter is the sector-level $\delta_i$ (from Nakamura-Steinsson). The effective Calvo parameter $\hat{\delta}_i = \delta_i(1-\rho(1-\delta_i))/(1-\rho\delta_i(1-\delta_i))$ in Rubbo generalizes Calvo's formula to the multi-period discounting case and is the key heterogeneity parameter driving DC weights.
+
+%--------------------------------------------------------------
+\subsection{Hulten (1978) --- Growth Accounting with Intermediate Inputs}
+
+\textbf{Citation:} Hulten, C. R. (1978). Growth Accounting with Intermediate Inputs. \textit{Review of Economic Studies}, 45(3), 511--518.
+
+\textbf{Question:} How should we measure aggregate TFP growth when firms use intermediate inputs from other sectors (not just labor and capital)?
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Hulten's theorem:} The aggregate effect of a TFP improvement in sector $i$ on economy-wide output is exactly $\lambda_i \Delta \log A_i$, where $\lambda_i = P_i Y_i / (P \cdot \text{GDP})$ is sector $i$'s total sales share (Domar weight). This holds regardless of the IO network structure.
+    \item \textbf{Domar weights sum to more than one:} Because $\sum_i \lambda_i > 1$ (gross output exceeds value added), aggregate TFP growth can exceed the weighted sum of sectoral productivities --- reflecting the amplification through intermediate input chains.
+    \item \textbf{Independence of IO structure:} To first order, the IO matrix $\Omega$ does not matter for the aggregate TFP calculation --- only the sales shares (Domar weights) matter. This is the exact first-order result extended by Baqaee-Farhi (2019) to nonlinear effects.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Foundational for Lemma 1 in Rubbo: natural output equals Domar-weighted TFP, which is precisely Hulten's theorem applied to the social planner's problem. In our open economy, the exchange rate enters the marginal cost analogously to TFP, so the network amplification of ER pass-through follows the same Hulten logic.
+
+%==============================================================
+\section{Additional Recent Papers}
+%==============================================================
+
+\subsection{Huo, Levchenko and Pandalai-Nayar (2023) --- International Comovement in the GVC Era}
+
+\textbf{Citation:} Huo, Z., Levchenko, A. A. and Pandalai-Nayar, N. (2023). The Global Business Cycle: Measurement and Transmission. \textit{Journal of Political Economy}. \textbf{Note: verify exact journal and year.}
+
+\textbf{Question:} How has the rise of global value chains (GVCs) changed the transmission of shocks across countries? What fraction of international business cycle comovement is driven by IO linkages versus common shocks?
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{GVC era increases comovement via cost channels:} As countries became more integrated through supply chains (post-2000), the cost-push channel (foreign productivity shocks raising domestic input costs) became a more important driver of comovement than the demand channel.
+    \item \textbf{IO linkages transmit both productivity and monetary shocks:} A US productivity shock or US monetary policy tightening propagates to partner countries through IO linkages at roughly the same speed as through trade demand channels.
+    \item \textbf{Structural change in comovement:} The within-GVC comovement (countries at adjacent stages of the same supply chain) is much higher than cross-GVC comovement, and has grown over time.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Motivates why in the open economy, the IO structure $\Omega$ and import shares $\bm{\omega}_F$ are critical for understanding how foreign shocks (including ER movements driven by foreign monetary policy) propagate into the domestic economy.
+
+%--------------------------------------------------------------
+\subsection{Ozdagli and Weber (2017) --- Monetary Policy Through Production Networks}
+
+\textbf{Citation:} Ozdagli, A. and Weber, M. (2017). Monetary Policy Through Production Networks. NBER Working Paper No. 23764. \textbf{Note: check if published version is available (2022 or later).}
+
+\textbf{Question:} Does monetary policy propagate through production networks empirically? Are more network-central firms (as measured by their IO position) more responsive to monetary policy shocks?
+
+\textbf{Model and data:} Uses firm-level stock return data around FOMC announcements (high-frequency identification of MP shocks). Matches firms to their IO network position using BEA data.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Network centrality amplifies MP response:} Firms with higher Domar weights (more central in the IO network) experience larger stock price responses to monetary policy surprises, consistent with the network amplification mechanism.
+    \item \textbf{Upstream exposure matters:} Firms whose customers are central (downstream centrality) respond more to MP shocks, because central customers' demand changes propagate to their suppliers.
+    \item \textbf{Empirical magnitude:} A one-standard-deviation increase in network centrality is associated with a roughly 50\% larger stock price response to a MP surprise.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Direct empirical validation that monetary policy propagates through the IO network --- the mechanism that drives Rubbo's theoretical results. In the open economy, if FX movements are transmitted through the same IO channels (as our $\Gamma$ term implies), one would expect similar network-centrality patterns in ER pass-through.
+
+%--------------------------------------------------------------
+\subsection{Ghassibe (2021) --- Monetary Policy and Production Networks: An Empirical Investigation}
+
+\textbf{Citation:} Ghassibe, M. (2021). Monetary Policy and Production Networks: An Empirical Investigation. \textit{Journal of Monetary Economics}, 119, 21--39. \textbf{Note: verify exact details.}
+
+\textbf{Question:} Empirically investigates how network centrality shapes the transmission of monetary policy to sectoral inflation and output at the industry level.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item \textbf{Network amplification of MP:} Industries with higher upstream network centrality (higher Domar weights as input suppliers) show larger output responses to monetary policy shocks.
+    \item \textbf{Price stickiness interacts with network position:} Industries that are both upstream and sticky (high Domar weight, low $\hat{\delta}$) are the key amplifiers of monetary policy --- consistent with the Pasten-Schoenle-Weber (2020) mechanism.
+    \item \textbf{Sectoral heterogeneity matters for aggregate:} Ignoring network heterogeneity and estimating a representative-agent PC gives a biased estimate of the slope; accounting for network-weighted stickiness gives a better fit.
+\end{enumerate}
+
+\textbf{Relation to this paper:} Empirical companion to Rubbo (2024). In our open economy model, similar network-centrality patterns would govern the heterogeneous response to ER shocks, testable in the data using TiVA-linked sectoral data.
+
+\end{document}

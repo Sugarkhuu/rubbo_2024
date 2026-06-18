@@ -116,19 +116,47 @@ where $\Omega^n_{ij}$ = total flow from $j$ to $i$ through chains of length exac
 
 \subsection{Log-Linearized Marginal Cost}
 
-Starting from the cost function $MC_{it} = c_i(W_t, \{P_{jt}\}, A_{it})$, log-linearize around steady state (where all variables are at their ergodic means). Use lowercase for log-deviations: $mc_{it} = \log MC_{it} - \log \overline{MC}_i$, etc.
+\textbf{Setup.} Since $F_i$ is CRS and $A_{it}$ is Hicks-neutral, the unit cost function is:
+\begin{equation}
+    MC_{it} = c_i(W_t, \{P_{jt}\}, A_{it}) = \frac{1}{A_{it}}\,\tilde{c}_i(W_t, \{P_{jt}\})
+\end{equation}
+where $\tilde{c}_i$ is the unit cost when $A_{it}=1$. The $1/A_{it}$ factor holds because doubling productivity halves the inputs needed per unit of output, hence halves unit cost.
 
-By Shephard's lemma, the cost-minimizing labor demand is $L_{it} = \partial MC_{it}/\partial W_t$, so its cost share is $\alpha_i = W_t L_{it}/(MC_{it} Y_{it})$. Similarly, $\omega_{ij} = P_{jt} X_{ijt}/(MC_{it} Y_{it})$.
+\textbf{Step 1: Elasticities via Shephard's lemma.} By Shephard's lemma applied to $\tilde{c}_i$:
+\begin{align}
+    \frac{\partial \tilde{c}_i}{\partial W_t} &= \frac{L_{it}}{Y_{it}}, \qquad
+    \frac{\partial \tilde{c}_i}{\partial P_{jt}} = \frac{X_{ijt}}{Y_{it}}
+\end{align}
+Converting to log-elasticities of $MC_{it}$ (using $MC_{it} = \tilde{c}_i/A_{it}$):
+\begin{align}
+    \frac{\partial \log MC_{it}}{\partial \log W_t}
+    &= \frac{W_t}{MC_{it}}\frac{\partial MC_{it}}{\partial W_t}
+     = \frac{W_t}{MC_{it}}\cdot\frac{L_{it}}{Y_{it}}
+     = \frac{W_t L_{it}}{MC_{it} Y_{it}} \equiv \alpha_i \\[4pt]
+    \frac{\partial \log MC_{it}}{\partial \log P_{jt}}
+    &= \frac{P_{jt}}{MC_{it}}\frac{\partial MC_{it}}{\partial P_{jt}}
+     = \frac{P_{jt} X_{ijt}}{MC_{it} Y_{it}} \equiv \omega_{ij}
+\end{align}
+so $\alpha_i$ is labor's cost share and $\omega_{ij}$ is intermediate input $j$'s cost share. CRS pins these shares to constants in steady state (they are independent of the scale of output).
 
-Log-linearizing:
+\textbf{Step 2: TFP elasticity.} From $MC_{it} = \tilde{c}_i/A_{it}$:
+\begin{equation}
+    \frac{\partial \log MC_{it}}{\partial \log A_{it}} = -1
+\end{equation}
+
+\textbf{Step 3: Log-linearize.} Collecting the three elasticities and expanding around steady state (lowercase = log-deviation from steady state):
+\begin{equation}
+    mc_{it} = \alpha_i\, w_t + \sum_j \omega_{ij}\, p_{jt} - \log A_{it}
+\end{equation}
+Stacking across all $N$ sectors in vector form gives Rubbo's equation (15):
 \begin{equation}
     \bm{mc}_t = \bm{\alpha}\, w_t + \Omega\, \bm{p}_t - \log \mathbf{A}_t
     \label{eq:mc}
 \end{equation}
 \begin{itemize}
     \item $\bm{\alpha} w_t$: higher wages raise costs proportional to labor share
-    \item $\Omega \bm{p}_t$: higher input prices raise costs proportional to input shares
-    \item $-\log \mathbf{A}_t$: higher productivity lowers costs
+    \item $\Omega \bm{p}_t$: higher input prices raise costs proportional to input shares (the IO matrix $\Omega$ enters here directly)
+    \item $-\log \mathbf{A}_t$: higher TFP lowers unit cost one-for-one
 \end{itemize}
 
 \subsection{Sector Price Level Dynamics}
