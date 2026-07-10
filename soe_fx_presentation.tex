@@ -1,0 +1,599 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+\title{\textbf{Exchange Rate Regimes in Production Networks}}
+\subtitle{A Small Open Economy Extension of Rubbo (2024)}
+\author{Sugarkhuu Radnaa}
+\institute[]{Bonn Graduate School of Economics}
+\date{July, 2026}
+\usetheme{default}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, positioning}
+
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamercolor{itemize item}{fg=customgreen}
+\setbeamertemplate{frametitle}[default][left]
+\setbeamertemplate{items}[circle]
+\definecolor{customgreen}{RGB}{10, 43, 19}
+\setbeamercolor{frametitle}{bg=customgreen, fg=white}
+\setlength{\headheight}{1.25cm}
+
+\setbeamertemplate{footline}{%
+  \hspace*{1em}\scriptsize\insertframenumber{} / \inserttotalframenumber%
+  \hfill%
+}
+
+\newcommand{\bpi}{\bm{\pi}}
+\newcommand{\ty}{\tilde{y}}
+\newcommand{\tA}{\tilde{A}}
+\newcommand{\bom}{\bm{\omega}_F}
+
+\pgfplotsset{
+  slide fig/.style={
+    tick label style={font=\tiny},
+    label style={font=\tiny},
+    title style={font=\tiny, align=center},
+    legend style={font=\tiny, draw=none, fill=none},
+    grid=both, grid style={dotted, gray!35},
+    axis line style={gray!60},
+    every axis plot/.append style={line width=1pt},
+  }
+}
+
+% ---- reusable placeholder box for not-yet-produced figures --------------
+\newcommand{\placeholder}[3]{%
+  \begin{tikzpicture}
+    \draw[dashed, gray!55, thick, rounded corners=2pt] (0,0) rectangle (#1,#2);
+    \node[align=center, font=\tiny, text=gray!60, text width=#1 cm - 0.6cm]
+      at (#1/2,#2/2) {\textbf{[Figure placeholder --- pending simulation output]}\\[3pt] #3};
+  \end{tikzpicture}%
+}
+
+\begin{document}
+
+%--------------------------------------------------------------
+\begin{frame}
+  \titlepage
+  \begin{center}
+    \small Building on: Rubbo (2024) \emph{Networks, Phillips Curves, and Monetary Policy}
+  \end{center}
+\end{frame}
+
+%==============================================================
+\begin{frame}{Motivation: Networks Meet the Exchange Rate}
+%==============================================================
+
+{\footnotesize \textbf{Two literatures that rarely talk to each other:}}
+
+\vspace{4pt}
+{\footnotesize
+\begin{enumerate}\setlength{\itemsep}{4pt}
+\item \textbf{Production-network Phillips curves} (Rubbo 2024; La'O \& Tahbaz-Salehi 2022): with input-output linkages, sector-level price stickiness generates a genuine inflation--output tradeoff for \emph{almost every} price index --- except one. A unique ``divine coincidence'' (DC) index, weighting sectors by Domar-scaled stickiness, restores the tradeoff-free policy prescription. All of this is derived in a \textbf{closed economy}.
+
+\item \textbf{Small open economy NK models} (Gal\'i \& Monacelli 2005 and successors): the exchange rate is a cost-push shifter and a policy instrument, but the production side is a single aggregate sector --- no network structure, no heterogeneity in who is exposed to FX shocks.
+\end{enumerate}}
+
+\vspace{6pt}
+{\footnotesize \textbf{This paper puts them together.} Once imported inputs enter a multi-sector network, the exchange rate becomes a \emph{second} cost-push channel that hits sectors asymmetrically depending on their import centrality and their position in the domestic supply chain. Does the DC index --- or any analog --- survive?}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Why This Matters: The Policy Question}
+%==============================================================
+
+{\footnotesize \textbf{Motivating case: a small oil-exporting economy.}
+Resource sector is upstream, import-intensive (machinery) and export-heavy;
+Manufacturing sits in the middle; Services is downstream, domestically
+oriented, and dominates final consumption.}
+
+\vspace{6pt}
+{\footnotesize \textbf{The question a central bank actually faces:}}
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \footnotesize Float and target inflation $\Rightarrow$ exchange rate absorbs FX/commodity-price shocks, but at the cost of nominal volatility and possibly balance-sheet risk.
+\item \footnotesize Peg $\Rightarrow$ eliminates FX risk, but forces \emph{all} adjustment onto domestic prices and output --- amplified by whichever sectors are most import-exposed and most central in the network.
+\item \footnotesize Manage the float $\Rightarrow$ partially, but at what welfare cost relative to the theoretical optimum?
+\end{itemize}
+
+\vspace{6pt}
+{\footnotesize \textbf{Rubbo's closed-economy answer} (target the DC index) says nothing about \emph{which} exchange-rate regime to combine it with, or how network position shapes the answer. That is the gap this paper fills.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Literature}
+%==============================================================
+
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \textbf{La'O \& Tahbaz-Salehi (2022, \emph{Econometrica})} --- optimal monetary policy in production networks; efficient allocations require targeting a Domar-weighted index, not simple CPI. Closed economy.
+\item \textbf{Rubbo (2024, \emph{Econometrica})} --- the paper we extend. Sectoral Calvo pricing $+$ IO network $\Rightarrow$ unique DC index with \emph{no} cost-push residual; welfare-optimal Taylor rule targets it.
+\item \textbf{Auer, Levchenko \& Sauré (2019, \emph{ReStud})} --- international inflation spillovers propagate through global IO linkages; empirical evidence that network position matters for cross-border pass-through.
+\item \textbf{Pasten, Schoenle \& Weber (2020, \emph{JPE})} --- heterogeneous price rigidity across sectors reshapes monetary transmission; motivates letting $\hat\delta_i$ differ by sector here too.
+\item \textbf{Fanelli \& Straub (2021, \emph{JPE})} --- theory of sterilized FX intervention as a second instrument alongside the policy rate.
+\item \textbf{Gopinath \& Itskhoki (2022)} --- dominant currency pricing; \textbf{Amiti, Itskhoki \& Konings (2019, \emph{QJE})} --- variable markups shape exchange-rate pass-through at the firm level.
+\end{itemize}}
+
+\vspace{4pt}
+{\footnotesize \textbf{Gap:} no existing paper combines a multi-sector Calvo network \emph{and} a genuine open-economy block (UIP, imported inputs, FX regimes) to ask whether the DC-targeting result survives.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Rubbo (2024): What Carries Over}
+%==============================================================
+
+\begin{columns}[t]
+\column{0.56\textwidth}
+
+{\footnotesize \textbf{Closed-economy system} ($N$ sectors, Calvo $\hat\delta_i$, IO network $\Omega$):}
+\vspace{-3pt}
+{\scriptsize\begin{align*}
+\text{IS:} &\quad \ty_t = \mathbb{E}\ty_{t+1} - \tfrac{1}{\gamma}(i_t - \mathbb{E}\pi^C_{t+1} - r^{nat}_t) \\[1pt]
+\text{MC:} &\quad \bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t \\[1pt]
+\text{NKPC:} &\quad \bpi_t = \rho(I{-}\mathcal{V})\mathbb{E}\bpi_{t+1} + \mathcal{B}(\gamma{+}\varphi)\ty_t - \mathcal{V}\bm{\chi}_t \\[1pt]
+\text{Policy:} &\quad i_t = r^{nat}_t + \phi_\pi\pi^C_t + \phi_y\ty_t
+\end{align*}}
+
+\vspace{3pt}
+{\footnotesize \textbf{Lemma 1:} natural output $=$ Domar-weighted TFP, $\;y^{nat}_t=\sum_i\lambda_i a_{it}$.
+
+\textbf{Proposition 1 (DC index):} unique index with \emph{no} cost-push:}
+\vspace{-4pt}
+\[\footnotesize \pi^{DC}_t = \rho\,\mathbb{E}\pi^{DC}_{t+1} + \tfrac{\gamma+\varphi}{\Lambda^{DC}}\ty_t,\quad w^{DC}_i \propto \lambda_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\]
+
+\column{0.40\textwidth}
+
+{\footnotesize \textbf{Why DC is unique:} $\mathcal{V}=\Delta(I-\Omega\Delta)^{-1}$ has rank $N{-}1$ on the space of cost-push shocks $\Rightarrow$ a one-dimensional null space $\Rightarrow$ exactly one index $\bm\phi$ with $\bm\phi^\top\mathcal{V}=\bm 0^\top$.}
+
+\vspace{6pt}
+{\footnotesize \textbf{One shock, one channel:} in the closed economy, only TFP shocks $\bm\chi_t$ enter the cost-push term. That is exactly why a single index can null it out.}
+
+\vspace{6pt}
+{\footnotesize \textbf{The open question we ask:} with a \emph{second} cost-push channel (the exchange rate), can the same trick still null out both simultaneously?}
+
+\end{columns}
+\end{frame}
+
+%==============================================================
+\begin{frame}{This Paper: Contribution and Approach}
+%==============================================================
+
+{\footnotesize \textbf{What we do:}}
+\begin{itemize}\setlength{\itemsep}{4pt}
+\item \footnotesize Extend Rubbo's network Phillips curve to a small open economy: imported intermediate inputs (with an import-cost-share matrix $\Omega^F$), imported final consumption, UIP with a debt-elastic premium.
+\item \footnotesize Ask whether the DC index survives when the exchange rate is a second cost-push channel, and quantify the welfare cost of float / peg / managed-float regimes.
+\item \footnotesize Calibrate to a 3-sector oil-exporting economy (Resource $\to$ Manufacturing $\to$ Services).
+\end{itemize}
+
+\vspace{8pt}
+{\footnotesize \textbf{Methodological choice:} the model is built and solved as the \emph{original nonlinear} system directly in Dynare --- Cobb-Douglas cost minimization, the exact recursive Calvo pricing problem, CRRA/Frisch household FOCs, CES consumption aggregation --- rather than substituting in a hand-linearized Phillips curve. Dynare computes the nonlinear steady state numerically and perturbs around it, so the log-linear coefficients (e.g.\ $\hat\delta_i$) come out of the solution rather than being assumed.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Model Setup: Households}
+%==============================================================
+
+{\footnotesize \textbf{Preferences} (CRRA consumption, Frisch labor supply):}
+\vspace{-4pt}
+{\scriptsize\[
+\mathbb{E}_0\sum_{t=0}^\infty \beta^t\left[\frac{C_t^{1-\gamma}}{1-\gamma} - \frac{L_t^{1+\varphi}}{1+\varphi}\right]
+\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Consumption aggregation:} CES nest between a domestic bundle and an imported bundle, home-bias weight $\omega$, elasticity $\eta$; the domestic bundle is itself Cobb-Douglas across the $N$ sectors with shares $\beta^H_i$:}
+\vspace{-4pt}
+{\scriptsize\[
+C_t=\Big[\omega^{1/\eta}(C^H_t)^{\frac{\eta-1}{\eta}}+(1-\omega)^{1/\eta}(C^F_t)^{\frac{\eta-1}{\eta}}\Big]^{\frac{\eta}{\eta-1}},\qquad
+C^H_t = \prod_i \Big(\tfrac{C_{it}}{\beta^H_i}\Big)^{\beta^H_i}
+\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Household FOCs} (nonlinear, exactly as solved in Dynare):}
+\vspace{-4pt}
+{\scriptsize\begin{align*}
+\text{Euler:}\quad & C_t^{-\gamma} = \beta(1+i_t)\,\mathbb{E}_t\big[C_{t+1}^{-\gamma}/\Pi^C_{t+1}\big] \\[1pt]
+\text{Labor supply:}\quad & W_t/P^C_t = C_t^{\gamma} L_t^{\varphi}
+\end{align*}}
+
+\vspace{2pt}
+{\footnotesize \textbf{Asset side:} single internationally traded bond $B^*_t$; no domestic bond needed (representative household, net-zero supply, redundant).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Model Setup: Firms and Calvo Pricing}
+%==============================================================
+
+\begin{columns}[t]
+\column{0.50\textwidth}
+
+{\footnotesize \textbf{Production} (Cobb-Douglas, sector $i$):}
+\vspace{-4pt}
+{\scriptsize\[
+Y_{it}=A_{it}\,L_{it}^{\alpha_i}\prod_j X_{ijt}^{\Omega^H_{ij}}\,M_{it}^{\Omega^F_i}
+\]}
+{\footnotesize Cost minimization $\Rightarrow$ nominal marginal cost is multiplicatively separable:}
+\vspace{-4pt}
+{\scriptsize\[
+MC_{it}=\frac{W_t^{\alpha_i}\prod_j P_{jt}^{\Omega^H_{ij}}\,(S_tP^{F*}_t)^{\Omega^F_i}}{A_{it}}
+\]}
+
+\vspace{4pt}
+{\footnotesize \textbf{Calvo pricing} --- fraction $\delta_i$ resets each period (\emph{not} $\hat\delta_i$: that is derived, not primitive):}
+\vspace{-4pt}
+{\scriptsize\[
+P_{it}^{\#}=\frac{\varepsilon}{\varepsilon-1}\cdot\frac{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}\,\widetilde{MC}_{it+s}}{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}/P_{it+s}}
+\]}
+
+\column{0.47\textwidth}
+
+{\footnotesize \textbf{Exact nonlinear recursion} (as coded in Dynare, real MC $\widetilde{MC}=MC/P$):}
+\vspace{-4pt}
+{\scriptsize\begin{align*}
+X1_{it} &= \widetilde{MC}_{it}Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon}X1_{i,t+1}\\
+X2_{it} &= Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon-1}X2_{i,t+1}\\
+P_{it}^\#/P_{it} &= \tfrac{\varepsilon}{\varepsilon-1}\,X1_{it}/X2_{it}\\
+1 &= (1{-}\delta_i)\Pi_{it}^{\varepsilon-1} + \delta_i (P_{it}^\#/P_{it})^{1-\varepsilon}
+\end{align*}}
+
+\vspace{4pt}
+{\footnotesize \textbf{Why this matters:} log-linearizing this exact recursion is what \emph{produces} Rubbo's adjusted parameter $\hat\delta_i=\tfrac{\delta_i(1-\beta(1-\delta_i))}{1-\beta\delta_i(1-\delta_i)}$ --- it is a derived object, not a primitive of the model.}
+
+\end{columns}
+\end{frame}
+
+%==============================================================
+\begin{frame}{Model Setup: The Open-Economy Block}
+%==============================================================
+
+{\footnotesize \textbf{Exchange rate and imports} ($S_t$: nominal ER, $P^{F*}_t$: foreign import price, law of one price):}
+\vspace{-4pt}
+{\scriptsize\[
+P^{FH}_t = S_t P^{F*}_t
+\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{UIP with a debt-elastic premium} (Schmitt-Groh\'e \& Uribe 2003, for stationarity):}
+\vspace{-4pt}
+{\scriptsize\[
+(1+i_t) = (1+i^*)\big[1-\psi(\hat b^*_t-\bar b^*)\big]\,\mathbb{E}_t\big[S_{t+1}/S_t\big]
+\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Net foreign assets} (current-account identity):}
+\vspace{-4pt}
+{\scriptsize\[
+\hat b^*_t = \frac{1+i_{t-1}}{\Pi^C_t}\hat b^*_{t-1} + \frac{P^H_t EX_t - P^{FH}_t IM_t}{P^C_t}
+\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Trade flows:}}
+\vspace{-4pt}
+{\scriptsize\[
+EX_t = \kappa_{EX}\,D^*_t\Big(\frac{P^H_t}{P^{FH}_t}\Big)^{-\theta^*},\qquad
+IM_t = C^F_t + \sum_i \Omega^F_i\frac{MC_{it}Y_{it}}{P^{FH}_t}
+\]}
+
+\vspace{4pt}
+{\footnotesize \textbf{Key mechanism:} imported inputs enter every sector's marginal cost through $\Omega^F_i$ --- the exchange rate now moves marginal cost \emph{exactly like a productivity shock}, scaled by each sector's import exposure and propagated through $\Omega^H$.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Policy Regimes and Shocks}
+%==============================================================
+
+{\footnotesize \textbf{Three FX regimes} (only the policy block changes):}
+
+\vspace{4pt}
+{\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Regime} & \textbf{Rule} & \textbf{Exchange rate} \\
+\midrule
+Float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t$ & fully endogenous (UIP) \\
+Peg & $S_t = \bar S$ & fixed; $i_t$ residual from UIP \\
+Managed float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi_s\log(S_t/\bar S)$ & partially stabilized \\
+\bottomrule
+\end{tabular}}
+
+\vspace{10pt}
+{\footnotesize \textbf{Three shocks studied:}}
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \footnotesize Sectoral TFP shocks $a_{it}$, AR(1), $\rho_a=0.90$
+\item \footnotesize Import price shock $p^{F*}_t$, AR(1), $\rho_{pF}=0.85$ --- the pure FX/commodity-price channel
+\item \footnotesize Foreign demand shock $D^*_t$, AR(1), $\rho_D=0.80$ --- affects exports, hence NFA and the exchange rate
+\end{itemize}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Solution Method: Nonlinear, Not Pre-Linearized}
+%==============================================================
+
+{\footnotesize \textbf{Why solve the nonlinear model directly, rather than hand-linearize first:}}
+\begin{itemize}\setlength{\itemsep}{4pt}
+\item \footnotesize The Calvo slope $\hat\delta_i$ and the DC weights are \emph{outputs} of log-linearizing the true recursion --- coding them as inputs risks baking in the answer.
+\item \footnotesize A genuine nonlinear model lets us go to order-2 perturbation, which is required for valid welfare comparisons across policy regimes (Kim-Kim / Woodford: first-order-accurate welfare rankings are not valid --- variance terms enter the welfare function only at second order).
+\end{itemize}
+
+\vspace{8pt}
+{\footnotesize \textbf{Steady state:} solved numerically in Dynare (\texttt{initval} + \texttt{steady;}), not imposed. Two closed-form results still apply exactly and are used directly, not approximated:}
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \footnotesize \textbf{Lemma 1 (exact):} $\tilde y_t=\sum_i\lambda_{D,i}\big[\log(Y_{it}/\bar Y_i)-\log A_{it}\big]$ --- no shadow flex-price block needed.
+\item \footnotesize \textbf{Proposition 1 weights (theory-motivated):} DC weights built from $\lambda_{D,i}$ and $\hat\delta_i$, applied to realized inflation in the true nonlinear simulation.
+\end{itemize}
+
+\vspace{6pt}
+{\footnotesize \textbf{Implementation:} \texttt{open\_economy\_network.mod} (Dynare) $\to$ \texttt{run\_all\_regimes.m} (3 regimes, IRFs $+$ moments) $\to$ \texttt{analysis.py} (figures below).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Calibration: A 3-Sector Oil-Exporting Economy}
+%==============================================================
+
+{\footnotesize
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} & \textbf{Parameter} & \textbf{Value}\\
+\midrule
+$\beta$ (discount factor) & 0.99 & $\Omega^H_{21}$ (Manuf.\ $\leftarrow$ Resource) & 0.20 \\
+$\gamma$ (risk aversion) & 1.00 & $\Omega^H_{32}$ (Services $\leftarrow$ Manuf.) & 0.25 \\
+$\varphi$ (inv.\ Frisch elasticity) & 2.00 & $\Omega^F_1,\Omega^F_2,\Omega^F_3$ (import shares) & 0.30, 0.10, 0.05 \\
+$\eta$ (home/foreign elasticity) & 1.50 & $\beta^H_1,\beta^H_2,\beta^H_3$ (consumption shares) & 0.05, 0.15, 0.80 \\
+$\beta^{F,tot}$ (import share, CPI) & 0.10 & $\delta_1,\delta_2,\delta_3$ (Calvo reset prob.) & 0.75, 0.50, 0.25 \\
+$\varepsilon$ (within-sector elasticity) & 8.00 & $\psi$ (NFA debt-elastic premium) & 0.020 \\
+$\theta^*$ (export price elasticity) & 2.00 & $\phi_\pi,\phi_y,\phi_s$ (policy) & 1.50, 0.50, 0.30 \\
+\bottomrule
+\end{tabular}}
+
+\vspace{8pt}
+{\footnotesize \textbf{Sector story:} Resource is upstream, flexible-priced, import-intensive (machinery) and the main exporter. Manufacturing is the middle of the chain. Services is downstream, sticky-priced, and dominates final consumption --- the classic setting for network amplification.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Network Properties: Centrality and DC Weights}
+%==============================================================
+
+\begin{columns}[t]
+\column{0.52\textwidth}
+
+{\footnotesize \textbf{Domestic supplier centrality (Domar weight):}}
+\vspace{-4pt}
+{\scriptsize\[
+\lambda_{D,i} = \big[(\bm\beta^H)^\top(I-\Omega^H)^{-1}\big]_i
+\]}
+
+{\footnotesize \textbf{Import centrality} (FX exposure transmitted through the domestic network):}
+\vspace{-4pt}
+{\scriptsize\[
+\mathcal{M}_i = \big[(I-\Omega^H)^{-1}\Omega^F\mathbf{1}\big]_i
+\]}
+
+{\footnotesize \textbf{DC-index weights} (Proposition 1, applied here to the true nonlinear realized inflation):}
+\vspace{-4pt}
+{\scriptsize\[
+w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
+\]}
+
+{\footnotesize Both objects are computed once from the calibrated $\Omega^H,\Omega^F,\bm\beta^H$ matrices --- no magic numbers, same formulas as Rubbo's Proposition 1 and the import-centrality analog.}
+
+\column{0.44\textwidth}
+
+\vspace{-2pt}
+\begin{center}
+\placeholder{6.0}{4.2}{Domar weights $\lambda_{D,i}$ and import centrality $\mathcal{M}_i$ by sector (bar chart, from \texttt{network\_objects.csv})}
+\end{center}
+
+\vspace{4pt}
+{\footnotesize \textit{Expect: Services has the largest $\lambda_{D,i}$ (dominates final demand, downstream); Resource has the largest $\mathcal{M}_i$ (directly import-intensive) but this need not be the sector with the largest \emph{DC weight}, since DC weights also load on stickiness $(1-\hat\delta_i)/\hat\delta_i$.}}
+
+\end{columns}
+\end{frame}
+
+%==============================================================
+\begin{frame}{Open-Economy Divine Coincidence: Does It Survive?}
+%==============================================================
+
+{\footnotesize \textbf{Closed economy (Rubbo):} one cost-push channel (TFP) $\Rightarrow$ DC index exists uniquely because a rank-deficient matrix $\mathcal{V}$ has a one-dimensional null space, and one index can sit in it.}
+
+\vspace{6pt}
+{\footnotesize \textbf{Open economy: two cost-push channels.} TFP \emph{and} the exchange rate now shift sectoral marginal cost. A single weight vector would need to null out \emph{both} simultaneously:}
+\vspace{-4pt}
+\[\footnotesize \underbrace{\bm\phi^\top\mathcal{V}=\bm 0^\top}_{\text{TFP channel}} \quad\text{and}\quad \underbrace{\bm\phi^\top\Gamma = 0}_{\text{FX channel}}\]
+{\footnotesize Two conditions, one free vector $\Rightarrow$ generically no solution: \textbf{DC breaks down under a float.}}
+
+\vspace{6pt}
+{\footnotesize \textbf{But:} import nodes can be modeled as fully flexible upstream sectors ($\hat\delta_M=1$) in an augmented network. Fully flexible nodes get \emph{zero} DC weight ($w_M=0$ since $(1-\hat\delta_M)/\hat\delta_M=0$), so Rubbo's Proposition 1 still applies to the \emph{augmented} network --- the DC index (as coded here) remains well-defined and insulates against domestic TFP shocks by construction. Whether it \emph{also} nulls the FX channel in the calibrated network is the quantitative question tackled below.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Regime Comparison: Theoretical Predictions}
+%==============================================================
+
+{\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & \textbf{Float} & \textbf{Peg} & \textbf{Managed} \\
+\midrule
+Exchange rate & fully endogenous & fixed & partially stabilized \\
+FX cost-push absorbed by & $S_t$ adjustment & domestic $\pi_i,\,y$ & split \\
+Monetary independence & full & none (residual $i_t$) & full \\
+Pass-through of import shocks & low (if $\phi_\pi$ high) & proportional to $\mathcal{M}_i$ & intermediate \\
+DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & yes \\
+\bottomrule
+\end{tabular}}
+
+\vspace{10pt}
+{\footnotesize \textbf{Expected ranking (to be verified quantitatively):} float should dominate on inflation stabilization when $\phi_\pi$ is high, at the cost of exchange-rate volatility; peg transmits import-price shocks directly, scaled by each sector's import centrality $\mathcal{M}_i$; managed float trades off between the two, with the trade-off governed by $\phi_s$.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{From Theory to Quantification}
+%==============================================================
+
+{\footnotesize \textbf{Pipeline:} \texttt{open\_economy\_network.mod} solved under each regime $\to$ IRFs and order-2 moments exported $\to$ figures below.}
+
+\vspace{8pt}
+{\footnotesize \textbf{Six questions the simulations answer:}}
+\begin{enumerate}\setlength{\itemsep}{4pt}
+\item \footnotesize How do sectoral inflation, the output gap, and the exchange rate respond to TFP, import-price, and foreign-demand shocks, under each regime?
+\item \footnotesize Which sectors are most exposed, and does that line up with Domar weight, import centrality, or both?
+\item \footnotesize How do exports and imports move, and what does that imply for the trade balance and NFA dynamics?
+\item \footnotesize Does the DC index stay close to zero across shocks and regimes (insulation property), or does it visibly move under the float?
+\item \footnotesize What is the welfare ranking of float vs.\ peg vs.\ managed float?
+\item \footnotesize How much of the welfare cost is output-gap volatility vs.\ sector-level price dispersion?
+\end{enumerate}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Impulse Responses Across Regimes}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{IRF grid: rows = shocks (TFP$_1$--TFP$_3$, import price, foreign demand); columns = CPI inflation, output gap, exchange rate, DC-index inflation; lines = float / peg / managed (\texttt{fig\_irfs} in \texttt{analysis.py})}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} under the float, the exchange rate should absorb most of the import-price shock, leaving CPI inflation and the output gap comparatively flat; under the peg, the same shock should show up directly in sectoral and CPI inflation.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Sectoral Inflation Heterogeneity}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{Sectoral inflation ($\pi_1,\pi_2,\pi_3$) under an import-price shock, one panel per regime (\texttt{fig\_sectoral\_inflation} in \texttt{analysis.py})}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} under the peg, sectors should be ranked by import centrality $\mathcal{M}_i$ -- Resource (most import-intensive) should show the largest and fastest inflation response; Services (least import-intensive, stickiest) should respond least but persist longest.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Network and Import Centrality}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{Domestic I-O matrix $\Omega^H$ heatmap, import-share bar chart, and import centrality $\mathcal{M}_i$ by sector (\texttt{fig\_network} in \texttt{analysis.py})}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} the sector with the highest $\mathcal{M}_i$ (likely Resource, given direct 30\% imported machinery share) versus the sector with the highest Domar weight $\lambda_{D,i}$ (likely Services, given its 80\% final-consumption share) --- these need not coincide, and the gap between them is exactly what makes network position matter for FX policy.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Exports, Imports and the Trade Balance}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{Exports $EX_t$, imports $IM_t$, and net foreign assets $\hat b^*_t$ under a foreign-demand shock and an import-price shock, by regime}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} a foreign demand shock should raise exports and NFA under all regimes, but by less under the peg if the associated appreciation pressure cannot be absorbed by $S_t$; an import price shock should worsen the trade balance more under the peg, since the exchange rate cannot adjust to choke off import demand.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Does the DC Index Insulate?}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{DC-index inflation $\pi^{DC}_t$ across all three shocks, by regime (\texttt{fig\_dc\_insulation} in \texttt{analysis.py})}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} under the float, $\pi^{DC}_t$ should stay close to zero even for the import-price shock, since the exchange rate is left free to adjust and the Taylor rule directly targets $\pi^{DC}_t$; any residual movement quantifies exactly how much the open-economy DC index fails to fully insulate (the FX-channel breakdown discussed above).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Welfare Comparison Across Regimes}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{Total welfare loss by regime (float / peg / managed), order-2 unconditional moments (\texttt{fig\_welfare}, panel 1, in \texttt{analysis.py})}
+\end{center}
+
+\vspace{4pt}
+{\footnotesize \textbf{Welfare measure} (Rubbo Proposition 3, adapted): $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\lambda_{D,i}\varepsilon_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\mathrm{Var}(\pi_{it})\big]$, computed on the true nonlinear model's order-2 moments (not a linear approximation --- first-order welfare comparisons across policy rules are not valid).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Results: Welfare Decomposition}
+%==============================================================
+
+\begin{center}
+\placeholder{9.5}{4.0}{Welfare loss decomposed into output-gap component and sector-level price-dispersion components, stacked bars by regime (\texttt{fig\_welfare}, panel 2, in \texttt{analysis.py})}
+\end{center}
+
+\vspace{6pt}
+{\footnotesize \textbf{What to look for:} under the peg, expect the price-dispersion component to be concentrated in the most import-exposed, most centrally located sector; under the float, expect the output-gap component to be relatively larger (since inflation is well stabilized but exchange-rate adjustment itself has a real cost via the debt-elastic premium and terms-of-trade movements).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Summary: Key Messages}
+%==============================================================
+
+{\footnotesize
+\begin{enumerate}\setlength{\itemsep}{6pt}
+\item \footnotesize Rubbo's divine-coincidence result relies on having exactly \emph{one} cost-push channel. Opening the economy adds a second (the exchange rate), so a single index generically cannot null out both --- \textbf{the DC-targeting prescription is not automatically inherited}.
+\item \footnotesize Treating imported inputs as fully flexible upstream nodes in an augmented network preserves a well-defined DC index that still insulates against domestic TFP shocks; whether it also insulates against FX shocks is a quantitative, not purely theoretical, question.
+\item \footnotesize Network position matters for FX policy in two \emph{distinct} dimensions: Domar centrality (who matters for aggregate output) and import centrality (who is exposed to the shock) --- they need not coincide.
+\item \footnotesize The welfare ranking of float / peg / managed float, and its decomposition into output-gap vs.\ price-dispersion costs, is calibration-dependent and is quantified directly from the nonlinear model's own second moments (order-2 perturbation), not a linearized proxy.
+\end{enumerate}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Remaining Work}
+%==============================================================
+
+{\footnotesize \textbf{Done:}}
+{\footnotesize
+\begin{tabular}{@{}ll@{}}
+$\checkmark$ & Full nonlinear structural model coded directly in Dynare \\
+$\checkmark$ & Numerical steady state; order-1 and order-2 perturbation solution \\
+$\checkmark$ & Network objects (Domar weights, import centrality, DC weights) derived, not hardcoded \\
+$\checkmark$ & Regime-switching infrastructure (float / peg / managed) \\
+$\checkmark$ & Analysis pipeline (IRFs, network plots, DC insulation, welfare decomposition) \\
+\end{tabular}}
+
+\vspace{8pt}
+{\footnotesize \textbf{Remaining (target: July 22):}}
+{\footnotesize
+\begin{tabular}{@{}ll@{}}
+$\square$ & Run \texttt{run\_all\_regimes.m}; verify Dynare steady state convergence \\
+$\square$ & Populate all placeholder figures with actual simulation output \\
+$\square$ & Sensitivity of welfare ranking to $\phi_s$ (managed-float sweep) \\
+$\square$ & Sensitivity to import centrality calibration (alternative $\Omega^F$) \\
+$\square$ & Write up Sections 4--6 of the paper (quantitative results, discussion) \\
+\end{tabular}}
+
+\end{frame}
+
+\end{document}

@@ -1,371 +1,382 @@
-// =========================================================
-// Open Economy Production Network NK Model
-// Rubbo (2024) extended to Small Open Economy
+// =========================================================================
+// Open-Economy Production-Network New Keynesian Model
+// Rubbo (2024) extended to a Small Open Economy
 // 3 sectors: Resource (1), Manufacturing (2), Services (3)
 //
-// REGIMES (uncomment one):
-// @#define REGIME = "float"    // Free float (default)
-// @#define REGIME = "peg"      // Hard peg
-// @#define REGIME = "managed"  // Managed float
+// THIS FILE CONTAINS THE ORIGINAL (NONLINEAR) STRUCTURAL MODEL, not a
+// hand-linearized version. Every equation below is a genuine nonlinear
+// first-order condition or identity (Cobb-Douglas cost minimization,
+// recursive Calvo pricing, CRRA Euler equation, CES consumption
+// aggregation, UIP with a debt-elastic premium). Dynare computes the
+// non-stochastic steady state numerically (see `initval`/`steady;`
+// below) and then perturbs around it (order=1 or order=2) -- Dynare
+// itself derives the local dynamics; nothing here is pre-linearized by
+// hand. The fully hand-linearized system that Rubbo-style algebra
+// implies is documented separately in model_equations.tex, Section 3,
+// so you can cross-check Dynare's own order=1 decision rules against it.
+//
+// MICROFOUNDATIONS
+// -----------------
+// Production: sector i uses Cobb-Douglas technology in labor and
+// (domestic + imported) intermediates, Y_it = A_it*L_it^alpha_i *
+// prod_j X_ijt^omegaH_ij * M_it^omegaF_i. Cobb-Douglas cost minimization
+// gives nominal marginal cost MC_it = (1/A_it)*W_t^alpha_i *
+// prod_j P_jt^omegaH_ij * PFH_t^omegaF_i (eq. mc_structural in the tex).
+//
+// Pricing: standard Calvo (Rubbo, proofs .tex eq. around line 75): a
+// fraction DELTA_i of firms in sector i reset their price optimally
+// each period; survivors keep last period's price. The reset price and
+// the recursive aggregator (X1,X2) below are the *exact* nonlinear
+// Calvo recursion -- the "adjusted Calvo parameter" dhat_i used in the
+// old linear file is NOT a primitive here; it is a pure function of
+// (DELTA_i, BETA) that shows up only after log-linearizing this exact
+// recursion (see proofs .tex eq. around line 198). We still compute it
+// below (as DHAT1-3) purely to build the theory-implied DC-index
+// weights used in the policy rule.
+//
+// Household: CRRA/GHH-free preferences, CES aggregation of a domestic
+// bundle (Cobb-Douglas across sectors, shares BH_i) and an imported
+// bundle, single internationally traded bond with a debt-elastic
+// premium (Schmitt-Grohe & Uribe, 2003) for stationarity.
+//
+// Output gap: uses Rubbo's Lemma 1 (natural/flex-price output level =
+// Domar-weighted TFP) in closed form, so no separate shadow flex-price
+// block is needed -- y_gap_t = sum_i lambda_D_i*[log(Y_it/Ybar_i) -
+// log(A_it)] is an EXACT implication of the model, not an approximation.
+//
+// REGIMES (set via -DREGIME=... on the command line, or edit below):
+//   float    Taylor rule targets the DC index (benchmark)
+//   peg      exchange rate fixed, S_t = 1
+//   managed  Taylor rule + partial FX stabilisation
+// =========================================================================
+
+@#ifndef REGIME
 @#define REGIME = "float"
-// =========================================================
+@#endif
 
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 // VARIABLES
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 var
-// Sectoral inflation
-pi1 pi2 pi3
-
-// Aggregate inflation measures
-piDC piCPI
-
-// Output gap and interest rate
-y_gap i_hat
-
-// Exchange rate (log deviation, depreciation = positive)
-s_hat
-
-// Sectoral price levels (log deviation)
-p1 p2 p3
-
-// Consumer price level (log deviation)
-pC_hat
-
-// Real wage (log deviation)
-w_hat
-
-// Net foreign assets (log deviation)
-bstar
-
-// TFP shocks (sectoral)
-a1 a2 a3
-
-// Import price shock
-pF
-
-// Foreign demand shock
-D_star
+  Y1 Y2 Y3            // sectoral gross output
+  L1 L2 L3            // sectoral labor
+  P1 P2 P3            // sectoral price levels (nominal, level)
+  PI1 PI2 PI3         // sectoral gross inflation P_i/P_i(-1)
+  MC1 MC2 MC3         // nominal marginal cost, sector i
+  PSTAR1 PSTAR2 PSTAR3    // optimal reset price relative to P_i (P_i#/P_i)
+  X1_1 X2_1 X1_2 X2_2 X1_3 X2_3   // Calvo recursive aggregators (num/denom)
+  C CH CF             // aggregate, domestic-bundle, imported-bundle consumption
+  PH PC PIC           // domestic-bundle price, CPI, CPI gross inflation
+  Ltot W              // aggregate labor, nominal wage
+  S PF PFH            // exchange rate, foreign import price, PFH = S*PF
+  BSTAR I             // net foreign assets, gross nominal interest rate
+  EX IM               // real exports, real imports (composite units)
+  DSTAR               // foreign demand shifter
+  A1 A2 A3            // sectoral TFP levels
+  piDC y_gap          // DC inflation index (policy target), output gap (Lemma 1)
+  GDP                 // nominal GDP (absorption + net exports), reporting only
 ;
 
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 // EXOGENOUS SHOCKS
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 varexo eps_a1 eps_a2 eps_a3 eps_pF eps_D;
 
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 // PARAMETERS
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 parameters
-// Preferences
-BETA GAMMA VARPHI
-
-// Adjusted Calvo parameters (Rubbo eq. after (14))
-DHAT1 DHAT2 DHAT3
-
-// Labour shares
-ALPHA1 ALPHA2 ALPHA3
-
-// Domestic input-output shares
-OH21      // Manuf. buys from Resource (domestic)
-OH32      // Services buys from Manuf. (domestic)
-
-// Import shares (total per sector)
-OF1 OF2 OF3
-
-// Final consumption shares (domestic sectors)
-BH1 BH2 BH3
-
-// Total import share in final consumption
-BF_TOT
-
-// DC index weights
-WDC1 WDC2 WDC3
-
-// Open economy
-PSI       // NFA premium
-THETA_S   // export price elasticity
-KAP_EX    // exports/GDP
-KAP_IM    // imports/GDP
-NU_D      // foreign demand sensitivity
-
-// Policy
-PHI_PI PHI_Y PHI_S
-
-// Shock persistence
-RHO_A RHO_PF RHO_D
+  BETA GAMMA VARPHI EPS
+  DELTA1 DELTA2 DELTA3          // raw Calvo RESET probabilities (primitives)
+  ALPHA1 ALPHA2 ALPHA3          // labour cost shares
+  OH21 OH32                     // domestic input-output shares
+  OF1 OF2 OF3                   // total imported-input cost shares
+  BH1 BH2 BH3                   // domestic consumption shares (Cobb-Douglas)
+  BF_TOT OMEGA ETA               // aggregate import share in CPI, home-bias weight, home/foreign elasticity
+  PSI THETA_S KAPEX_SCALE BSTARBAR   // open-economy: NFA premium, export elasticity, export scale, NFA target
+  ISTAR                          // steady-state foreign gross rate (pinned by BETA)
+  PHI_PI PHI_Y PHI_S             // policy
+  RHO_A RHO_PF RHO_D             // shock persistence
+  LAMBDA_D1 LAMBDA_D2 LAMBDA_D3   // Domar / domestic-supplier centrality (derived)
+  DHAT1 DHAT2 DHAT3               // adjusted Calvo parameters (derived, reporting/weights only)
+  WDC1 WDC2 WDC3                   // DC-index weights (derived)
+  MIMP1 MIMP2 MIMP3                // import centrality (derived, reporting only)
 ;
 
-// ---------------------------------------------------------
-// PARAMETER VALUES
-// ---------------------------------------------------------
-
-// Preferences
+// -------------------------------------------------------------------------
+// PARAMETER VALUES (primitive calibration)
+// -------------------------------------------------------------------------
 BETA    = 0.99;
 GAMMA   = 1.00;
 VARPHI  = 2.00;
+EPS     = 8.00;      // within-sector elasticity of substitution (all sectors)
 
-// Adjusted Calvo (delta_hat from eq. (2))
-// delta = [0.75, 0.50, 0.25], beta = 0.99
-// dhat_i = delta_i*(1-beta*(1-delta_i))/(1-beta*delta_i*(1-delta_i))
-DHAT1   = 0.693;
-DHAT2   = 0.336;
-DHAT3   = 0.079;
+// Raw Calvo reset probabilities (delta_i in proofs.tex, NOT dhat_i)
+DELTA1  = 0.75;      // Resource: flexible (commodity prices)
+DELTA2  = 0.50;      // Manufacturing: intermediate stickiness
+DELTA3  = 0.25;      // Services: sticky
 
-// Labour shares (alpha_i = 1 - sum_j(omega_H_ij + omega_F_ij))
-ALPHA1  = 0.70;   // Resource:  1 - 0.00 - 0.30
-ALPHA2  = 0.70;   // Manuf.:    1 - 0.20 - 0.10
-ALPHA3  = 0.70;   // Services:  1 - 0.25 - 0.05
+ALPHA1  = 0.70;
+ALPHA2  = 0.70;
+ALPHA3  = 0.70;
 
-// Domestic I-O shares
-OH21    = 0.20;   // Manuf. <- Resource (domestic)
-OH32    = 0.25;   // Services <- Manuf. (domestic)
+OH21    = 0.20;      // Manuf. <- Resource (domestic)
+OH32    = 0.25;      // Services <- Manuf. (domestic)
 
-// Total import shares per sector
-OF1     = 0.30;   // Resource
-OF2     = 0.10;   // Manufacturing
-OF3     = 0.05;   // Services
+OF1     = 0.30;      // Resource: imported machinery
+OF2     = 0.10;      // Manufacturing: imported components
+OF3     = 0.05;      // Services: indirect imports
 
-// Final consumption shares
 BH1     = 0.05;
 BH2     = 0.15;
 BH3     = 0.80;
 BF_TOT  = 0.10;
+OMEGA   = 1 - BF_TOT;   // home bias weight in the outer CES nest
+ETA     = 1.50;         // home/foreign substitution elasticity (Gali-Monacelli 2005)
 
-// DC index weights  w_i propto lambda_D_i*(1-dhat_i)/dhat_i
-// lambda_D = [0.12, 0.35, 0.80] (domestic supplier centrality)
-// raw weights:
-//   w1 = 0.12*(1-0.693)/0.693 = 0.0532
-//   w2 = 0.35*(1-0.336)/0.336 = 0.6916
-//   w3 = 0.80*(1-0.079)/0.079 = 9.328
-//   total = 10.073
-WDC1    = 0.0053;
-WDC2    = 0.0686;
-WDC3    = 0.9261;
+PSI        = 0.020;
+THETA_S    = 2.00;
+KAPEX_SCALE = 0.50;      // export-demand scale constant -- calibrated, see note below
+BSTARBAR    = 0.00;      // target/steady-state NFA position (debt-elastic premium reference)
 
-// Open economy
-PSI      = 0.020;
-THETA_S  = 2.00;
-KAP_EX   = 0.85;
-KAP_IM   = 0.45;
-NU_D     = 0.30;
+PHI_PI  = 1.50;
+PHI_Y   = 0.50;
+PHI_S   = 0.30;
 
-// Policy
-PHI_PI   = 1.50;
-PHI_Y    = 0.50;
-PHI_S    = 0.30;   // managed float only
+RHO_A   = 0.90;
+RHO_PF  = 0.85;
+RHO_D   = 0.80;
 
-// Shock persistence
-RHO_A    = 0.90;
-RHO_PF   = 0.85;
-RHO_D    = 0.80;
+ISTAR = 1/BETA;   // pins down the foreign nominal rate so UIP + Euler are
+                  // jointly consistent with a zero-inflation steady state
+                  // at BSTAR = BSTARBAR (standard SOE closure).
 
-// ---------------------------------------------------------
-// MODEL BLOCK
-// ---------------------------------------------------------
-model(linear);
+// -------------------------------------------------------------------------
+// DERIVED NETWORK / POLICY OBJECTS
+// (computed once from the primitives above -- no magic numbers)
+// -------------------------------------------------------------------------
+OmH = [0,    0,    0;
+       OH21, 0,    0;
+       0,    OH32, 0];
+OF_vec = [OF1; OF2; OF3];
+BH_vec = [BH1; BH2; BH3];
+LH = inv(eye(3) - OmH);                 // domestic Leontief inverse (I-OmegaH)^-1
 
-//----------------------------------------------------------
-// [1] Sectoral Phillips curves  (eqs. 3-5 in paper)
-// pi_it = beta*(1-dhat_i)*E[pi_{i,t+1}]
-//       + dhat_i*[alpha_i*w + omega_H_ij*p_j - p_i(-1)
-//                + omega_F_i*(s+pF) - a_i]
-// Note: p_jt = p_j(-1) + pi_j  is substituted inline
-//----------------------------------------------------------
+lambda_D = (BH_vec' * LH)';             // eq. (lambdaD): domestic supplier centrality
+LAMBDA_D1 = lambda_D(1);
+LAMBDA_D2 = lambda_D(2);
+LAMBDA_D3 = lambda_D(3);
 
-// Resource (no domestic inputs)
-pi1 = BETA*(1-DHAT1)*pi1(+1)
-+ DHAT1*(   ALPHA1*w_hat
-          + OF1*(s_hat + pF)
-          - a1
-          - p1(-1)
-        );
+M_import = LH * OF_vec;                 // eq. (importcent): import centrality
+MIMP1 = M_import(1);
+MIMP2 = M_import(2);
+MIMP3 = M_import(3);
 
-// Manufacturing (buys from Resource domestic)
-pi2 = BETA*(1-DHAT2)*pi2(+1)
-+ DHAT2*(   ALPHA2*w_hat
-          + OH21*(p1(-1) + pi1)
-          + OF2*(s_hat + pF)
-          - a2
-          - p2(-1)
-        );
+delta_raw = [DELTA1; DELTA2; DELTA3];
+dhat_vec  = delta_raw.*(1-BETA*(1-delta_raw)) ./ (1-BETA*delta_raw.*(1-delta_raw));
+DHAT1 = dhat_vec(1);
+DHAT2 = dhat_vec(2);
+DHAT3 = dhat_vec(3);
 
-// Services (buys from Manufacturing domestic)
-pi3 = BETA*(1-DHAT3)*pi3(+1)
-+ DHAT3*(   ALPHA3*w_hat
-          + OH32*(p2(-1) + pi2)
-          + OF3*(s_hat + pF)
-          - a3
-          - p3(-1)
-        );
+raw_w = lambda_D .* (1-dhat_vec) ./ dhat_vec;   // eq. (DCindex) weight formula
+w_dc  = raw_w / sum(raw_w);
+WDC1 = w_dc(1);
+WDC2 = w_dc(2);
+WDC3 = w_dc(3);
 
-//----------------------------------------------------------
-// [2] Price level laws of motion  (eq. 6)
-//----------------------------------------------------------
-p1 = p1(-1) + pi1;
-p2 = p2(-1) + pi2;
-p3 = p3(-1) + pi3;
+disp('=== Domar / domestic-supplier centrality (lambda_D) ===');
+disp(lambda_D');
+disp('=== Import centrality (M_i) ===');
+disp(M_import');
+disp('=== Adjusted Calvo parameters (dhat_i, reporting only) ===');
+disp(dhat_vec');
+disp('=== DC-index weights (w_DC) ===');
+disp(w_dc');
 
-//----------------------------------------------------------
-// [3] Consumer price level  (eq. 9)
-//----------------------------------------------------------
-pC_hat = BH1*p1 + BH2*p2 + BH3*p3 + BF_TOT*(s_hat + pF);
+// -------------------------------------------------------------------------
+// MODEL BLOCK (nonlinear -- levels, NOT model(linear))
+// -------------------------------------------------------------------------
+model;
 
-//----------------------------------------------------------
-// [4] CPI inflation  (eq. 8)
-//----------------------------------------------------------
-piCPI = BH1*pi1 + BH2*pi2 + BH3*pi3
-  + BF_TOT*((s_hat + pF) - (s_hat(-1) + pF(-1)));
+//----------------------------------------------------------------
+// [1] Nominal marginal cost, Cobb-Douglas cost minimization
+//----------------------------------------------------------------
+MC1 = (1/A1) * W^ALPHA1                          * PFH^OF1;
+MC2 = (1/A2) * W^ALPHA2 * P1^OH21                * PFH^OF2;
+MC3 = (1/A3) * W^ALPHA3 * P2^OH32                * PFH^OF3;
 
-//----------------------------------------------------------
-// [5] Real wage  (eq. 7, labour supply)
-// w_hat = pC_hat + (gamma+varphi)*y_gap
-//----------------------------------------------------------
-w_hat = pC_hat + (GAMMA + VARPHI)*y_gap;
+//----------------------------------------------------------------
+// [2] Recursive Calvo pricing (exact nonlinear recursion), sector 1
+//----------------------------------------------------------------
+X1_1 = (MC1/P1)*Y1 + (1-DELTA1)*BETA*(C(+1)/C)^(-GAMMA)*PI1(+1)^EPS      *X1_1(+1);
+X2_1 = Y1     + (1-DELTA1)*BETA*(C(+1)/C)^(-GAMMA)*PI1(+1)^(EPS-1)  *X2_1(+1);
+PSTAR1 = (EPS/(EPS-1)) * X1_1/X2_1;
+1 = (1-DELTA1)*PI1^(EPS-1) + DELTA1*PSTAR1^(1-EPS);
+P1 = PI1*P1(-1);
 
-//----------------------------------------------------------
-// [6] DC inflation index  (eq. 10, Proposition 1)
-//----------------------------------------------------------
-piDC = WDC1*pi1 + WDC2*pi2 + WDC3*pi3;
+// sector 2
+X1_2 = (MC2/P2)*Y2 + (1-DELTA2)*BETA*(C(+1)/C)^(-GAMMA)*PI2(+1)^EPS      *X1_2(+1);
+X2_2 = Y2     + (1-DELTA2)*BETA*(C(+1)/C)^(-GAMMA)*PI2(+1)^(EPS-1)  *X2_2(+1);
+PSTAR2 = (EPS/(EPS-1)) * X1_2/X2_2;
+1 = (1-DELTA2)*PI2^(EPS-1) + DELTA2*PSTAR2^(1-EPS);
+P2 = PI2*P2(-1);
 
-//----------------------------------------------------------
-// [7] IS curve  (eq. 11)
-// y_gap = E[y_gap(+1)] - (1/gamma)*(i_hat - E[piCPI(+1)])
-//       + nu_D * D_star
-// (natural rate r_nat = 0 in deviations from SS)
-//----------------------------------------------------------
-y_gap = y_gap(+1) - (1/GAMMA)*(i_hat - piCPI(+1)) + NU_D*D_star;
+// sector 3
+X1_3 = (MC3/P3)*Y3 + (1-DELTA3)*BETA*(C(+1)/C)^(-GAMMA)*PI3(+1)^EPS      *X1_3(+1);
+X2_3 = Y3     + (1-DELTA3)*BETA*(C(+1)/C)^(-GAMMA)*PI3(+1)^(EPS-1)  *X2_3(+1);
+PSTAR3 = (EPS/(EPS-1)) * X1_3/X2_3;
+1 = (1-DELTA3)*PI3^(EPS-1) + DELTA3*PSTAR3^(1-EPS);
+P3 = PI3*P3(-1);
 
-//----------------------------------------------------------
-// [8] UIP  (eq. 12)
-// i_hat = -psi*bstar + E[s(+1)] - s
-//----------------------------------------------------------
-i_hat = -PSI*bstar + s_hat(+1) - s_hat;
+//----------------------------------------------------------------
+// [3] Labour demand (Cobb-Douglas cost share ALPHA_i of total cost)
+//----------------------------------------------------------------
+L1 = ALPHA1*MC1*Y1/W;
+L2 = ALPHA2*MC2*Y2/W;
+L3 = ALPHA3*MC3*Y3/W;
+Ltot = L1 + L2 + L3;
 
-//----------------------------------------------------------
-// [9] NFA accumulation  (eq. 13)
-// bstar = (1/beta - psi)*bstar(-1)
-//       + kap_EX*(-theta_s*s + D_star)
-//       - kap_IM*(pF + y_gap)
-// Eigenvalue = 1/beta - psi = 0.990 < 1 (stationary)
-//----------------------------------------------------------
-bstar = (1/BETA - PSI)*bstar(-1)
-  + KAP_EX*(-THETA_S*s_hat + D_star)
-  - KAP_IM*(pF + y_gap);
+//----------------------------------------------------------------
+// [4] Goods market clearing: output = domestic consumption
+//     + domestic intermediate demand + exports
+//     (export bundle shares the same Cobb-Douglas composition BH_i
+//      as domestic consumption -- "one home good sold at home and abroad")
+//----------------------------------------------------------------
+Y1 = BH1*PH*CH/P1 + OH21*MC2*Y2/P1 + BH1*PH*EX/P1;
+Y2 = BH2*PH*CH/P2 + OH32*MC3*Y3/P2 + BH2*PH*EX/P2;
+Y3 = BH3*PH*CH/P3                  + BH3*PH*EX/P3;
 
-//----------------------------------------------------------
+//----------------------------------------------------------------
+// [5] Consumption aggregation: Cobb-Douglas domestic bundle,
+//     CES nest between domestic (H) and imported (F) bundles
+//----------------------------------------------------------------
+PH = P1^BH1 * P2^BH2 * P3^BH3;
+PC = ( OMEGA*PH^(1-ETA) + (1-OMEGA)*PFH^(1-ETA) )^(1/(1-ETA));
+CH = OMEGA*(PH/PC)^(-ETA)*C;
+CF = (1-OMEGA)*(PFH/PC)^(-ETA)*C;
+PIC = PC/PC(-1);
+
+//----------------------------------------------------------------
+// [6] Household Euler equation and labour supply (nonlinear CRRA/Frisch)
+//----------------------------------------------------------------
+C^(-GAMMA) = BETA*I*(C(+1)^(-GAMMA))/PIC(+1);
+W/PC = C^GAMMA * Ltot^VARPHI;
+
+//----------------------------------------------------------------
+// [7] Exchange rate block: LOP for imports, UIP with debt-elastic premium
+//----------------------------------------------------------------
+PFH = S*PF;
+I = ISTAR*(1 - PSI*(BSTAR - BSTARBAR)) * S(+1)/S;
+
+//----------------------------------------------------------------
+// [8] Net foreign assets: current-account identity
+//     BSTAR_t = gross return on BSTAR_{t-1} + real trade balance
+//----------------------------------------------------------------
+BSTAR = (I(-1)/PIC)*BSTAR(-1) + (PH*EX - PFH*IM)/PC;
+
+//----------------------------------------------------------------
+// [9] Export demand and total import demand
+//     EX: reduced-form ROW demand for the home composite good,
+//         decreasing in the real exchange rate PH/PFH, increasing in DSTAR
+//     IM: final imported consumption + imported intermediate inputs
+//----------------------------------------------------------------
+EX = KAPEX_SCALE*DSTAR*(PH/PFH)^(-THETA_S);
+IM = CF + OF1*MC1*Y1/PFH + OF2*MC2*Y2/PFH + OF3*MC3*Y3/PFH;
+
+//----------------------------------------------------------------
 // [10] Policy rule (regime-dependent)
-//----------------------------------------------------------
+//----------------------------------------------------------------
 @#if REGIME == "float"
-// Free float: Taylor rule on DC index
-i_hat = PHI_PI*piDC + PHI_Y*y_gap;
+log(I/ISTAR) = PHI_PI*piDC + PHI_Y*y_gap;
 
 @#elseif REGIME == "peg"
-// Hard peg: exchange rate fixed
-s_hat = 0;
-// i_hat determined residually by UIP (already in eq. 8)
+S = 1;
+// I is residual, pinned down by the UIP equation in block [7]
 
 @#elseif REGIME == "managed"
-// Managed float: Taylor rule + FX stabilisation
-i_hat = PHI_PI*piDC + PHI_Y*y_gap + PHI_S*s_hat;
+log(I/ISTAR) = PHI_PI*piDC + PHI_Y*y_gap + PHI_S*log(S);
 
 @#endif
 
-//----------------------------------------------------------
-// [11] Shock processes  (eqs. 15-17)
-//----------------------------------------------------------
-a1 = RHO_A*a1(-1)  + eps_a1;
-a2 = RHO_A*a2(-1)  + eps_a2;
-a3 = RHO_A*a3(-1)  + eps_a3;
-pF = RHO_PF*pF(-1) + eps_pF;
-D_star = RHO_D*D_star(-1) + eps_D;
+//----------------------------------------------------------------
+// [11] DC inflation index and output gap
+//      DC weights from Rubbo Prop. 1 (log measure of realized inflation)
+//      y_gap from Lemma 1: natural output = Domar-weighted TFP, in closed form
+//----------------------------------------------------------------
+piDC = WDC1*log(PI1) + WDC2*log(PI2) + WDC3*log(PI3);
+y_gap = LAMBDA_D1*(log(Y1/STEADY_STATE(Y1)) - log(A1))
+      + LAMBDA_D2*(log(Y2/STEADY_STATE(Y2)) - log(A2))
+      + LAMBDA_D3*(log(Y3/STEADY_STATE(Y3)) - log(A3));
+
+//----------------------------------------------------------------
+// [12] Exogenous shock processes (AR(1) in logs)
+//----------------------------------------------------------------
+log(A1) = RHO_A *log(A1(-1))  + eps_a1;
+log(A2) = RHO_A *log(A2(-1))  + eps_a2;
+log(A3) = RHO_A *log(A3(-1))  + eps_a3;
+log(PF) = RHO_PF*log(PF(-1))  + eps_pF;
+log(DSTAR) = RHO_D*log(DSTAR(-1)) + eps_D;
+
+//----------------------------------------------------------------
+// [13] Reporting: nominal GDP = absorption + net exports
+//----------------------------------------------------------------
+GDP = PC*C + PH*EX - PFH*IM;
 
 end;
 
-// ---------------------------------------------------------
+// -------------------------------------------------------------------------
 // STEADY STATE
-// (All log-deviations are zero by construction)
-// ---------------------------------------------------------
+// Dynare solves this numerically (nonlinear system, no closed form
+// imposed) from the initial guess below via `steady;`. If it fails to
+// converge: (i) run `resid;` to see which equations are furthest from
+// zero, (ii) try tightening the initval guesses, or (iii) recalibrate
+// KAPEX_SCALE / BSTARBAR (the trade balance and NFA position are jointly
+// determined by these two and are NOT independently targeted here).
+// -------------------------------------------------------------------------
 initval;
-pi1 = 0; pi2 = 0; pi3 = 0;
-piDC = 0; piCPI = 0;
-y_gap = 0; i_hat = 0; s_hat = 0;
-p1 = 0; p2 = 0; p3 = 0;
-pC_hat = 0; w_hat = 0; bstar = 0;
-a1 = 0; a2 = 0; a3 = 0;
-pF = 0; D_star = 0;
+A1 = 1; A2 = 1; A3 = 1;
+PF = 1; DSTAR = 1; S = 1;
+W  = 1;
+P1 = 1; P2 = 1; P3 = 1;
+PH = 1; PC = 1; PFH = 1;
+PI1 = 1; PI2 = 1; PI3 = 1; PIC = 1;
+PSTAR1 = 1; PSTAR2 = 1; PSTAR3 = 1;
+MC1 = (EPS-1)/EPS; MC2 = (EPS-1)/EPS; MC3 = (EPS-1)/EPS;
+Y1 = 0.30; Y2 = 0.45; Y3 = 1.00;
+X1_1 = MC1*Y1/(1-(1-DELTA1)*BETA); X2_1 = Y1/(1-(1-DELTA1)*BETA);
+X1_2 = MC2*Y2/(1-(1-DELTA2)*BETA); X2_2 = Y2/(1-(1-DELTA2)*BETA);
+X1_3 = MC3*Y3/(1-(1-DELTA3)*BETA); X2_3 = Y3/(1-(1-DELTA3)*BETA);
+L1 = ALPHA1*MC1*Y1/W; L2 = ALPHA2*MC2*Y2/W; L3 = ALPHA3*MC3*Y3/W;
+Ltot = L1+L2+L3;
+C  = 1.00; CH = 0.90; CF = 0.10;
+I = 1/BETA;
+BSTAR = 0;
+EX = 0.30; IM = 0.30;
+piDC = 0; y_gap = 0;
+GDP = 1.20;
 end;
 
-// ---------------------------------------------------------
-// SHOCKS (unit standard deviations)
-// ---------------------------------------------------------
+steady;
+resid;
+check;
+
+// -------------------------------------------------------------------------
+// SHOCKS (1 s.d. innovations)
+// -------------------------------------------------------------------------
 shocks;
-var eps_a1  = 0.01^2;   // 1% TFP shock, sector 1 (Resource)
-var eps_a2  = 0.01^2;   // 1% TFP shock, sector 2 (Manuf.)
-var eps_a3  = 0.01^2;   // 1% TFP shock, sector 3 (Services)
-var eps_pF  = 0.01^2;   // 1% import price shock
-var eps_D   = 0.01^2;   // 1% foreign demand shock
+var eps_a1  = 0.01^2;
+var eps_a2  = 0.01^2;
+var eps_a3  = 0.01^2;
+var eps_pF  = 0.01^2;
+var eps_D   = 0.01^2;
 end;
 
-// ---------------------------------------------------------
-// SOLUTION AND OUTPUT
-// ---------------------------------------------------------
-stoch_simul(
-order       = 1,       // linear model
-periods     = 0,       // no simulation; compute IRFs only
-irf         = 40,      // 40-quarter IRF horizon
-graph_format = pdf,
-nograph     = 0,
-noprint     = 0
-);
-
-// Print key model moments
-disp('=== DC index weights ===');
-disp([WDC1 WDC2 WDC3]);
-
-disp('=== Import centrality (network exposure to FX shock) ===');
-// M_i = [((I-OmegaH)^{-1}) * OF] -- computed externally from network matrices
-// Values: [0.30, 0.16, 0.09] for Resource, Manuf., Services
-
-\paragraph{Switching regimes.}
-To compare the peg, change line 12 to
-\texttt{@\#define REGIME = "peg"} and re-run.
-For the managed float, use \texttt{"managed"}.
-Dynare will automatically drop or add the exchange-rate equation.
-
-\paragraph{Note on the peg.}
-Under the peg (\texttt{s\_hat = 0}), the interest-rate equation \texttt{i\_hat}
-is no longer set by the Taylor rule; instead it is determined residually by
-UIP \eqref{eq:UIP} (equation~[8] in the model block remains active).
-Dynare handles this automatically since the number of equations equals
-the number of variables in both cases.
-
-\paragraph{Welfare comparison.}
-After obtaining the second-order moments from \texttt{stoch\_simul},
-compute the per-period welfare loss:
-\begin{equation}
-\mathcal{W}=\tfrac{1}{2}\!\left[(\gamma+\varphi)\,\text{Var}(\tl y_t)
-+\sum_i\lambda_{D,i}\varepsilon_i\frac{1-\wh\delta_i}{\wh\delta_i}\,\text{Var}(\pi_{it})\right].
-\label{eq:welfare}
-\end{equation}
-In Dynare add after \texttt{stoch\_simul}:
-// Welfare (Rubbo Prop. 3 adapted for open economy)
-GAMMA_PHI = GAMMA + VARPHI;
-EPS = 8;       // within-sector substitution elasticity (same for all i)
-LD = [0.12, 0.35, 0.80];   // lambda_D
-DHAT = [DHAT1, DHAT2, DHAT3];
-
-W_output = 0.5 * GAMMA_PHI * oo_.var(strmatch('y_gap', M_.endo_names,'exact'), ...
-       strmatch('y_gap', M_.endo_names,'exact'));
-
-W_pi = 0;
-for i = 1:3
-var_name = ['pi', num2str(i)];
-idx = strmatch(var_name, M_.endo_names, 'exact');
-W_pi = W_pi + 0.5 * LD(i) * EPS * (1-DHAT(i))/DHAT(i) * oo_.var(idx,idx);
-end
-
-W_total = W_output + W_pi;
-fprintf('Welfare loss (x10^4): %.4f\n', W_total * 1e4);
-fprintf('  Output gap component: %.4f\n', W_output * 1e4);
-fprintf('  Inflation component:  %.4f\n', W_pi * 1e4);
+// -------------------------------------------------------------------------
+// SOLUTION
+// order=2 with pruning: welfare/regime rankings are NOT first-order
+// accurate (Kim-Kim / Woodford critique -- variance terms only enter
+// the welfare function at second order), so use order=2 for anything
+// welfare-related. order=1 IRFs are also produced and can be checked
+// against the hand-linearized system in model_equations.tex Sec. 3.
+// -------------------------------------------------------------------------
+stoch_simul(order=2, pruning, irf=40, periods=0, graph_format=pdf, nograph=0) piDC PIC y_gap PI1 PI2 PI3 S I BSTAR GDP;
