@@ -15,14 +15,15 @@ modfiles = struct('float', 'open_economy_network', ...
                    'peg', 'open_economy_network_peg', ...
                    'managed', 'open_economy_network_managed');
 shock_names = {'eps_a1','eps_a2','eps_a3','eps_pF','eps_D'};
-moment_vars = {'piDC','PIC','y_gap','PI1','PI2','PI3','I','BSTAR'};
-irf_vars = {'piDC','PIC','y_gap','PI1','PI2','PI3','S','I','BSTAR','GDP','EX','IM','C','P1','P2','P3'};
+moment_vars = {'piDC','PIC','y_gap','y_gap1','y_gap2','y_gap3','PI1','PI2','PI3','I','BSTAR'};
+irf_vars = {'piDC','PIC','y_gap','y_gap1','y_gap2','y_gap3','PI1','PI2','PI3','S','I','BSTAR','GDP','EX','IM','C','P1','P2','P3'};
 
 out_dir = 'results';
 if ~exist(out_dir, 'dir'); mkdir(out_dir); end
 
 all_irfs = struct();
 all_var = struct();
+all_vardec = struct();
 all_params = struct();
 
 for r = 1:numel(regimes)
@@ -46,6 +47,17 @@ for r = 1:numel(regimes)
     for v = 1:numel(moment_vars)
         all_var.(regime).(moment_vars{v}) = oo_.var(v, v);
     end
+
+    % oo_.variance_decomposition (rows = moment_vars, in var_list order;
+    % cols = M_.exo_names order) gives the % of each variable's
+    % unconditional variance attributable to each shock. Reindex the
+    % columns onto shock_names so downstream code doesn't depend on
+    % M_.exo_names order.
+    exo_idx = zeros(1, numel(shock_names));
+    for s = 1:numel(shock_names)
+        exo_idx(s) = find(strcmp(M_.exo_names, shock_names{s}));
+    end
+    all_vardec.(regime) = oo_.variance_decomposition(:, exo_idx);
 
     par_names = {'LAMBDA_D1','LAMBDA_D2','LAMBDA_D3','MIMP1','MIMP2','MIMP3', ...
                  'DHAT1','DHAT2','DHAT3','WDC1','WDC2','WDC3','BETA','GAMMA','VARPHI','EPS'};
@@ -98,6 +110,24 @@ for r = 1:numel(regimes)
 end
 fclose(fid);
 
+% ---- write variance_decomposition.csv -------------------------------------
+% One row per (regime, variable): % of that variable's unconditional
+% variance attributable to each shock (columns follow shock_names order).
+% Multiplying these percentages by variances.csv's totals recovers each
+% shock's absolute variance contribution -- used to split the welfare
+% loss by shock (TFP vs import-price vs foreign-demand).
+fid = fopen(fullfile(out_dir, 'variance_decomposition.csv'), 'w');
+fprintf(fid, 'regime,variable,%s\n', strjoin(shock_names, ','));
+for r = 1:numel(regimes)
+    regime = regimes{r};
+    for v = 1:numel(moment_vars)
+        row = sprintf('%.10g,', all_vardec.(regime)(v, :));
+        row(end) = [];
+        fprintf(fid, '%s,%s,%s\n', regime, moment_vars{v}, row);
+    end
+end
+fclose(fid);
+
 % ---- write network_objects.csv (identical across regimes, from float) ----
 fid = fopen(fullfile(out_dir, 'network_objects.csv'), 'w');
 fprintf(fid, 'object,sector1,sector2,sector3\n');
@@ -115,6 +145,6 @@ fprintf(fid, 'VARPHI,%.10g\n', all_params.float.VARPHI);
 fprintf(fid, 'EPS,%.10g\n', all_params.float.EPS);
 fclose(fid);
 
-save(fullfile(out_dir, 'all_results.mat'), 'all_irfs', 'all_var', 'all_params', 'moment_vars', 'irf_vars', 'shock_names', 'regimes');
+save(fullfile(out_dir, 'all_results.mat'), 'all_irfs', 'all_var', 'all_vardec', 'all_params', 'moment_vars', 'irf_vars', 'shock_names', 'regimes');
 
 fprintf('\nDone. Results written to %s\n', out_dir);

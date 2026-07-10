@@ -99,6 +99,15 @@ def load_params() -> dict:
     return dict(zip(df["name"], df["value"]))
 
 
+def load_variance_decomposition() -> pd.DataFrame:
+    """% of each variable's unconditional variance attributable to each
+    shock (rows = regime x variable, cols = shock names). Comes straight
+    from Dynare's oo_.variance_decomposition (run_all_regimes.m saves it
+    to variance_decomposition.csv), NOT a hand computation."""
+    path = os.path.join(RESULTS_DIR, "variance_decomposition.csv")
+    return pd.read_csv(path)
+
+
 # ══════════════════════════════════════════════════════════════════════════
 # 2. WELFARE DECOMPOSITION (Rubbo Prop. 3, open-economy welfare eq.)
 # ══════════════════════════════════════════════════════════════════════════
@@ -137,6 +146,59 @@ def compute_welfare(variances: pd.DataFrame, net_obj: pd.DataFrame, params: dict
             "total": w_output + w_pi_by_sector.sum(),
         })
     return pd.DataFrame(rows).set_index("regime")
+
+
+SHOCK_GROUPS = {
+    "TFP": ["eps_a1", "eps_a2", "eps_a3"],
+    "Import price (FX)": ["eps_pF"],
+    "Foreign demand": ["eps_D"],
+}
+
+
+def compute_welfare_by_shock(variances: pd.DataFrame, vardec: pd.DataFrame,
+                              net_obj: pd.DataFrame, params: dict) -> pd.DataFrame:
+    """
+    Split each regime's total welfare loss (compute_welfare) by shock
+    SOURCE, using Dynare's own variance decomposition (% of each
+    variable's variance due to each shock) to allocate the SAME
+    variances that go into the welfare formula:
+
+        W = 0.5*(gamma+varphi)*Var(y_gap)
+          + 0.5*sum_i lambda_D_i*eps_i*(1-dhat_i)/dhat_i*Var(pi_i)
+
+    Because Var(x) = sum_shock (pct_shock/100)*Var(x) exactly (the
+    decomposition is additive across independent shocks), summing this
+    function's per-shock welfare contributions over shocks reproduces
+    compute_welfare()'s "total" column exactly, for every regime.
+    Grouped into TFP (eps_a1-3) / Import-price (FX channel) / Foreign
+    demand, since that's the economically meaningful split (SHOCK_GROUPS).
+    """
+    gamma_phi = params["GAMMA"] + params["VARPHI"]
+    lam = net_obj.loc["lambda_D"].values
+    dhat = net_obj.loc["dhat"].values
+    eps = params["EPS"]
+    disp_weight = lam * eps * (1 - dhat) / dhat
+
+    rows = []
+    for regime in variances.index:
+        sub = vardec[vardec["regime"] == regime].set_index("variable")
+        var_y = variances.loc[regime, "y_gap"]
+        var_pi = variances.loc[regime, ["PI1", "PI2", "PI3"]].values
+
+        for group_name, shocks in SHOCK_GROUPS.items():
+            pct_y = sub.loc["y_gap", shocks].sum() / 100.0
+            pct_pi = sub.loc[["PI1", "PI2", "PI3"], shocks].sum(axis=1).values / 100.0
+
+            w_output = 0.5 * gamma_phi * var_y * pct_y
+            w_pi = 0.5 * disp_weight * var_pi * pct_pi
+            rows.append({
+                "regime": regime,
+                "shock_group": group_name,
+                "output_gap": w_output,
+                "price_disp": w_pi.sum(),
+                "total": w_output + w_pi.sum(),
+            })
+    return pd.DataFrame(rows).set_index(["regime", "shock_group"])
 
 
 # ══════════════════════════════════════════════════════════════════════════

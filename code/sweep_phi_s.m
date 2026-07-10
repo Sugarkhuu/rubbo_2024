@@ -6,7 +6,9 @@
 % Run from repo root: addpath('C:\dynare\7.0\matlab'); addpath('code'); sweep_phi_s
 
 phi_s_grid = [0.00, 0.10, 0.20, 0.30, 0.50, 0.75, 1.00, 1.50, 2.00];
-moment_vars = {'piDC','PIC','y_gap','PI1','PI2','PI3','I','BSTAR'};
+% Must match the stoch_simul var_list order in open_economy_network_managed.mod
+% exactly -- oo_.var(v,v) below is indexed by POSITION in that list.
+moment_vars = {'piDC','PIC','y_gap','y_gap1','y_gap2','y_gap3','PI1','PI2','PI3','I','BSTAR'};
 
 master_txt = fileread('open_economy_network_managed.mod');
 rows = {};

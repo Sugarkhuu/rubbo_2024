@@ -74,6 +74,7 @@ var
   DSTAR               // foreign demand shifter
   A1 A2 A3            // sectoral TFP levels
   piDC y_gap          // DC inflation index (policy target), output gap (Lemma 1)
+  y_gap1 y_gap2 y_gap3  // sector-level contributions to y_gap (Domar-weighted, pre-sum)
   GDP                 // nominal GDP (absorption + net exports), reporting only
 ;
 
@@ -298,9 +299,10 @@ log(I/ISTAR) = PHI_PI*piDC + PHI_Y*y_gap + PHI_S*log(S);
 //      y_gap from Lemma 1: natural output = Domar-weighted TFP, in closed form
 //----------------------------------------------------------------
 piDC = WDC1*log(PI1) + WDC2*log(PI2) + WDC3*log(PI3);
-y_gap = LAMBDA_D1*(log(Y1/STEADY_STATE(Y1)) - log(A1))
-      + LAMBDA_D2*(log(Y2/STEADY_STATE(Y2)) - log(A2))
-      + LAMBDA_D3*(log(Y3/STEADY_STATE(Y3)) - log(A3));
+y_gap1 = LAMBDA_D1*(log(Y1/STEADY_STATE(Y1)) - log(A1));
+y_gap2 = LAMBDA_D2*(log(Y2/STEADY_STATE(Y2)) - log(A2));
+y_gap3 = LAMBDA_D3*(log(Y3/STEADY_STATE(Y3)) - log(A3));
+y_gap = y_gap1 + y_gap2 + y_gap3;
 
 //----------------------------------------------------------------
 // [12] Exogenous shock processes (AR(1) in logs)
@@ -350,7 +352,7 @@ X1_3 = (MC3/P3)*Y3/(1-(1-DELTA3)*BETA); X2_3 = Y3/(1-(1-DELTA3)*BETA);
 
 I = 1/BETA;
 BSTAR = BSTARBAR;
-piDC = 0; y_gap = 0;
+piDC = 0; y_gap = 0; y_gap1 = 0; y_gap2 = 0; y_gap3 = 0;
 GDP = PC*C + PH*EX - PFH*IM;
 end;
 
@@ -386,7 +388,7 @@ end;
 // second order) -- treat cross-regime welfare rankings as indicative,
 // not certainty-equivalent-exact.
 // -------------------------------------------------------------------------
-stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap PI1 PI2 PI3 I BSTAR;
+stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR;
 
 // Second call, IRFs only (nomoments/nocorr/noprint): adds the unit-root
 // variables (S, GDP, P1-3, PC, EX, IM, C) so their IRFs land in
@@ -395,4 +397,4 @@ stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap PI1 PI2
 // economically meaningless -- their IRFs do not decay back to zero,
 // which is the expected, correct behavior of a pure inflation/output-gap
 // Taylor rule with no price-level anchor).
-stoch_simul(order=1, irf=40, periods=0, nomoments, nocorr, nodecomposition, noprint) piDC PIC y_gap PI1 PI2 PI3 I BSTAR S GDP EX IM C P1 P2 P3;
+stoch_simul(order=1, irf=40, periods=0, nomoments, nocorr, nodecomposition, noprint) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR S GDP EX IM C P1 P2 P3;
