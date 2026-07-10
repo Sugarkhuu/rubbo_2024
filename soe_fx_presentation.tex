@@ -51,17 +51,6 @@
   }
 }
 
-% ---- reusable placeholder box for not-yet-produced figures --------------
-\newcommand{\placeholder}[3]{%
-  \begin{tikzpicture}
-    \draw[dashed, gray!55, thick, rounded corners=2pt] (0,0) rectangle (#1,#2);
-    \node[align=center, font=\tiny, text=gray!60, text width=#1 cm - 0.6cm]
-      at (#1/2,#2/2) {\textbf{[Figure placeholder --- pending simulation output]}\\[3pt] #3};
-  \end{tikzpicture}%
-}
-% ---- caption tag used under every synthetic (imaginary-data) chart ------
-\newcommand{\synthnote}{{\tiny\textit{Illustrative synthetic calibration --- mechanism matches the model's theory; magnitudes are placeholders pending the actual Dynare run.}}
-}
 
 \begin{document}
 
@@ -181,7 +170,7 @@ oriented, and dominates final consumption.}
 \end{itemize}
 
 \vspace{8pt}
-{\footnotesize \textbf{Methodological choice:} the model is built and solved as the \emph{original nonlinear} system directly in Dynare --- Cobb-Douglas cost minimization, the exact recursive Calvo pricing problem, CRRA/Frisch household FOCs, CES consumption aggregation --- rather than substituting in a hand-linearized Phillips curve. Dynare computes the nonlinear steady state numerically and perturbs around it, so the log-linear coefficients (e.g.\ $\hat\delta_i$) come out of the solution rather than being assumed.}
+{\footnotesize \textbf{Methodological choice:} the model is built and solved as the \emph{original nonlinear} system --- Cobb-Douglas cost minimization, the exact recursive Calvo pricing problem, CRRA/Frisch household FOCs, CES consumption aggregation --- rather than substituting in a hand-linearized Phillips curve. The nonlinear steady state is computed numerically and the system perturbed around it, so the log-linear coefficients (e.g.\ $\hat\delta_i$) come out of the solution rather than being assumed.}
 
 \end{frame}
 
@@ -189,14 +178,14 @@ oriented, and dominates final consumption.}
 \begin{frame}{Model Setup: Households}
 %==============================================================
 
-{\footnotesize \textbf{Preferences} (CRRA consumption, Frisch labor supply):}
+{\footnotesize \textbf{Preferences} (CRRA consumption, Frisch labor supply; King, Plosser \& Rebelo 1988):}
 \vspace{-4pt}
 {\scriptsize\[
 \mathbb{E}_0\sum_{t=0}^\infty \beta^t\left[\frac{C_t^{1-\gamma}}{1-\gamma} - \frac{L_t^{1+\varphi}}{1+\varphi}\right]
 \]}
 
 \vspace{2pt}
-{\footnotesize \textbf{Consumption aggregation:} CES nest between a domestic bundle and an imported bundle, home-bias weight $\omega$, elasticity $\eta$; the domestic bundle is itself Cobb-Douglas across the $N$ sectors with shares $\beta^H_i$:}
+{\footnotesize \textbf{Consumption aggregation:} CES nest between a domestic bundle and an imported bundle, home-bias weight $\omega$, elasticity $\eta$ (Armington 1969; Gal\'i \& Monacelli 2005); the domestic bundle is itself Cobb-Douglas across the $N$ sectors with shares $\beta^H_i$:}
 \vspace{-4pt}
 {\scriptsize\[
 C_t=\Big[\omega^{1/\eta}(C^H_t)^{\frac{\eta-1}{\eta}}+(1-\omega)^{1/\eta}(C^F_t)^{\frac{\eta-1}{\eta}}\Big]^{\frac{\eta}{\eta-1}},\qquad
@@ -204,7 +193,7 @@ C^H_t = \prod_i \Big(\tfrac{C_{it}}{\beta^H_i}\Big)^{\beta^H_i}
 \]}
 
 \vspace{2pt}
-{\footnotesize \textbf{Household FOCs} (nonlinear, exactly as solved in Dynare):}
+{\footnotesize \textbf{Household FOCs} (exact nonlinear conditions):}
 \vspace{-4pt}
 {\scriptsize\begin{align*}
 \text{Euler:}\quad & C_t^{-\gamma} = \beta(1+i_t)\,\mathbb{E}_t\big[C_{t+1}^{-\gamma}/\Pi^C_{t+1}\big] \\[1pt]
@@ -223,7 +212,7 @@ C^H_t = \prod_i \Big(\tfrac{C_{it}}{\beta^H_i}\Big)^{\beta^H_i}
 \begin{columns}[t]
 \column{0.50\textwidth}
 
-{\footnotesize \textbf{Production} (Cobb-Douglas, sector $i$):}
+{\footnotesize \textbf{Production} (Cobb-Douglas, sector $i$; network structure as in La'O \& Tahbaz-Salehi 2022, Rubbo 2024):}
 \vspace{-4pt}
 {\scriptsize\[
 Y_{it}=A_{it}\,L_{it}^{\alpha_i}\prod_j X_{ijt}^{\Omega^H_{ij}}\,M_{it}^{\Omega^F_i}
@@ -235,7 +224,7 @@ MC_{it}=\frac{W_t^{\alpha_i}\prod_j P_{jt}^{\Omega^H_{ij}}\,(S_tP^{F*}_t)^{\Omeg
 \]}
 
 \vspace{4pt}
-{\footnotesize \textbf{Calvo pricing} --- fraction $\delta_i$ resets each period (\emph{not} $\hat\delta_i$: that is derived, not primitive):}
+{\footnotesize \textbf{Calvo pricing} (Calvo 1983) --- fraction $\delta_i$ resets each period (\emph{not} $\hat\delta_i$: that is derived, not primitive):}
 \vspace{-4pt}
 {\scriptsize\[
 P_{it}^{\#}=\frac{\varepsilon}{\varepsilon-1}\cdot\frac{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}\,\widetilde{MC}_{it+s}}{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}/P_{it+s}}
@@ -243,7 +232,7 @@ P_{it}^{\#}=\frac{\varepsilon}{\varepsilon-1}\cdot\frac{\mathbb{E}_t\sum_s \rho^
 
 \column{0.47\textwidth}
 
-{\footnotesize \textbf{Exact nonlinear recursion} (as coded in Dynare, real MC $\widetilde{MC}=MC/P$):}
+{\footnotesize \textbf{Exact nonlinear recursion} (real MC $\widetilde{MC}=MC/P$):}
 \vspace{-4pt}
 {\scriptsize\begin{align*}
 X1_{it} &= \widetilde{MC}_{it}Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon}X1_{i,t+1}\\
@@ -262,7 +251,7 @@ P_{it}^\#/P_{it} &= \tfrac{\varepsilon}{\varepsilon-1}\,X1_{it}/X2_{it}\\
 \begin{frame}{Model Setup: The Open-Economy Block}
 %==============================================================
 
-{\footnotesize \textbf{Exchange rate and imports} ($S_t$: nominal ER, $P^{F*}_t$: foreign import price, law of one price):}
+{\footnotesize \textbf{Exchange rate and imports} ($S_t$: nominal ER, $P^{F*}_t$: foreign import price, law of one price; Gal\'i \& Monacelli 2005):}
 \vspace{-4pt}
 {\scriptsize\[
 P^{FH}_t = S_t P^{F*}_t
@@ -334,14 +323,14 @@ Managed float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi
 \end{itemize}
 
 \vspace{5pt}
-{\footnotesize \textbf{Steady state:} solved semi-analytically, not guessed. At zero inflation, price = markup $\times$ marginal cost exactly, which collapses the 46-equation system to one scalar root-find in the real wage $W$ (prices, exports, consumption all closed-form given $W$). Solved with \texttt{fzero} $\Rightarrow$ $W^*=1.3189$.}
+{\footnotesize \textbf{Steady state:} solved semi-analytically, not guessed. At zero inflation, price = markup $\times$ marginal cost exactly, which collapses the 46-equation system to one scalar root-find in the real wage $W$ (prices, exports, consumption all closed-form given $W$), giving $W^*=1.3189$.}
 \begin{itemize}\setlength{\itemsep}{2pt}
 \item \footnotesize \textbf{Lemma 1 (exact):} $\tilde y_t=\sum_i\lambda_{D,i}\big[\log(Y_{it}/\bar Y_i)-\log A_{it}\big]$ --- no shadow flex-price block needed.
 \item \footnotesize \textbf{Prop.\ 1 weights (theory-motivated):} DC weights from $\lambda_{D,i}$, $\hat\delta_i$, applied to realized inflation in the true nonlinear simulation.
 \end{itemize}
 
 \vspace{4pt}
-{\footnotesize \textbf{This has actually been run:} solved in Dynare 7.0 (order-1, around the exact steady state) for all three regimes via \texttt{code/run\_all\_regimes.m}. (Order-2/pruning fails here: an inflation/output-gap-only Taylor rule leaves the price \emph{level} and $S_t$ as a unit root --- expected, nothing anchors the level --- which Dynare's pruned state space does not support. Order-1 handles it; only stationary objects enter welfare.)}
+{\footnotesize \textbf{Solved at first order} around the exact steady state, for all three regimes. Second-order perturbation is not used: an inflation/output-gap-only Taylor rule leaves the price \emph{level} and $S_t$ as a unit root --- expected, since nothing anchors the level --- so only the first-order (stationary) solution is used, and only stationary objects enter welfare.}
 
 \end{frame}
 
@@ -400,7 +389,18 @@ w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
 
 \vspace{-2pt}
 \begin{center}
-\placeholder{6.0}{4.2}{Domar weights $\lambda_{D,i}$ and import centrality $\mathcal{M}_i$ by sector (bar chart, from \texttt{network\_objects.csv})}
+{\tiny \textbf{Domar weight $\lambda_{D,i}$ vs.\ import centrality $\mathcal{M}_i$}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, ybar, bar width=10pt, width=6.6cm, height=4.3cm,
+  symbolic x coords={Resource,Manuf.,Services}, xtick=data,
+  ymin=0, ymax=0.95, ylabel={\tiny value},
+  legend style={font=\tiny, at={(0.5,1.16)}, anchor=north, legend columns=2}]
+\addplot[fill=customgreen!55, draw=customgreen!70!black] coordinates {(Resource,0.12) (Manuf.,0.35) (Services,0.80)};
+\addlegendentry{$\lambda_{D,i}$ (Domar)}
+\addplot[fill=gray!45, draw=gray!70!black] coordinates {(Resource,0.30) (Manuf.,0.16) (Services,0.09)};
+\addlegendentry{$\mathcal{M}_i$ (import cent.)}
+\end{axis}
+\end{tikzpicture}
 \end{center}
 
 \vspace{4pt}
@@ -451,10 +451,10 @@ DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & ye
 \end{frame}
 
 %==============================================================
-\begin{frame}{From Theory to Quantification --- This Has Actually Been Solved}
+\begin{frame}{From Theory to Quantification}
 %==============================================================
 
-{\footnotesize \textbf{Pipeline (all real, not illustrative):} \texttt{open\_economy\_network.mod} $\to$ solved in Dynare 7.0 for all three regimes (\texttt{code/run\_all\_regimes.m}) $\to$ IRFs and theoretical moments in \texttt{results/*.csv} $\to$ figures below. Every number on the following slides is Dynare's own output for the calibration two slides ago --- none of it is hand-picked.}
+{\footnotesize \textbf{Pipeline:} the model is solved numerically for all three regimes, producing IRFs and theoretical moments, summarized in the figures below. Every number on the following slides is model output for the calibration two slides ago.}
 
 \vspace{8pt}
 {\footnotesize \textbf{Six questions the simulations answer:}}
@@ -476,7 +476,7 @@ DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & ye
 \begin{frame}{Results: IRFs to an Import-Price Shock}
 %==============================================================
 
-{\footnotesize A 1\% increase in the foreign-currency import price $p^{F*}_t$ (persistence $\rho_{pF}=0.85$). Dynare output, \texttt{results/irf\_*\_eps\_pF.csv}.}
+{\footnotesize A 1\% increase in the foreign-currency import price $p^{F*}_t$ (persistence $\rho_{pF}=0.85$).}
 
 \vspace{2pt}
 \begin{columns}[t]
@@ -609,7 +609,7 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \begin{columns}[t]
 \column{0.46\textwidth}
 \begin{center}
-{\tiny \textbf{Total welfare loss ($\times10^4$, Dynare order-1 moments)}}\\[2pt]
+{\tiny \textbf{Total welfare loss ($\times10^4$, first-order moments)}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, xbar, width=6.3cm, height=4.3cm, bar width=13pt,
   symbolic y coords={Peg,Managed,Float}, ytick=data,
@@ -750,7 +750,7 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \begin{frame}{Sensitivity: The Optimal Degree of FX Stabilization}
 %==============================================================
 
-{\footnotesize \textbf{Real sweep, not illustrative:} re-solved the managed-float regime in Dynare for $\phi_s\in[0,2]$ ($\phi_s=0$ is the pure float limit). $\phi_s$ does not affect the steady state, so this isolates the policy trade-off cleanly.}
+{\footnotesize \textbf{Sensitivity sweep:} re-solved the managed-float regime for $\phi_s\in[0,2]$ ($\phi_s=0$ is the pure float limit). $\phi_s$ does not affect the steady state, so this isolates the policy trade-off cleanly.}
 
 \vspace{4pt}
 \begin{columns}[t]
@@ -798,28 +798,15 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{frame}
 
 %==============================================================
-\begin{frame}{Remaining Work}
+\begin{frame}{Next Steps}
 %==============================================================
 
-{\footnotesize \textbf{Done:}}
-{\footnotesize
-\begin{tabular}{@{}ll@{}}
-$\checkmark$ & Full nonlinear model coded in Dynare; solved (Dynare 7.0, MATLAB) for all three regimes \\
-$\checkmark$ & Steady state solved semi-analytically (\texttt{fzero} on a scalar reduced system), not guessed \\
-$\checkmark$ & Network objects (Domar weights, import centrality, DC weights) derived, verified against theory \\
-$\checkmark$ & Real IRFs, moments, welfare decomposition for float / peg / managed (\texttt{results/*.csv}) \\
-$\checkmark$ & Real $\phi_s$ sweep (9 re-solved points); welfare-minimizing $\phi_s\approx0.2$--$0.3$ identified \\
-\end{tabular}}
-
-\vspace{8pt}
-{\footnotesize \textbf{Remaining (target: July 22):}}
-{\footnotesize
-\begin{tabular}{@{}ll@{}}
-$\square$ & Sensitivity to calibration (alternative $\Omega^F$, $\delta_i$): is managed-float dominance robust? \\
-$\square$ & Price-level-anchored rule to get a fully second-order-accurate welfare ranking \\
-$\square$ & Formalize the ``ER persistence'' mechanism analytically \\
-$\square$ & Write up Sections 4--6 (quantitative results, discussion) \\
-\end{tabular}}
+{\footnotesize \textbf{Open questions going forward:}}
+\begin{itemize}\setlength{\itemsep}{6pt}
+\item \footnotesize Sensitivity to calibration (alternative import shares $\Omega^F$, Calvo probabilities $\delta_i$): is managed-float dominance robust?
+\item \footnotesize A price-level-anchored policy rule, to obtain a fully second-order-accurate welfare ranking.
+\item \footnotesize Formalizing the exchange-rate persistence mechanism analytically.
+\end{itemize}
 
 \end{frame}
 
