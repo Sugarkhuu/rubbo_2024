@@ -1012,6 +1012,62 @@ Optimal FX policy minimizes this over $\{i_t, \nu_t\}$ (interest rate + FX inter
 \end{equation}
 i.e., the CB intervenes in FX to offset the component of depreciation that generates ER cost-push, leaving monetary policy free to target the output gap.
 
+\subsection{Which Sectors Prefer Which Regime: A Parameter-Based Decomposition}
+\label{sec:sector_regime_pref}
+
+The quantitative results (calibrated 3-sector SOE, solved in Dynare) show that sectors do not rank FX regimes the same way, and that the ranking is \emph{not} simply ``most import-exposed sector wants the exchange rate to move least.'' Two already-derived objects, evaluated at their calibrated values, explain why.
+
+\textbf{Object 1 --- direct FX exposure.} From \eqref{eq:mc_open}--the $\Gamma$ formula, sector $i$'s own-inflation sensitivity to a nominal depreciation is
+\begin{equation}
+    \Gamma_i = \frac{[\tilde{A}\bm{\omega}_F]_i}{\kappa}, \qquad \tilde{A} \equiv \Delta(I-\Omega\Delta)^{-1}
+    \label{eq:Gamma_i_reprise}
+\end{equation}
+with $\Delta=\mathrm{diag}(\hat\delta_i)$ the effective-Calvo matrix. $\Gamma_i$ is large when sector $i$ imports directly ($\omega_{Fi}$ large) \emph{or} buys heavily from suppliers who do, discounted by how quickly prices reset along the chain.
+
+\textbf{Object 2 --- welfare weight.} From Proposition 3 \eqref{eq:pi_sector}, sector $i$'s inflation variance is priced into aggregate welfare by
+\begin{equation}
+    \kappa_i \equiv \lambda_{D,i}\,\varepsilon_i\,\frac{1-\hat\delta_i}{\hat\delta_i}
+    \label{eq:kappa_i_reprise}
+\end{equation}
+large when sector $i$ is a big, central domestic supplier ($\lambda_{D,i}$ large) \emph{and} very sticky ($\hat\delta_i$ small, so it accumulates price dispersion whenever it does move).
+
+\textbf{The tension.} In a triangular network where the upstream sector is also the direct importer (as in the calibration below, sectors ordered $1\to2\to3$ with $\bm\omega_F$ decreasing downstream and $\bm\lambda_D$ increasing downstream), $\Gamma_i$ and $\kappa_i$ move in \emph{opposite} directions across $i$:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& Sector 1 (upstream) & Sector 2 & Sector 3 (downstream) \\
+\midrule
+$\Gamma_i$ (FX exposure) & $0.234$ & $0.054$ & $0.006$ \\
+$\kappa_i$ (welfare weight) & $0.43$ & $5.54$ & $74.6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The sector most exposed to the exchange rate on impact (sector 1) is the one welfare cares about \emph{least} per unit of its inflation variance; the sector welfare cares about \emph{most} (sector 3) is almost insulated from the exchange rate directly. Neither parameter alone predicts the regime ranking --- their product, combined with how each regime redistributes \emph{where} adjustment happens, does.
+
+\textbf{Closing the loop with simulated variances.} Applying \eqref{eq:kappa_i_reprise} to the actual regime-by-regime inflation variances (Dynare, order 1) gives each sector's realized loss $\kappa_i\,\mathrm{Var}^R(\pi_i)$:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+$\kappa_i\,\mathrm{Var}^R(\pi_i)\times 10^4$ & Float & Peg & Managed \\
+\midrule
+Sector 1 (upstream) & $0.44$ & $0.59$ & $0.33$ \\
+Sector 2 & $3.18$ & $3.22$ & $2.02$ \\
+Sector 3 (downstream) & $16.96$ & $8.86$ & $5.17$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Two forces are at work, and they are visible directly in these numbers:
+\begin{itemize}
+    \item \textbf{The $\Gamma$-channel favors peg for high-$\Gamma_i$ sectors.} A peg sets $\Delta e_t\equiv 0$, switching off the $\Gamma_i\Delta e_t$ cost-push term in \eqref{eq:pi_sector}-type equation for everyone. Taken alone, this predicts sector 1 (largest $\Gamma_1$) should gain the most from pegging.
+    \item \textbf{But pegging does not eliminate adjustment --- it relocates it.} With $e_t$ fixed, whatever relative-price adjustment the economy needs (to a foreign-price or productivity shock) must now show up in \emph{domestic} prices, and by construction $P^H$ (the home-goods price index that must move to clear the border) is dominated by the upstream sector. This channel raises $\mathrm{Var}(\pi_1)$ under peg by more than the $\Gamma_1$-channel it switches off ($0.59>0.44$), so sector 1 nets out preferring \emph{float} between the two corner regimes, despite having the largest direct FX exposure.
+    \item \textbf{Sector 3 is doubly insulated from the peg's downside.} Being three links removed from the border ($\Gamma_3\approx0$, $M_3=0.09$) and the stickiest sector, almost none of the peg's relocated adjustment burden reaches it, while under float it is heavily exposed to the persistent nominal-exchange-rate/NFA state through the common real-wage/consumption channel and its own low reset frequency (it ``banks'' cost pressure across many periods before it can reprice). Its inflation variance falls by nearly half under peg ($16.96\to8.86$), and since $\kappa_3\gg\kappa_1,\kappa_2$, this single sector's preference dominates the aggregate ranking.
+    \item \textbf{Managed float dominates for every sector simultaneously} because $\phi_S>0$ damps the exchange rate's contribution to $\mathrm{Var}(\pi_i)$ without fully re-imposing the peg's relative-price-relocation cost --- it does not need to pick a winner among sectors to still improve on both corner regimes.
+\end{itemize}
+
+\begin{insight}
+The general lesson: an economy's ``natural'' FX regime is predictable from calibratable primitives --- how import-exposed its most upstream/tradable sector is ($\bm\omega_F$, $\Gamma_i$) versus how large and sticky its most central domestic sector is ($\lambda_{D,i}$, $\hat\delta_i$). When these are concentrated in the \emph{same} sector, that sector's preference is decisive for the whole economy; when they are concentrated in \emph{different} sectors (as calibrated here), the aggregate ranking is set by whichever parameter combination has the larger welfare-weighted swing, which here is $\kappa_i$ (network centrality $\times$ stickiness) rather than $\Gamma_i$ (import exposure) alone.
+\end{insight}
+
 \subsection{Proposed Simulation Code for Your Paper}
 
 The Matlab code for the SOE extension closely parallels Rubbo's code, adding:
