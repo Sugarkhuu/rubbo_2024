@@ -17,6 +17,7 @@
 \usepackage{tikz}
 \usepackage{pgffor}
 \usepackage{pgfplots}
+\usepackage{appendixnumberbeamer}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta, positioning}
 
@@ -36,9 +37,10 @@
 \setlength{\headheight}{1.25cm}
 \setbeamertemplate{navigation symbols}{}
 
-% 12 numbered sections (Motivation ... Conclusion); Appendix uses \section*
-% and is deliberately excluded from this bar and from \value{section}.
-\newcommand{\navsectionlist}{Motivation,Literature,Paper,Model,Theory,Calib,Shocks,Network,Welfare,Decomp,General,Conclusion}
+% 4 numbered sections (Intro ... Conclusion); Appendix uses \section*
+% and is deliberately excluded from this bar, from \value{section}, and from
+% the 25-slide budget (backup only).
+\newcommand{\navsectionlist}{Intro,Model,Results,Conclusion}
 \setbeamertemplate{headline}{%
   \ifnum\value{section}>0
     \vskip1pt
@@ -50,7 +52,7 @@
       \else
         \textcolor{gray!55}{\ \name\ }%
       \fi
-      \ifnum\i<12 {\textcolor{gray!35}{$\,\triangleright\,$}}\fi
+      \ifnum\i<4 {\textcolor{gray!35}{$\,\triangleright\,$}}\fi
     }}
   \fi
 }
@@ -64,7 +66,7 @@
 \newcommand{\ty}{\tilde{y}}
 \newcommand{\tA}{\tilde{A}}
 \newcommand{\bom}{\bm{\omega}_F}
-\newcommand{\shockregimelegend}{{\scriptsize Top row (Peg / Managed / Float): \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet} Peg}\quad \textcolor{gray!60!black}{\textbf{- -} Managed}\quad \textcolor{customgreen!85!black}{\textbf{---} Float}.\quad Bottom row (Float regime, by sector): \textcolor{sectorres}{\textbf{---} Resource}\quad \textcolor{sectorman}{\textbf{---} Manuf.}\quad \textcolor{sectorserv}{\textbf{---} Services}.}}
+\newcommand{\shockregimelegend}{{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}}
 
 \pgfplotsset{
   slide fig/.style={
@@ -96,61 +98,50 @@
 \end{frame}
 
 %==============================================================
-\section{Motivation}
+\section{Intro}
 %==============================================================
-\begin{frame}{Motivation: Networks Meet the Exchange Rate}
+\begin{frame}{Motivation}
 %==============================================================
 
-{\footnotesize \textbf{Two literatures that rarely talk to each other:}}
-
-\vspace{4pt}
 {\footnotesize
-\begin{enumerate}\setlength{\itemsep}{4pt}
-\item \textbf{Production-network Phillips curves} (Rubbo 2024; La'O \& Tahbaz-Salehi 2022): with input-output linkages, sector-level price stickiness generates a genuine inflation--output tradeoff for \emph{almost every} price index --- except one. A unique ``divine coincidence'' (DC) index, weighting sectors by Domar-scaled stickiness, restores the tradeoff-free policy prescription. All of this is derived in a \textbf{closed economy}.
-
-\item \textbf{Small open economy NK models} (Gal\'i \& Monacelli 2005 and successors): the exchange rate is a cost-push shifter and a policy instrument, but the production side is a single aggregate sector --- no network structure, no heterogeneity in who is exposed to FX shocks.
-\end{enumerate}}
-
-\vspace{6pt}
-{\footnotesize \textbf{This paper puts them together.} Once imported inputs enter a multi-sector network, the exchange rate becomes a \emph{second} cost-push channel that hits sectors asymmetrically depending on their import centrality and their position in the domestic supply chain. Does the DC index --- or any analog --- survive, and which FX regime is actually optimal once network structure is taken seriously?}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Why This Matters: The Policy Question}
-%==============================================================
-
-{\footnotesize \textbf{Motivating case: a small oil-exporting economy.}
-Resource sector is upstream, import-intensive (machinery) and export-heavy;
-Manufacturing sits in the middle; Services is downstream, domestically
-oriented, and dominates final consumption.}
-
-\vspace{6pt}
-{\footnotesize \textbf{The question a central bank actually faces:}}
 \begin{itemize}\setlength{\itemsep}{3pt}
-\item \footnotesize Float and target inflation $\Rightarrow$ exchange rate absorbs FX/commodity-price shocks, but at the cost of nominal volatility and possibly balance-sheet risk.
-\item \footnotesize Peg $\Rightarrow$ eliminates FX risk, but forces \emph{all} adjustment onto domestic prices and output --- amplified by whichever sectors are most import-exposed and most central in the network.
-\item \footnotesize Manage the float $\Rightarrow$ partially, but at what welfare cost relative to the theoretical optimum?
-\end{itemize}
+\item Network Phillips curves (Rubbo 2024, La'O--Tahbaz-Salehi 2022): \textbf{closed economy}, unique DC index
+\item Open-economy NK (Gal\'i--Monacelli 2005): FX channel, \textbf{no network}
+\item \textbf{This paper: both together} --- multi-sector network $+$ FX
+\end{itemize}}
 
 \vspace{6pt}
-{\footnotesize \textbf{Rubbo's closed-economy answer} (target the DC index) says nothing about \emph{which} exchange-rate regime to combine it with, or how network position shapes the answer. That is the gap this paper fills.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Headline Result: Managed Float Wins the Regime Comparison}
-%==============================================================
-
-{\footnotesize \textbf{Jump to the answer first, mechanism after:} solving the full nonlinear open-economy network model for all three FX regimes gives a clear --- and non-obvious --- welfare ranking.}
+\begin{center}
+\begin{tikzpicture}[node distance=0.9cm and 1.3cm, every node/.style={font=\tiny}]
+\node[draw, rounded corners, fill=sectorres!25, minimum width=1.7cm] (R) {Resource};
+\node[draw, rounded corners, fill=sectorman!25, minimum width=2.0cm, right=of R] (M) {Manufacturing};
+\node[draw, rounded corners, fill=sectorserv!25, minimum width=1.7cm, right=of M] (S) {Services};
+\draw[-{Latex}] (R) -- (M);
+\draw[-{Latex}] (M) -- (S);
+\node[above=0.5cm of R, font=\tiny, gray!60!black] (FR) {imports};
+\draw[-{Latex}, gray!60] (FR) -- (R);
+\node[above=0.5cm of M, font=\tiny, gray!60!black] (FM) {imports};
+\draw[-{Latex}, gray!60] (FM) -- (M);
+\node[below=0.5cm of R, font=\tiny, customgreen!70!black] (EX) {exports};
+\draw[-{Latex}, customgreen!70!black] (R) -- (EX);
+\end{tikzpicture}
+\end{center}
 
 \vspace{4pt}
+{\footnotesize \textbf{Questions:} (1) which FX regime is welfare-optimal? (2) does the DC index survive a second (FX) cost-push channel?}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Headline Result}
+%==============================================================
+
 \begin{columns}[t]
 \column{0.46\textwidth}
 \begin{center}
-{\tiny \textbf{Total welfare loss ($\times10^4$, first-order moments)}}\\[2pt]
+{\tiny \textbf{Total welfare loss ($\times10^4$)}}\\[2pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, xbar, width=6.3cm, height=4.0cm, bar width=13pt,
+\begin{axis}[slide fig, xbar, width=6.3cm, height=4.2cm, bar width=13pt,
   symbolic y coords={Peg,Managed,Float}, ytick=data,
   xmin=0, xmax=12.5, xlabel={\tiny welfare loss ($\times10^4$)}, nodes near coords,
   nodes near coords style={font=\tiny}]
@@ -159,474 +150,185 @@ oriented, and dominates final consumption.}
 \end{tikzpicture}
 \end{center}
 \column{0.50\textwidth}
-{\footnotesize \textbf{Managed float dominates both corner regimes} --- less than half the loss of free float, and lower than a hard peg too. This is the model's own solution to the FX-regime choice, not an assumption.}
-
-\vspace{6pt}
-{\footnotesize \textbf{Why this is surprising:} float directly targets the divine-coincidence index and should, on the textbook intuition, be (weakly) best. It is not --- floating turns the exchange rate into a slow, persistent state variable that keeps feeding cost-push shocks back into the network (mechanism in the Welfare section).}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \textbf{Managed float dominates} both corners
+\item Float targets DC index directly --- still \textbf{not} best
+\item Driver: ER \textbf{persistence}, not volatility (Welfare section)
+\end{itemize}}
 \end{columns}
-
-\vspace{6pt}
-{\footnotesize \textbf{Roadmap:} Literature $\to$ This paper $\to$ Model $\to$ Theory (why DC targeting could fail to survive) $\to$ Calibration $\to$ Shocks/IRFs $\to$ network amplification $\to$ welfare cost $\to$ shock decomposition.}
 
 \end{frame}
 
-%==============================================================
-\section{Literature}
 %==============================================================
 \begin{frame}{Literature}
 %==============================================================
 
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{5pt}
-\item \textbf{La'O \& Tahbaz-Salehi (2022, \emph{Econometrica})} --- optimal monetary policy in production networks; efficient allocations require targeting a Domar-weighted index, not simple CPI. Closed economy.
-\item \textbf{Rubbo (2024, \emph{Econometrica})} --- the paper we extend. Sectoral Calvo pricing $+$ IO network $\Rightarrow$ unique DC index with \emph{no} cost-push residual; welfare-optimal Taylor rule targets it.
-\item \textbf{Auer, Levchenko \& Sauré (2019, \emph{ReStud})} --- international inflation spillovers propagate through global IO linkages; empirical evidence that network position matters for cross-border pass-through.
-\item \textbf{Pasten, Schoenle \& Weber (2020, \emph{JPE})} --- heterogeneous price rigidity across sectors reshapes monetary transmission; motivates letting $\hat\delta_i$ differ by sector here too.
-\item \textbf{Fanelli \& Straub (2021, \emph{JPE})} --- theory of sterilized FX intervention as a second instrument alongside the policy rate.
-\item \textbf{Gopinath \& Itskhoki (2022)} --- dominant currency pricing; \textbf{Amiti, Itskhoki \& Konings (2019, \emph{QJE})} --- variable markups shape exchange-rate pass-through at the firm level.
+\item \textbf{La'O \& Tahbaz-Salehi (2022)} --- optimal MP, production networks, closed economy
+\item \textbf{Rubbo (2024)} --- base paper: Calvo network $\Rightarrow$ unique DC index
+\item \textbf{Auer, Levchenko \& Sauré (2019)} --- inflation spillovers via global IO
+\item \textbf{Pasten, Schoenle \& Weber (2020)} --- sectoral rigidity heterogeneity, transmission
+\item \textbf{Fanelli \& Straub (2021)} --- FX intervention theory
+\item \textbf{Gopinath \& Itskhoki (2022); Amiti et al.\ (2019)} --- dominant currency, pass-through
 \end{itemize}}
 
-\vspace{4pt}
-{\footnotesize \textbf{Gap:} no existing paper combines a multi-sector Calvo network \emph{and} a genuine open-economy block (UIP, imported inputs, FX regimes) to ask which FX regime is optimal, and whether the DC-targeting result survives.}
+\vspace{6pt}
+{\footnotesize \textbf{Gap:} network $+$ open economy $+$ FX regimes --- together, no one has this.}
 
 \end{frame}
 
 %==============================================================
-\section{This Paper}
-%==============================================================
-\begin{frame}{This Paper: Contribution and Approach}
+\begin{frame}{This Paper}
 %==============================================================
 
-{\footnotesize \textbf{What we do:}}
-\begin{itemize}\setlength{\itemsep}{4pt}
-\item \footnotesize Extend Rubbo's network Phillips curve to a small open economy: imported intermediate inputs (with an import-cost-share matrix $\Omega^F$), imported final consumption, UIP with a debt-elastic premium.
-\item \footnotesize Ask which FX regime (float / peg / managed float) is welfare-optimal in a multi-sector network, and whether the DC index survives when the exchange rate is a second cost-push channel.
-\item \footnotesize Calibrate to a 3-sector oil-exporting economy (Resource $\to$ Manufacturing $\to$ Services).
-\end{itemize}
-
-\vspace{8pt}
-{\footnotesize \textbf{Methodological choice:} the model is built and solved as the \emph{original nonlinear} system --- Cobb-Douglas cost minimization, the exact recursive Calvo pricing problem, CRRA/Frisch household FOCs, CES consumption aggregation --- rather than substituting in a hand-linearized Phillips curve. The nonlinear steady state is computed numerically and the system perturbed around it, so the log-linear coefficients (e.g.\ $\hat\delta_i$) come out of the solution rather than being assumed.}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{6pt}
+\item Extend Rubbo $\to$ SOE: imported inputs $\Omega^F$, UIP, debt-elastic premium
+\item Ask: optimal FX regime? DC index survive?
+\item Calibrate: 3-sector oil exporter
+\item Solve \textbf{nonlinear} model directly (not hand-linearized)
+\end{itemize}}
 
 \end{frame}
 
 %==============================================================
 \section{Model}
 %==============================================================
-\begin{frame}{Notation: Households, Firms, and the Network}
+\begin{frame}{Model: Households}
 %==============================================================
 
-\begin{columns}[t]
-\column{0.5\textwidth}
-{\footnotesize \textbf{Households}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$C_t,\,L_t$ & aggregate consumption, labor supply \\
-$\beta,\,\gamma,\,\varphi$ & discount factor; risk aversion ($1/$IES); inv.\ Frisch \\
-$W_t,\,i_t$ & nominal wage; domestic nominal rate \\
-$\omega,\,\eta$ & home-bias weight; home/foreign elasticity \\
-$\beta^H_i$ & sector-$i$ share of the domestic consumption bundle \\
-$C^H_t,\,C^F_t$ & domestic-bundle, imported-bundle consumption \\
-$B^*_t$ & real holdings of the internationally traded bond \\
-\end{tabular}}
-
-\vspace{8pt}
-{\footnotesize \textbf{Network objects}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$\Omega^H_{ij}$ & sector $i$'s cost share of domestic input $j$ \\
-$\Omega^F_i$ & sector $i$'s cost share of the imported input \\
-$\lambda_{D,i}$ & Domar weight (sector $i$'s domestic sales centrality) \\
-$\mathcal{M}_i$ & import centrality of sector $i$ \\
-$w^{DC}_i$ & sector $i$'s weight in the DC index \\
-\end{tabular}}
-
-\column{0.5\textwidth}
-{\footnotesize \textbf{Firms, sector $i$}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$Y_{it},\,A_{it}$ & gross output; total factor productivity \\
-$L_{it}$ & labor employed in sector $i$ \\
-$X_{ijt}$ & sector $i$'s use of sector $j$'s output as input \\
-$M_{it}$ & sector $i$'s imported intermediate input \\
-$\alpha_i$ & sector $i$'s labor cost share ($\alpha_i{+}\sum_j\Omega^H_{ij}{+}\Omega^F_i{=}1$) \\
-$P_{it},\,MC_{it}$ & sector-$i$ price; nominal marginal cost \\
-$\varepsilon$ & within-sector elasticity (markup $=\varepsilon/(\varepsilon-1)$) \\
-$\delta_i$ & Calvo reset probability (primitive) \\
-$\hat\delta_i$ & log-linear ``effective slope'' (derived, not primitive) \\
-$P_{it}^\#$ & sector-$i$ reset price \\
-\end{tabular}}
-
-\vspace{8pt}
-{\footnotesize \textbf{Price indices}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$P^H_t$ & price of the domestic-goods bundle \\
-$P^C_t$ & CPI (dual price index to $C_t$) \\
-\end{tabular}}
-
-\end{columns}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Notation: Open Economy and Policy}
-%==============================================================
-
-\begin{columns}[t]
-\column{0.5\textwidth}
-{\footnotesize \textbf{Open economy}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$S_t$ & nominal exchange rate (home ccy.\ per unit foreign ccy.) \\
-$P^{F*}_t$ & foreign-currency price of imports \\
-$P^{FH}_t=S_tP^{F*}_t$ & landed domestic-currency import price \\
-$i^*$ & foreign nominal interest rate \\
-$\psi$ & debt-elastic risk-premium coefficient \\
-$\hat b^*_t$ & (scaled) net foreign asset position \\
-$EX_t,\,IM_t$ & real exports, real imports \\
-$\theta^*$ & export price (demand) elasticity \\
-$D^*_t$ & foreign demand shifter \\
-\end{tabular}}
-
-\column{0.5\textwidth}
-{\footnotesize \textbf{Policy and shocks}}
-\vspace{2pt}
-{\tiny
-\begin{tabular}{@{}ll@{}}
-$\pi_{it},\,\pi^C_t$ & sector-$i$ inflation; CPI inflation \\
-$\pi^{DC}_t$ & divine-coincidence index inflation \\
-$\tilde y_t$ & output gap \\
-$\phi_\pi,\,\phi_y,\,\phi_s$ & Taylor-rule weights (inflation, gap, FX) \\
-$\bar S$ & peg target for the exchange rate \\
-$r^{nat}_t$ & natural real interest rate \\
-$a_{it}$ & sector-$i$ TFP shock, AR(1) \\
-$p^{F*}_t,\,D^*_t$ & import-price, foreign-demand shocks, AR(1) \\
-\end{tabular}}
-
-\end{columns}
-
-\vspace{10pt}
-{\footnotesize All variables denote log-deviations from steady state in the linearized formulas (Theory section); the model-setup slides that follow use the exact nonlinear level variables (capital letters), which is what is actually solved and simulated.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Model Setup: Households --- Preferences and Budget}
-%==============================================================
-
-{\footnotesize \textbf{Preferences} (CRRA consumption, Frisch labor supply; King, Plosser \& Rebelo 1988):}
-\vspace{-4pt}
-{\scriptsize\[
-\max\ \mathbb{E}_0\sum_{t=0}^\infty \beta^t\left[\frac{C_t^{1-\gamma}}{1-\gamma} - \frac{L_t^{1+\varphi}}{1+\varphi}\right]
-\]}
-
-\vspace{1pt}
-{\footnotesize \textbf{Sequential budget constraint} (representative household; $\Pi_t$ = firm profits rebated lump-sum; $B^*_t$ = real holdings of the internationally traded bond, valued at $S_t$). The household chooses $\{C_t,L_t,B^*_t\}_{t\ge0}$ subject to this each period:}
-\vspace{-4pt}
-{\scriptsize\[
+{\scriptsize
+\[
+\max\ \mathbb{E}_0\sum_t \beta^t\Big[\tfrac{C_t^{1-\gamma}}{1-\gamma} - \tfrac{L_t^{1+\varphi}}{1+\varphi}\Big]
+\qquad\text{s.t.}\qquad
 P^C_tC_t + S_tB^*_t = W_tL_t + \Pi_t + (1{+}i^*)\big[1{-}\psi(\hat b^*_{t-1}{-}\bar b^*)\big]S_tB^*_{t-1}
+\]
+\vspace{-8pt}
+\[
+C_t^{-\gamma} = \beta(1{+}i_t)\mathbb{E}_t\big[C_{t+1}^{-\gamma}/\Pi^C_{t+1}\big],\qquad
+W_t/P^C_t = C_t^{\gamma}L_t^{\varphi}
+\]
+\vspace{-6pt}
+\[
+\text{UIP (derived):}\quad (1{+}i_t) = (1{+}i^*)\big[1{-}\psi(\hat b^*_t{-}\bar b^*)\big]\,\mathbb{E}_t[S_{t+1}/S_t]
 \]}
 
-\vspace{1pt}
-{\footnotesize \textbf{No domestic bond needed:} representative household, net-zero supply $\Rightarrow$ redundant asset (Wallace irrelevance); the internationally traded bond alone prices consumption smoothing.}
-
-\vspace{1pt}
-{\footnotesize \textbf{Consumption aggregation:} CES nest between a domestic bundle and an imported bundle, home-bias $\omega$, elasticity $\eta$ (Armington 1969; Gal\'i \& Monacelli 2005); the domestic bundle is Cobb-Douglas across sectors with shares $\beta^H_i$:}
-\vspace{-4pt}
-{\scriptsize\[
-C_t=\Big[\omega^{1/\eta}(C^H_t)^{\frac{\eta-1}{\eta}}+(1-\omega)^{1/\eta}(C^F_t)^{\frac{\eta-1}{\eta}}\Big]^{\frac{\eta}{\eta-1}},\qquad
-C^H_t = \prod_i \Big(\tfrac{C_{it}}{\beta^H_i}\Big)^{\beta^H_i}
-\]}
-
-\vspace{1pt}
-{\footnotesize \textbf{Dual price indices} (cost of one unit of $C_t^H$ and $C_t$ respectively; $P^{FH}_t$ defined on the Open-Economy slide):}
-\vspace{-4pt}
-{\scriptsize\[
-P^H_t=\prod_iP_{it}^{\beta^H_i},\qquad
-P^C_t=\big[\omega(P^H_t)^{1-\eta}+(1{-}\omega)(P^{FH}_t)^{1-\eta}\big]^{\frac{1}{1-\eta}}
-\]}
+\vspace{6pt}
+{\tiny
+\begin{tabular}{@{}llll@{}}
+$C,L$: consumption, labor & $\beta,\gamma,\varphi$: discount, RRA, inv.\ Frisch & $W,i$: wage, dom.\ rate & $S,i^*$: ER, foreign rate \\
+$\psi$: debt-elastic premium & $B^*$: foreign bond & $P^C$: CPI & $\Pi_t$: profits (rebated) \\
+\end{tabular}}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Model Setup: Households --- Optimality Conditions}
+\begin{frame}{Model: Firms --- Technology and Cost}
 %==============================================================
 
-{\footnotesize \textbf{FOCs} (from the Lagrangian on the budget constraint, choice variables $C_t,L_t,B^*_t$; exact nonlinear conditions):}
-
-\vspace{4pt}
-{\footnotesize \textbf{Euler equation} ($\partial/\partial C_t$, combined with $\partial/\partial C_{t+1}$):}
-\vspace{-4pt}
-\[
-C_t^{-\gamma} = \beta(1+i_t)\,\mathbb{E}_t\big[C_{t+1}^{-\gamma}/\Pi^C_{t+1}\big]
-\]
-
-\vspace{3pt}
-{\footnotesize \textbf{Labor supply} ($\partial/\partial L_t$):}
-\vspace{-4pt}
-\[
-W_t/P^C_t = C_t^{\gamma} L_t^{\varphi}
-\]
-
-\vspace{3pt}
-{\footnotesize \textbf{Foreign-bond FOC} ($\partial/\partial B^*_t$):}
-\vspace{-4pt}
-\[
-C_t^{-\gamma} = \beta(1{+}i^*)\big[1{-}\psi(\hat b^*_t{-}\bar b^*)\big]\,\mathbb{E}_t\Big[C_{t+1}^{-\gamma}\,\tfrac{S_{t+1}}{S_t\Pi^C_{t+1}}\Big]
-\]
-
-\vspace{4pt}
-{\footnotesize \textbf{Where UIP comes from:} eliminating the common term $\mathbb{E}_t\big[C_{t+1}^{-\gamma}/\Pi^C_{t+1}\big]$ between the Euler equation and the foreign-bond FOC above gives exactly the uncovered interest parity condition used throughout the open-economy block --- it is \emph{derived} from household optimization, not assumed:}
-\vspace{-4pt}
-\[
-(1+i_t) = (1+i^*)\big[1-\psi(\hat b^*_t-\bar b^*)\big]\,\mathbb{E}_t\big[S_{t+1}/S_t\big]
-\]
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Model Setup: Firms --- Technology and Cost Minimization}
-%==============================================================
-
-{\footnotesize \textbf{Production} (Cobb-Douglas, sector $i$; network structure as in La'O \& Tahbaz-Salehi 2022, Rubbo 2024):}
-\vspace{-4pt}
+{\scriptsize
 \[
 Y_{it}=A_{it}\,L_{it}^{\alpha_i}\prod_j X_{ijt}^{\Omega^H_{ij}}\,M_{it}^{\Omega^F_i}
-\]
-
-\vspace{2pt}
-{\footnotesize \textbf{Cost minimization:} choose $\{L_{it},X_{ijt},M_{it}\}$ to minimize total cost $W_tL_{it}+\sum_jP_{jt}X_{ijt}+S_tP^{F*}_tM_{it}$ subject to the production constraint above. The FOCs equate each input's expenditure to its Cobb-Douglas exponent times total cost $MC_{it}Y_{it}$:}
-\vspace{-4pt}
-\[
-W_tL_{it}=\alpha_i MC_{it}Y_{it},\qquad P_{jt}X_{ijt}=\Omega^H_{ij}MC_{it}Y_{it},\qquad S_tP^{F*}_tM_{it}=\Omega^F_i MC_{it}Y_{it}
-\]
-
-\vspace{2pt}
-{\footnotesize Summing the three input demands back into the cost function gives nominal marginal cost, multiplicatively separable in input prices:}
-\vspace{-4pt}
-\[
+\qquad\Rightarrow\qquad
 MC_{it}=\frac{W_t^{\alpha_i}\prod_j P_{jt}^{\Omega^H_{ij}}\,(S_tP^{F*}_t)^{\Omega^F_i}}{A_{it}}
 \]
+\vspace{-6pt}
+\[
+W_tL_{it}=\alpha_i MC_{it}Y_{it},\qquad P_{jt}X_{ijt}=\Omega^H_{ij}MC_{it}Y_{it},\qquad S_tP^{F*}_tM_{it}=\Omega^F_i MC_{it}Y_{it}
+\]}
 
-\vspace{2pt}
-{\footnotesize This is the object that both the exchange rate (via $M_{it}$, Open-Economy slide) and TFP shocks $A_{it}$ shift --- the two cost-push channels the rest of the paper is about.}
+\vspace{6pt}
+{\tiny
+\begin{tabular}{@{}llll@{}}
+$Y,A$: output, TFP & $L,X,M$: labor, dom./imp.\ inputs & $\Omega^H_{ij}$: dom.\ IO share & $\Omega^F_i$: import cost share \\
+$\alpha_i$: labor share & $MC_{it}$: nominal marg.\ cost & \multicolumn{2}{l}{$P^{F*}$: foreign import price} \\
+\end{tabular}}
+
+\vspace{6pt}
+{\footnotesize \textbf{Key:} $MC_{it}$ moves with both $A_{it}$ (TFP) and $S_t$ (via $M_{it}$) --- the two cost-push channels.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Model Setup: Firms --- Calvo Price Setting}
+\begin{frame}{Model: Firms --- Calvo Pricing}
 %==============================================================
 
-{\footnotesize \textbf{Calvo pricing} (Calvo 1983): with probability $\delta_i$ (primitive; \emph{not} $\hat\delta_i$, derived below) the firm resets its price each period; with probability $1{-}\delta_i$ it keeps last period's price. A resetting firm chooses $P_{it}^\#$ to maximize expected discounted profits, weighting each future state by the probability $(1-\delta_i)^s$ that the price is \emph{still} not reset $s$ periods later:}
+{\scriptsize \textbf{Reset price} (probability $\delta_i$ resets, $1{-}\delta_i$ keeps last price):}
 \vspace{-4pt}
+{\scriptsize
 \[
-\max_{P_{it}^\#}\ \mathbb{E}_t\sum_{s=0}^\infty\rho^s(1{-}\delta_i)^s\big[P_{it}^\#{-}MC_{it+s}\big]\Big(\tfrac{P_{it}^\#}{P_{it+s}}\Big)^{-\varepsilon}Y_{it+s}
+X1_{it} = \widetilde{MC}_{it}Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon}X1_{i,t+1},\qquad
+X2_{it} = Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon-1}X2_{i,t+1}
 \]
-
-\vspace{2pt}
-{\footnotesize where $\big(P_{it}^\#/P_{it+s}\big)^{-\varepsilon}Y_{it+s}$ is the CES demand curve the firm faces (elasticity $\varepsilon$, markup $\varepsilon/(\varepsilon{-}1)$). FOC (forward-looking markup pricing):}
-\vspace{-4pt}
+\vspace{-8pt}
 \[
-P_{it}^{\#}=\frac{\varepsilon}{\varepsilon-1}\cdot\frac{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}\,\widetilde{MC}_{it+s}}{\mathbb{E}_t\sum_s \rho^s(1-\delta_i)^s Y_{it+s}/P_{it+s}}
-\]
-
-\vspace{2pt}
-{\footnotesize \textbf{Reading the FOC:} the reset price is a markup over a \emph{weighted average of current and future marginal costs}, with weights given by how likely the price is to still be in effect. The stickier the sector ($\delta_i$ small), the further forward the firm must look --- this forward-lookingness is exactly what the recursive form on the next slide computes period by period.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Model Setup: Firms --- Calvo Recursion, as Solved}
-%==============================================================
-
-{\footnotesize \textbf{As coded} (recursive form of the FOC on the previous slide, real MC $\widetilde{MC}=MC/P$): $X1_{it}$ and $X2_{it}$ are the numerator and denominator of the reset-price formula, written recursively so Dynare can solve them jointly with the rest of the nonlinear system:}
-\vspace{-4pt}
-\[
-X1_{it} = \widetilde{MC}_{it}Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon}X1_{i,t+1}
-\]
-\vspace{-10pt}
-\[
-X2_{it} = Y_{it} + (1{-}\delta_i)\beta\Big(\tfrac{C_{t+1}}{C_t}\Big)^{-\gamma}\Pi_{i,t+1}^{\varepsilon-1}X2_{i,t+1},
-\qquad
-P_{it}^\#/P_{it} = \tfrac{\varepsilon}{\varepsilon-1}\,X1_{it}/X2_{it}
-\]
-
-\vspace{4pt}
-{\footnotesize \textbf{Price index law of motion} (CES aggregation of the $\delta_i$ fraction that resets to $P_{it}^\#$ and the $1{-}\delta_i$ fraction that keeps last period's price):}
-\vspace{-4pt}
-\[
+P_{it}^\#/P_{it} = \tfrac{\varepsilon}{\varepsilon-1}\,X1_{it}/X2_{it},\qquad
 1 = (1{-}\delta_i)\Pi_{it}^{\varepsilon-1} + \delta_i \big(P_{it}^\#/P_{it}\big)^{1-\varepsilon}
+\]}
+
+\vspace{6pt}
+{\tiny
+\begin{tabular}{@{}llll@{}}
+$\delta_i$: Calvo reset prob.\ (primitive) & $\hat\delta_i$: derived slope & $P_{it}^\#$: reset price & $\varepsilon$: elasticity (markup $\varepsilon/(\varepsilon{-}1)$) \\
+\end{tabular}}
+
+\vspace{6pt}
+{\footnotesize $\hat\delta_i=\dfrac{\delta_i(1-\beta(1-\delta_i))}{1-\beta\delta_i(1-\delta_i)}$ --- appears in DC weights (Theory section), \emph{derived} not primitive.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Model: Open Economy}
+%==============================================================
+
+{\scriptsize
+\[
+\underbrace{P^{FH}_t = S_t P^{F*}_t}_{\text{LOP}},\qquad
+\underbrace{(1{+}i_t) = (1{+}i^*)\big[1{-}\psi(\hat b^*_t{-}\bar b^*)\big]\,\mathbb{E}_t[S_{t+1}/S_t]}_{\text{UIP}}
 \]
-
-\vspace{4pt}
-{\footnotesize \textbf{Why this matters:} log-linearizing this exact recursion around the steady state is what \emph{produces} Rubbo's adjusted slope $\hat\delta_i=\tfrac{\delta_i(1-\beta(1-\delta_i))}{1-\beta\delta_i(1-\delta_i)}$, which appears throughout the Theory section --- it is a derived object, not a primitive of the model.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Model Setup: Open Economy --- Prices and Interest Parity}
-%==============================================================
-
-{\footnotesize \textbf{Law of one price for imports} ($S_t$: nominal ER, home ccy.\ per unit foreign ccy.; $P^{F*}_t$: foreign-currency import price; Gal\'i \& Monacelli 2005):}
-\vspace{-4pt}
-{\scriptsize\[
-P^{FH}_t = S_t P^{F*}_t
+\vspace{-8pt}
+\[
+\hat b^*_t = \tfrac{1+i_{t-1}}{\Pi^C_t}\hat b^*_{t-1} + \tfrac{P^H_t EX_t - P^{FH}_t IM_t}{P^C_t},\qquad
+EX_t = \kappa_{EX}D^*_t\Big(\tfrac{P^H_t}{P^{FH}_t}\Big)^{-\theta^*}
+\]
+\vspace{-8pt}
+\[
+Y_{it} = \beta^H_i\tfrac{P^H_t}{P_{it}}\big(C^H_t+EX_t\big) + \sum_j \Omega^H_{ji}\tfrac{MC_{jt}Y_{jt}}{P_{it}}
 \]}
-{\footnotesize This is the last piece needed to close the price indices from the Households slide: $P^H_t=\prod_iP_{it}^{\beta^H_i}$ is the price of the domestic bundle, and $P^C_t=\big[\omega(P^H_t)^{1-\eta}+(1{-}\omega)(P^{FH}_t)^{1-\eta}\big]^{1/(1-\eta)}$ is the CPI.}
 
 \vspace{6pt}
-{\footnotesize \textbf{Uncovered interest parity, with a debt-elastic risk premium} (functional form: Schmitt-Groh\'e \& Uribe 2003, for stationarity of $\hat b^*_t$). Derived, not assumed: eliminate $\mathbb{E}_tC_{t+1}^{-\gamma}/\Pi^C_{t+1}$ between the household's domestic Euler equation and its foreign-bond FOC (Households slide) to get}
-\vspace{-4pt}
-{\scriptsize\[
-(1+i_t) = (1+i^*)\big[1-\psi(\hat b^*_t-\bar b^*)\big]\,\mathbb{E}_t\big[S_{t+1}/S_t\big]
-\]}
-{\footnotesize Under a float, $i_t$ follows the Taylor rule and $S_t$ adjusts to satisfy this equation; under a peg, $S_t=\bar S$ is fixed and $i_t$ is the residual.}
-
-\vspace{6pt}
-{\footnotesize \textbf{Key mechanism:} imported inputs enter every sector's marginal cost through $\Omega^F_i$ (Firms slide, via $M_{it}$) --- the exchange rate now moves marginal cost \emph{exactly like a productivity shock}, scaled by each sector's import exposure and propagated through $\Omega^H$.}
+{\tiny
+\begin{tabular}{@{}llll@{}}
+$\hat b^*$: NFA (scaled) & $EX,IM$: exports, imports & $\theta^*$: export elasticity & $D^*$: foreign demand shifter \\
+$\beta^H_i$: cons.\ share, sector $i$ & \multicolumn{3}{l}{Float: $i_t$ Taylor rule, $S_t$ free \quad Peg: $S_t=\bar S$, $i_t$ residual} \\
+\end{tabular}}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Model Setup: Open Economy --- External Accounts and Market Clearing}
+\begin{frame}{Model: Policy Regimes and Shocks}
 %==============================================================
 
-{\footnotesize \textbf{Net foreign assets} (aggregating household budget constraints across the economy collapses to the standard current-account law of motion):}
-\vspace{-4pt}
-{\scriptsize\[
-\hat b^*_t = \frac{1+i_{t-1}}{\Pi^C_t}\hat b^*_{t-1} + \frac{P^H_t EX_t - P^{FH}_t IM_t}{P^C_t}
-\]}
-
-\vspace{4pt}
-{\footnotesize \textbf{Trade flows:} $EX_t$ is reduced-form foreign demand for the home bundle (elasticity $\theta^*$, shifter $D^*_t$); $IM_t$ sums final-consumption imports and the imported input embedded in every sector's cost:}
-\vspace{-4pt}
-{\scriptsize\[
-EX_t = \kappa_{EX}\,D^*_t\Big(\frac{P^H_t}{P^{FH}_t}\Big)^{-\theta^*},\qquad
-IM_t = C^F_t + \sum_i \Omega^F_i\frac{MC_{it}Y_{it}}{P^{FH}_t}
-\]}
-
-\vspace{4pt}
-{\footnotesize \textbf{Sectoral goods-market clearing:} sector $i$'s output is absorbed by domestic consumption and exports of $i$'s share of the bundle, plus intermediate demand from every downstream sector $j$ that uses $i$ as an input:}
-\vspace{-4pt}
-{\scriptsize\[
-Y_{it} = \beta^H_i\,\frac{P^H_t}{P_{it}}\big(C^H_t+EX_t\big) + \sum_j \Omega^H_{ji}\,\frac{MC_{jt}Y_{jt}}{P_{it}}
-\]}
-{\footnotesize (In the 3-sector calibration: Resource feeds Manufacturing, Manufacturing feeds Services, and each sector also sells directly to $C^H_t$ and $EX_t$.)}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Policy Regimes and Shocks}
-%==============================================================
-
-{\footnotesize \textbf{Three FX regimes} (only the policy block changes):}
-
-\vspace{4pt}
 {\footnotesize
 \begin{tabular}{@{}lll@{}}
 \toprule
 \textbf{Regime} & \textbf{Rule} & \textbf{Exchange rate} \\
 \midrule
 Float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t$ & fully endogenous (UIP) \\
-Peg & $S_t = \bar S$ & fixed; $i_t$ residual from UIP \\
-Managed float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi_s\log(S_t/\bar S)$ & partially stabilized \\
+Peg & $S_t = \bar S$ & fixed; $i_t$ residual \\
+Managed & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi_s\log(S_t/\bar S)$ & partially stabilized \\
 \bottomrule
 \end{tabular}}
 
 \vspace{10pt}
-{\footnotesize \textbf{Three shocks studied:}}
-\begin{itemize}\setlength{\itemsep}{3pt}
-\item \footnotesize Sectoral TFP shocks $a_{it}$, AR(1), $\rho_a=0.90$
-\item \footnotesize Import price shock $p^{F*}_t$, AR(1), $\rho_{pF}=0.85$ --- the pure FX/commodity-price channel
-\item \footnotesize Foreign demand shock $D^*_t$, AR(1), $\rho_D=0.80$ --- affects exports, hence NFA and the exchange rate
-\end{itemize}
+{\footnotesize \textbf{Shocks} (AR(1)): $a_{it}$ (TFP, $\rho{=}0.90$)\quad $p^{F*}_t$ (import price, $\rho{=}0.85$)\quad $D^*_t$ (foreign demand, $\rho{=}0.80$)}
 
 \end{frame}
 
 %==============================================================
-\section{Theory}
-%==============================================================
-\begin{frame}{Rubbo (2024): What Carries Over}
-%==============================================================
-
-\begin{columns}[t]
-\column{0.56\textwidth}
-
-{\footnotesize \textbf{Closed-economy system} ($N$ sectors, Calvo $\hat\delta_i$, IO network $\Omega$):}
-\vspace{-3pt}
-{\scriptsize\begin{align*}
-\text{IS:} &\quad \ty_t = \mathbb{E}\ty_{t+1} - \tfrac{1}{\gamma}(i_t - \mathbb{E}\pi^C_{t+1} - r^{nat}_t) \\[1pt]
-\text{MC:} &\quad \bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t \\[1pt]
-\text{NKPC:} &\quad \bpi_t = \rho(I{-}\mathcal{V})\mathbb{E}\bpi_{t+1} + \mathcal{B}(\gamma{+}\varphi)\ty_t - \mathcal{V}\bm{\chi}_t \\[1pt]
-\text{Policy:} &\quad i_t = r^{nat}_t + \phi_\pi\pi^C_t + \phi_y\ty_t
-\end{align*}}
-
-\vspace{3pt}
-{\footnotesize \textbf{Lemma 1:} natural output $=$ Domar-weighted TFP, $\;y^{nat}_t=\sum_i\lambda_i a_{it}$.
-
-\textbf{Proposition 1 (DC index):} unique index with \emph{no} cost-push:}
-\vspace{-4pt}
-\[\footnotesize \pi^{DC}_t = \rho\,\mathbb{E}\pi^{DC}_{t+1} + \tfrac{\gamma+\varphi}{\Lambda^{DC}}\ty_t,\quad w^{DC}_i \propto \lambda_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\]
-
-\column{0.40\textwidth}
-
-{\footnotesize \textbf{Why DC is unique:} $\mathcal{V}=\Delta(I-\Omega\Delta)^{-1}$ has rank $N{-}1$ on the space of cost-push shocks $\Rightarrow$ a one-dimensional null space $\Rightarrow$ exactly one index $\bm\phi$ with $\bm\phi^\top\mathcal{V}=\bm 0^\top$.}
-
-\vspace{6pt}
-{\footnotesize \textbf{One shock, one channel:} in the closed economy, only TFP shocks $\bm\chi_t$ enter the cost-push term. That is exactly why a single index can null it out.}
-
-\vspace{6pt}
-{\footnotesize \textbf{The open question we ask:} with a \emph{second} cost-push channel (the exchange rate), can the same trick still null out both simultaneously?}
-
-\end{columns}
-\end{frame}
-
-%==============================================================
-\begin{frame}{Why the Divine Coincidence Matters}
-%==============================================================
-
-{\scriptsize \textbf{Where the name comes from} (Blanchard \& Gal\'i 2007, \emph{JEEA}): in the canonical one-sector NK model, if the \emph{only} distortion is nominal price stickiness, then stabilizing inflation, closing the output gap, and maximizing welfare are the \emph{same} objective --- one instrument, one target, no tradeoff. It is called ``divine'' because this is fragile: any second distortion (real wage rigidity, markup or cost-push shocks) breaks it and forces a genuine tradeoff.}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why sectoral heterogeneity threatens it:} with $N$ sectors resetting prices at different rates $\delta_i$, an arbitrary index --- plain CPI, say --- behaves like a model with an extra distortion: stabilizing it no longer stabilizes the output gap. Rubbo's Proposition 1 shows the coincidence is not lost, only \emph{hidden}: exactly one Domar- and stickiness-weighted index restores it (previous slide).}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why it matters in practice:}}
-\begin{itemize}\setlength{\itemsep}{0pt}
-\item \scriptsize It gives a central bank a single, well-defined, model-consistent target whose stabilization \emph{alone} delivers the fully efficient (flexible-price) allocation --- no discretionary weighing of inflation against output.
-\item \scriptsize It shows plain CPI targeting is \emph{not} optimal once sectors differ in stickiness: the wedge between CPI inflation and $\pi^{DC}_t$ is exactly the welfare-relevant cost-push term a CPI-targeting central bank would be missing.
-\item \scriptsize It is not merely a price index: by Proposition 3, $\pi^{DC}_t\equiv0$ for all $t$ exactly minimizes the model's quadratic welfare loss --- ``divine coincidence'' and ``welfare-optimal policy'' are the same statement.
-\end{itemize}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why it recurs on almost every slide that follows:} the paper is organized around one question --- does this single tradeoff-free target survive once the exchange rate becomes a \emph{second} source of cost-push shocks. Every quantitative result below is, implicitly, a test of how ``divine'' the coincidence remains once the economy is open.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Open-Economy Divine Coincidence: Does It Survive?}
-%==============================================================
-
-{\footnotesize \textbf{Closed economy (Rubbo):} one cost-push channel (TFP) $\Rightarrow$ DC index exists uniquely because a rank-deficient matrix $\mathcal{V}$ has a one-dimensional null space, and one index can sit in it.}
-
-\vspace{6pt}
-{\footnotesize \textbf{Open economy: two cost-push channels.} TFP \emph{and} the exchange rate now shift sectoral marginal cost. A single weight vector would need to null out \emph{both} simultaneously:}
-\vspace{-4pt}
-\[\footnotesize \underbrace{\bm\phi^\top\mathcal{V}=\bm 0^\top}_{\text{TFP channel}} \quad\text{and}\quad \underbrace{\bm\phi^\top\Gamma = 0}_{\text{FX channel}}\]
-{\footnotesize Two conditions, one free vector $\Rightarrow$ generically no solution: \textbf{DC breaks down under a float.}}
-
-\vspace{6pt}
-{\footnotesize \textbf{But:} import nodes can be modeled as fully flexible upstream sectors ($\hat\delta_M=1$) in an augmented network. Fully flexible nodes get \emph{zero} DC weight ($w_M=0$ since $(1-\hat\delta_M)/\hat\delta_M=0$), so Rubbo's Proposition 1 still applies to the \emph{augmented} network --- the DC index (as coded here) remains well-defined and insulates against domestic TFP shocks by construction. Whether it \emph{also} nulls the FX channel in the calibrated network is the quantitative question tackled below.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Regime Comparison: Theoretical Predictions}
+\begin{frame}{Theory: Regime Comparison --- Predictions}
 %==============================================================
 
 {\footnotesize
@@ -634,47 +336,21 @@ Managed float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi
 \toprule
  & \textbf{Float} & \textbf{Peg} & \textbf{Managed} \\
 \midrule
-Exchange rate & fully endogenous & fixed & partially stabilized \\
-FX cost-push absorbed by & $S_t$ adjustment & domestic $\pi_i,\,y$ & split \\
-Monetary independence & full & none (residual $i_t$) & full \\
-Pass-through of import shocks & low (if $\phi_\pi$ high) & proportional to $\mathcal{M}_i$ & intermediate \\
-DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & yes \\
+Exchange rate & endogenous & fixed & partial \\
+FX cost-push absorbed by & $S_t$ & $\pi_i,y$ & split \\
+Monetary independence & full & none & full \\
 \bottomrule
 \end{tabular}}
 
 \vspace{10pt}
-{\footnotesize \textbf{Naive expectation:} float should dominate on inflation stabilization since it directly targets $\pi^{DC}_t$; peg transmits import shocks directly, scaled by $\mathcal{M}_i$; managed sits in between.
-
-\textbf{Preview: the quantitative results overturn part of this.} Solving the actual nonlinear model shows free float is \emph{not} the best regime here --- see the Welfare section, below.}
+{\footnotesize \textbf{Naive:} float best (targets $\pi^{DC}_t$, well-defined by construction --- see appendix). \textbf{Overturned} --- see Welfare section.}
 
 \end{frame}
 
 %==============================================================
-\section{Calibration}
+\section{Results}
 %==============================================================
-\begin{frame}{Solution Method: Nonlinear, Not Pre-Linearized}
-%==============================================================
-
-{\footnotesize \textbf{Why solve the nonlinear model directly, rather than hand-linearize first:}}
-\begin{itemize}\setlength{\itemsep}{4pt}
-\item \footnotesize The Calvo slope $\hat\delta_i$ and the DC weights are \emph{outputs} of log-linearizing the true recursion --- coding them as inputs risks baking in the answer.
-\item \footnotesize A genuine nonlinear model lets us go to order-2 perturbation, which is required for valid welfare comparisons across policy regimes (Kim-Kim / Woodford: first-order-accurate welfare rankings are not valid --- variance terms enter the welfare function only at second order).
-\end{itemize}
-
-\vspace{5pt}
-{\footnotesize \textbf{Steady state:} solved semi-analytically, not guessed. At zero inflation, price = markup $\times$ marginal cost exactly, which collapses the 46-equation system to one scalar root-find in the real wage $W$ (prices, exports, consumption all closed-form given $W$), giving $W^*=1.3189$.}
-\begin{itemize}\setlength{\itemsep}{2pt}
-\item \footnotesize \textbf{Lemma 1 (exact):} $\tilde y_t=\sum_i\lambda_{D,i}\big[\log(Y_{it}/\bar Y_i)-\log A_{it}\big]$ --- no shadow flex-price block needed.
-\item \footnotesize \textbf{Prop.\ 1 weights (theory-motivated):} DC weights from $\lambda_{D,i}$, $\hat\delta_i$, applied to realized inflation in the true nonlinear simulation.
-\end{itemize}
-
-\vspace{4pt}
-{\footnotesize \textbf{Solved at first order} around the exact steady state, for all three regimes. Second-order perturbation is not used: an inflation/output-gap-only Taylor rule leaves the price \emph{level} and $S_t$ as a unit root --- expected, since nothing anchors the level --- so only the first-order (stationary) solution is used, and only stationary objects enter welfare.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Calibration: A 3-Sector Oil-Exporting Economy}
+\begin{frame}{Calibration: 3-Sector Oil-Exporting Economy}
 %==============================================================
 
 {\footnotesize
@@ -682,146 +358,164 @@ DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & ye
 \toprule
 \textbf{Parameter} & \textbf{Value} & \textbf{Parameter} & \textbf{Value}\\
 \midrule
-$\beta$ (discount factor) & 0.99 & $\Omega^H_{21}$ (Manuf.\ $\leftarrow$ Resource) & 0.20 \\
-$\gamma$ (risk aversion) & 1.00 & $\Omega^H_{32}$ (Services $\leftarrow$ Manuf.) & 0.25 \\
-$\varphi$ (inv.\ Frisch elasticity) & 2.00 & $\Omega^F_1,\Omega^F_2,\Omega^F_3$ (import shares) & 0.30, 0.10, 0.05 \\
-$\eta$ (home/foreign elasticity) & 1.50 & $\beta^H_1,\beta^H_2,\beta^H_3$ (consumption shares) & 0.05, 0.15, 0.80 \\
-$\beta^{F,tot}$ (import share, CPI) & 0.10 & $\delta_1,\delta_2,\delta_3$ (Calvo reset prob.) & 0.75, 0.50, 0.25 \\
-$\varepsilon$ (within-sector elasticity) & 8.00 & $\psi$ (NFA debt-elastic premium) & 0.020 \\
-$\theta^*$ (export price elasticity) & 2.00 & $\phi_\pi,\phi_y,\phi_s$ (policy) & 1.50, 0.50, 0.30 \\
+$\beta$ & 0.99 & $\Omega^H_{21},\Omega^H_{32}$ & 0.20, 0.25 \\
+$\gamma,\varphi$ & 1.00, 2.00 & $\Omega^F_1,\Omega^F_2,\Omega^F_3$ & 0.30, 0.10, 0.05 \\
+$\eta$ & 1.50 & $\beta^H_1,\beta^H_2,\beta^H_3$ & 0.05, 0.15, 0.80 \\
+$\varepsilon$ & 8.00 & $\delta_1,\delta_2,\delta_3$ & 0.75, 0.50, 0.25 \\
+$\theta^*$ & 2.00 & $\psi$ & 0.020 \\
+$\beta^{F,tot}$ & 0.10 & $\phi_\pi,\phi_y,\phi_s$ & 1.50, 0.50, 0.30 \\
 \bottomrule
 \end{tabular}}
 
 \vspace{8pt}
-{\footnotesize \textbf{Sector story:} Resource is upstream, flexible-priced, import-intensive (machinery) and the main exporter. Manufacturing is the middle of the chain. Services is downstream, sticky-priced, and dominates final consumption --- the classic setting for network amplification.}
+{\footnotesize Resource: upstream, flexible, import/export-heavy $\to$ Manufacturing: mid-chain $\to$ Services: sticky, consumption-dominant.
+
+\textbf{Solved:} nonlinear, order 1; steady state $\Rightarrow$ scalar root-find, $W^*=1.3189$.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Network Properties: Centrality and DC Weights}
+\begin{frame}{Calibration: Network Properties}
 %==============================================================
 
 \begin{columns}[t]
-\column{0.52\textwidth}
-
-{\footnotesize \textbf{Domestic supplier centrality (Domar weight):}}
-\vspace{-4pt}
-{\scriptsize\[
+\column{0.5\textwidth}
+{\scriptsize
+\[
 \lambda_{D,i} = \big[(\bm\beta^H)^\top(I-\Omega^H)^{-1}\big]_i
-\]}
-
-{\footnotesize \textbf{Import centrality} (FX exposure transmitted through the domestic network):}
-\vspace{-4pt}
-{\scriptsize\[
+\]
+\[
 \mathcal{M}_i = \big[(I-\Omega^H)^{-1}\Omega^F\mathbf{1}\big]_i
+\]
+\[
+w^{DC}_i \propto \lambda_{D,i}\,\tfrac{1-\hat\delta_i}{\hat\delta_i}
 \]}
-
-{\footnotesize \textbf{DC-index weights} (Proposition 1, applied here to the true nonlinear realized inflation):}
-\vspace{-4pt}
-{\scriptsize\[
-w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
-\]}
-
-{\footnotesize Both objects are computed once from the calibrated $\Omega^H,\Omega^F,\bm\beta^H$ matrices --- no magic numbers, same formulas as Rubbo's Proposition 1 and the import-centrality analog.}
+{\tiny $\lambda_{D,i}$: Domar weight\quad $\mathcal{M}_i$: import centrality\quad $w^{DC}_i$: DC weight}
 
 \column{0.44\textwidth}
-
-\vspace{-4pt}
 \begin{center}
-{\tiny \textbf{Domar weight $\lambda_{D,i}$ vs.\ import centrality $\mathcal{M}_i$}}\\[1pt]
+{\tiny \textbf{$\lambda_{D,i}$ vs.\ $\mathcal{M}_i$}}\\[1pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, ybar, bar width=9pt, width=6.4cm, height=3.7cm,
   symbolic x coords={Resource,Manuf.,Services}, xtick=data,
   ymin=0, ymax=0.95, ylabel={\tiny value},
   legend style={font=\tiny, at={(0.5,1.16)}, anchor=north, legend columns=2}]
 \addplot[fill=customgreen!55, draw=customgreen!70!black] coordinates {(Resource,0.12) (Manuf.,0.35) (Services,0.80)};
-\addlegendentry{$\lambda_{D,i}$ (Domar)}
+\addlegendentry{$\lambda_{D,i}$}
 \addplot[fill=gray!45, draw=gray!70!black] coordinates {(Resource,0.30) (Manuf.,0.16) (Services,0.09)};
-\addlegendentry{$\mathcal{M}_i$ (import cent.)}
+\addlegendentry{$\mathcal{M}_i$}
 \end{axis}
 \end{tikzpicture}
 \end{center}
-
-\vspace{1pt}
-{\scriptsize \textit{Expect: Services has the largest $\lambda_{D,i}$ (dominates final demand, downstream); Resource has the largest $\mathcal{M}_i$ (directly import-intensive) but this need not be the sector with the largest \emph{DC weight}, since DC weights also load on stickiness $(1-\hat\delta_i)/\hat\delta_i$.}}
-
 \end{columns}
-\end{frame}
-
-%==============================================================
-\section{Shocks}
-%==============================================================
-\begin{frame}{From Theory to Quantification}
-%==============================================================
-
-{\footnotesize \textbf{Pipeline:} the model is solved numerically for all three regimes, producing IRFs and theoretical moments, summarized in the figures below. Every number on the following slides is model output for the calibration two slides ago.}
-
-\vspace{6pt}
-{\footnotesize \textbf{Main text focuses on the import-price shock} --- the cleanest test of the FX cost-push channel the Theory section just introduced, since it hits every sector's marginal cost through $\Omega^F_i$ with no domestic-TFP confound. (TFP and foreign-demand IRFs, which confirm the same ranking, are in the Appendix.)}
-
-\vspace{6pt}
-{\footnotesize \textbf{Five questions the simulations answer:}}
-\begin{enumerate}\setlength{\itemsep}{4pt}
-\item \footnotesize Which sectors are most exposed to the import-price shock, and does that line up with Domar weight, import centrality, or both?
-\item \footnotesize Does the DC index stay close to zero (insulation property), or does it visibly move under the float?
-\item \footnotesize What is the welfare ranking of float vs.\ peg vs.\ managed float, and what drives it -- output-gap volatility or sector-level price dispersion?
-\item \footnotesize Is the driver on-impact volatility, or something slower (persistence)?
-\item \footnotesize How much of this depends on \emph{this particular} calibration -- i.e.\ does the ranking generalize? (Generalization section, later in the deck.)
-\end{enumerate}
-
-\vspace{6pt}
-{\footnotesize \textbf{Headline (surprising) answer:} free float is \emph{not} the best regime here. Managed float dominates on almost every margin, and even the hard peg beats pure float on \emph{total} welfare. The next slides show why -- and then show how general that conclusion is.}
 
 \end{frame}
-%==============================================================
-\begin{frame}{Results: IRFs to an Import-Price Shock --- the Mechanism Shock}
-%==============================================================
-{\scriptsize A 1\% increase in the foreign-currency import price $p^{F*}_t$, $\rho_{pF}=0.85$ --- the shock that directly targets $\Gamma$, the FX cost-push channel from the Theory section.}
 
-\vspace{1pt}
+%==============================================================
+\begin{frame}{IRFs: Import-Price Shock}
+%==============================================================
+\vspace{-3pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Output gap $\tilde y_t$ (\%)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.05, ymax=0.80, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.6063, ymax=0.0650, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.4095)(2,-0.3093)(3,-0.2318)(4,-0.1711)(5,-0.1234)(6,-0.0860)(7,-0.0567)(8,-0.0339)(9,-0.0164)(10,-0.0030)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.5413)(2,-0.4685)(3,-0.4055)(4,-0.3502)(5,-0.3015)(6,-0.2583)(7,-0.2198)(8,-0.1856)(9,-0.1551)(10,-0.1278)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: import price $P^{F*}_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.1394, ymax=1.0922, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.8500)(3,0.7225)(4,0.6141)(5,0.5220)(6,0.4437)(7,0.3771)(8,0.3206)(9,0.2725)(10,0.2316)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0966, ymax=0.8125, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, gray!45, densely dotted] coordinates {(1,0.7245)(2,0.3844)(3,0.2096)(4,0.1148)(5,0.0613)(6,0.0303)(7,0.0121)(8,0.0013)(9,-0.0050)(10,-0.0087)};
 \addplot[thick, gray!60!black, dashed] coordinates {(1,0.1863)(2,0.1375)(3,0.1035)(4,0.0783)(5,0.0590)(6,0.0440)(7,0.0323)(8,0.0230)(9,0.0157)(10,0.0099)};
 \addplot[thick, customgreen!85!black] coordinates {(1,0.0573)(2,0.0433)(3,0.0334)(4,0.0260)(5,0.0201)(6,0.0154)(7,0.0117)(8,0.0087)(9,0.0062)(10,0.0042)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Exchange rate $S_t$ (\%, dep.\ $>0$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.60, ymax=0.05, xtick={2,4,6,8,10}]
-\addplot[thick, gray!45, densely dotted] coordinates {(1,0)(2,0)(3,0)(4,0)(5,0)(6,0)(7,0)(8,0)(9,0)(10,0)};
-\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.4095)(2,-0.3093)(3,-0.2318)(4,-0.1711)(5,-0.1234)(6,-0.0860)(7,-0.0567)(8,-0.0339)(9,-0.0164)(10,-0.0030)};
-\addplot[thick, customgreen!85!black] coordinates {(1,-0.5413)(2,-0.4685)(3,-0.4055)(4,-0.3502)(5,-0.3015)(6,-0.2583)(7,-0.2198)(8,-0.1856)(9,-0.1551)(10,-0.1278)};
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0709, ymax=0.3790, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.3355)(2,0.0700)(3,0.0161)(4,-0.0090)(5,-0.0207)(6,-0.0258)(7,-0.0274)(8,-0.0272)(9,-0.0260)(10,-0.0244)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.1592)(2,0.0516)(3,0.0325)(4,0.0195)(5,0.0101)(6,0.0031)(7,-0.0020)(8,-0.0057)(9,-0.0084)(10,-0.0102)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.0841)(2,0.0112)(3,0.0080)(4,0.0061)(5,0.0049)(6,0.0039)(7,0.0032)(8,0.0026)(9,0.0021)(10,0.0017)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
+\vspace{0pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral output gap components (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.01, ymax=0.05, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0569, ymax=0.4759, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0581)(2,0.0105)(3,-0.0021)(4,-0.0047)(5,-0.0044)(6,-0.0034)(7,-0.0023)(8,-0.0014)(9,-0.0007)(10,-0.0001)};
+\addplot[thick, sectorman] coordinates {(1,0.2421)(2,0.1049)(3,0.0424)(4,0.0146)(5,0.0028)(6,-0.0019)(7,-0.0035)(8,-0.0038)(9,-0.0036)(10,-0.0032)};
+\addplot[thick, sectorserv] coordinates {(1,0.4243)(2,0.2690)(3,0.1694)(4,0.1048)(5,0.0629)(6,0.0356)(7,0.0179)(8,0.0065)(9,-0.0008)(10,-0.0053)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0569, ymax=0.4759, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0093)(2,0.0005)(3,-0.0018)(4,-0.0021)(5,-0.0018)(6,-0.0013)(7,-0.0008)(8,-0.0003)(9,0.0001)(10,0.0004)};
+\addplot[thick, sectorman] coordinates {(1,0.0576)(2,0.0354)(3,0.0222)(4,0.0142)(5,0.0093)(6,0.0062)(7,0.0042)(8,0.0027)(9,0.0017)(10,0.0010)};
+\addplot[thick, sectorserv] coordinates {(1,0.1194)(2,0.1016)(3,0.0831)(4,0.0661)(5,0.0514)(6,0.0391)(7,0.0289)(8,0.0206)(9,0.0139)(10,0.0086)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0569, ymax=0.4759, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.0012)(2,-0.0036)(3,-0.0035)(4,-0.0028)(5,-0.0020)(6,-0.0013)(7,-0.0007)(8,-0.0002)(9,0.0002)(10,0.0005)};
 \addplot[thick, sectorman] coordinates {(1,0.0154)(2,0.0097)(3,0.0061)(4,0.0040)(5,0.0028)(6,0.0020)(7,0.0014)(8,0.0011)(9,0.0008)(10,0.0006)};
 \addplot[thick, sectorserv] coordinates {(1,0.0431)(2,0.0372)(3,0.0308)(4,0.0247)(5,0.0194)(6,0.0148)(7,0.0109)(8,0.0078)(9,0.0052)(10,0.0030)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral inflation $\pi_{it}$ (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.05, ymax=0.14, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2260, ymax=0.9086, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.7988)(2,0.0182)(3,-0.1162)(4,-0.1143)(5,-0.0916)(6,-0.0713)(7,-0.0562)(8,-0.0454)(9,-0.0374)(10,-0.0314)};
+\addplot[thick, sectorman] coordinates {(1,0.4608)(2,0.1371)(3,-0.0000)(4,-0.0496)(5,-0.0615)(6,-0.0587)(7,-0.0515)(8,-0.0437)(9,-0.0368)(10,-0.0312)};
+\addplot[thick, sectorserv] coordinates {(1,0.1694)(2,0.0982)(3,0.0520)(4,0.0222)(5,0.0036)(6,-0.0078)(7,-0.0144)(8,-0.0179)(9,-0.0195)(10,-0.0199)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2260, ymax=0.9086, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.2845)(2,0.0738)(3,0.0136)(4,-0.0057)(5,-0.0130)(6,-0.0163)(7,-0.0179)(8,-0.0186)(9,-0.0187)(10,-0.0184)};
+\addplot[thick, sectorman] coordinates {(1,0.1665)(2,0.0914)(3,0.0461)(4,0.0196)(5,0.0043)(6,-0.0047)(7,-0.0100)(8,-0.0130)(9,-0.0148)(10,-0.0156)};
+\addplot[thick, sectorserv] coordinates {(1,0.0763)(2,0.0600)(3,0.0452)(4,0.0325)(5,0.0219)(6,0.0134)(7,0.0066)(8,0.0013)(9,-0.0027)(10,-0.0058)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2260, ymax=0.9086, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,0.1182)(2,0.0273)(3,0.0039)(4,-0.0020)(5,-0.0031)(6,-0.0030)(7,-0.0027)(8,-0.0022)(9,-0.0018)(10,-0.0015)};
 \addplot[thick, sectorman] coordinates {(1,0.0516)(2,0.0322)(3,0.0197)(4,0.0123)(5,0.0079)(6,0.0052)(7,0.0036)(8,0.0025)(9,0.0018)(10,0.0013)};
 \addplot[thick, sectorserv] coordinates {(1,0.0240)(2,0.0214)(3,0.0185)(4,0.0156)(5,0.0131)(6,0.0108)(7,0.0089)(8,0.0072)(9,0.0058)(10,0.0046)};
@@ -830,40 +524,38 @@ w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-\shockregimelegend
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
 
 \end{frame}
 
 %==============================================================
-\section{Network}
-%==============================================================
-\begin{frame}{Results: Sectoral Heterogeneity and Network Centrality}
+\begin{frame}{Network: Centrality vs.\ Exposure}
 %==============================================================
 
 \begin{columns}[t]
 \column{0.48\textwidth}
 \begin{center}
-{\tiny \textbf{Domar weight $\lambda_{D,i}$ vs.\ import centrality $\mathcal{M}_i$}}\\[2pt]
+{\tiny \textbf{$\lambda_{D,i}$ vs.\ $\mathcal{M}_i$}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, ybar, bar width=9pt, width=6.4cm, height=4.0cm,
   symbolic x coords={Resource,Manuf.,Services}, xtick=data,
   ymin=0, ymax=0.95, ylabel={\tiny value},
   legend style={font=\tiny, at={(0.5,1.14)}, anchor=north, legend columns=2}]
 \addplot[fill=customgreen!55, draw=customgreen!70!black] coordinates {(Resource,0.12) (Manuf.,0.35) (Services,0.80)};
-\addlegendentry{$\lambda_{D,i}$ (Domar)}
+\addlegendentry{$\lambda_{D,i}$}
 \addplot[fill=gray!45, draw=gray!70!black] coordinates {(Resource,0.30) (Manuf.,0.16) (Services,0.09)};
-\addlegendentry{$\mathcal{M}_i$ (import cent.)}
+\addlegendentry{$\mathcal{M}_i$}
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \column{0.48\textwidth}
 \begin{center}
-{\tiny \textbf{Peak sectoral inflation, import-price shock, peg}}\\[2pt]
+{\tiny \textbf{Peak $\pi_i$, import shock, peg}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, xbar, bar width=10pt, width=6.4cm, height=4.0cm,
   symbolic y coords={Services,Manuf.,Resource}, ytick=data,
-  xmin=0, xmax=0.95, xlabel={\tiny peak $\pi_i$ (\%), peg, on impact}, nodes near coords,
+  xmin=0, xmax=0.95, xlabel={\tiny peak $\pi_i$ (\%), on impact}, nodes near coords,
   nodes near coords style={font=\tiny}]
 \addplot[fill=customgreen!45!white, draw=customgreen!70!black] coordinates {(0.80,Resource) (0.46,Manuf.) (0.17,Services)};
 \end{axis}
@@ -871,67 +563,20 @@ w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-{\scriptsize \textbf{Two different rankings, confirmed by simulation:} Resource has the highest import centrality $\mathcal{M}_i=0.30$ and (as predicted) the most volatile own inflation on impact (0.80\%), but the lowest Domar weight $\lambda_{D,i}=0.12$ --- its shocks barely move the aggregate. Services is the mirror image: low import exposure ($\mathcal{M}_3=0.09$), the least volatile own inflation on impact (0.17\%), but dominates the aggregate (Domar weight 0.80, DC weight 0.93). As the welfare numbers below show, ``least volatile on impact'' does \emph{not} mean ``least costly'' once persistence is priced in.}
+\vspace{4pt}
+{\footnotesize \textbf{Resource:} high $\mathcal{M}_i$ (0.30), low $\lambda_{D,i}$ (0.12) $\to$ volatile locally, small aggregate.\quad
+\textbf{Services:} low $\mathcal{M}_i$ (0.09), high $\lambda_{D,i}$ (0.80) $\to$ dominates aggregate.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Results: DC-Index Insulation and Trade Flows}
-%==============================================================
-
-\begin{columns}[t]
-\column{0.54\textwidth}
-\begin{center}
-{\tiny \textbf{DC-index inflation $\pi^{DC}_t$, import-price shock}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, width=7.0cm, height=4.6cm,
-  xlabel={\tiny Quarters}, ylabel={\tiny $\pi^{DC}_t$ (\%)},
-  xmin=0.5, xmax=10.5, ymin=-0.03, ymax=0.21, xtick={2,4,6,8,10},
-  legend style={font=\tiny, at={(0.97,0.97)}, anchor=north east, row sep=-3pt}]
-\addplot[thick, gray!40, dotted] coordinates {(1,0.1928)(2,0.1005)(3,0.0475)(4,0.0166)(5,-0.0014)(6,-0.0116)(7,-0.0172)(8,-0.0198)(9,-0.0208)(10,-0.0207)};
-\addlegendentry{Peg}
-\addplot[thick, gray!60!black, dashed] coordinates {(1,0.0836)(2,0.0623)(3,0.0451)(4,0.0314)(5,0.0205)(6,0.0120)(7,0.0053)(8,0.0002)(9,-0.0037)(10,-0.0065)};
-\addlegendentry{Managed}
-\addplot[thick, customgreen!85!black] coordinates {(1,0.0264)(2,0.0222)(3,0.0185)(4,0.0153)(5,0.0126)(6,0.0103)(7,0.0084)(8,0.0068)(9,0.0055)(10,0.0044)};
-\addlegendentry{Float}
-\end{axis}
-\end{tikzpicture}
-\end{center}
-\column{0.42\textwidth}
-{\footnotesize \textbf{Peak response to a foreign-demand shock (\%):}}
-\vspace{4pt}
-{\scriptsize
-\begin{tabular}{@{}lccc@{}}
-\toprule
- & Float & Managed & Peg \\
-\midrule
-Exports $EX_t$ & 0.122 & 0.134 & 0.182 \\
-Imports $IM_t$ & 0.081 & 0.090 & 0.130 \\
-NFA $\hat b^*_t$ & 0.122 & 0.122 & 0.119 \\
-Output gap & 0.064 & 0.115 & 0.339 \\
-\bottomrule
-\end{tabular}}
-
-\vspace{8pt}
-{\footnotesize NFA accumulation is almost identical across regimes; the output gap is not --- peg's output gap moves $\sim$5$\times$ more than float's for the same demand shock, since the interest rate cannot help absorb it.}
-\end{columns}
-
-\vspace{4pt}
-{\footnotesize \textbf{DC insulation, on impact:} float's $\pi^{DC}_t$ is smallest on impact (0.026\%) --- the augmented-network DC index does dampen the immediate FX cost-push. But float's response is also the \emph{most persistent} (barely decaying by quarter 10), while peg's and managed's both overshoot and reverse sign. On-impact insulation is not the whole story.}
-
-\end{frame}
-
-%==============================================================
-\section{Welfare}
-%==============================================================
-\begin{frame}{Results: Welfare Cost by Regime --- The Headline Finding}
+\begin{frame}{Welfare: Headline}
 %==============================================================
 
 \begin{columns}[t]
 \column{0.46\textwidth}
 \begin{center}
-{\tiny \textbf{Total welfare loss ($\times10^4$, first-order moments)}}\\[2pt]
+{\tiny \textbf{Total welfare loss ($\times10^4$)}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, xbar, width=6.3cm, height=4.3cm, bar width=13pt,
   symbolic y coords={Peg,Managed,Float}, ytick=data,
@@ -943,7 +588,7 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \end{center}
 \column{0.52\textwidth}
 \begin{center}
-{\tiny \textbf{Decomposition: output gap vs.\ sector dispersion}}\\[2pt]
+{\tiny \textbf{Output gap vs.\ sector dispersion}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, ybar stacked, width=7.2cm, height=4.3cm, bar width=22pt,
   symbolic x coords={Float,Managed,Peg}, xtick=data,
@@ -952,29 +597,29 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \addplot[fill=gray!35] coordinates {(Float,0.19) (Managed,0.43) (Peg,2.34)};
 \addlegendentry{Output gap}
 \addplot[fill=customgreen!25] coordinates {(Float,0.22) (Managed,0.17) (Peg,0.29)};
-\addlegendentry{Disp.\ Resource}
+\addlegendentry{Disp.\ Res.}
 \addplot[fill=customgreen!55] coordinates {(Float,1.59) (Managed,1.01) (Peg,1.61)};
-\addlegendentry{Disp.\ Manuf.}
+\addlegendentry{Disp.\ Man.}
 \addplot[fill=customgreen!85!black] coordinates {(Float,8.48) (Managed,2.59) (Peg,4.43)};
-\addlegendentry{Disp.\ Services}
+\addlegendentry{Disp.\ Serv.}
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{6pt}
-{\footnotesize \textbf{Welfare measure} (Rubbo Prop.\ 3, adapted): $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\lambda_{D,i}\varepsilon_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\mathrm{Var}(\pi_{it})\big]$, evaluated on Dynare's own order-1 theoretical variances (see caveat on order vs.\ welfare, Calibration section). \textbf{Float has the lowest output-gap cost of all three (0.19) but by far the largest Services-dispersion cost (8.48, driven by the persistence channel below) --- managed float is the only regime that is not dominated on some margin.}}
+\vspace{4pt}
+{\scriptsize $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\lambda_{D,i}\varepsilon\tfrac{1-\hat\delta_i}{\hat\delta_i}\mathrm{Var}(\pi_{it})\big]$ --- Float: lowest output-gap cost, largest Services dispersion; Managed: not dominated on any margin.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Why Floating Costs More Than Expected: Persistence, Not Volatility}
+\begin{frame}{Welfare: Persistence, Not Volatility}
 %==============================================================
 
-{\footnotesize \textbf{Mechanism:} under float, $S_t$ is pinned down by UIP and the (highly persistent, autocorrelation 0.994) net-foreign-asset process $\hat b^*_t$. Since $S_t$ enters \emph{every} sector's marginal cost via $\Omega^F_i$, letting the currency float doesn't just insulate against FX shocks --- it also lets \emph{domestic} TFP shocks propagate through a new, slow-decaying exchange-rate channel that does not exist under a peg ($S_t\equiv0$).}
+{\footnotesize Under float, $S_t$ is pinned by UIP $+$ near-unit-root NFA (AR $\approx0.994$) $\Rightarrow$ feeds \emph{every} sector's MC via $\Omega^F_i$, even for pure domestic shocks.}
 
 \begin{center}
-{\tiny \textbf{$\pi^{DC}_t$ response to a Services (sector 3) TFP shock}}\\[2pt]
+{\tiny \textbf{$\pi^{DC}_t$ response to Services TFP shock}}\\[2pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, width=10.5cm, height=3.6cm,
   xlabel={\tiny Quarters}, ylabel={\tiny $\pi^{DC}_t$ (\%)},
@@ -990,64 +635,22 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \end{tikzpicture}
 \end{center}
 
-{\footnotesize \textbf{Reading:} peg resolves the shock via a fast, one-time adjustment and overshoots/reverses within 3--4 quarters; float's response barely decays over the whole horizon. This is a \emph{pure domestic TFP shock} --- no FX shock to insulate against --- yet float still has the most drawn-out response, since the exchange rate is now a slow state variable feeding continuously back into costs.}
+{\footnotesize Peg: fast, one-time overshoot/reversal. Float: barely decays --- \textbf{no FX shock here}, pure domestic TFP.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Which Sector Prefers Which Regime? Two Equations}
-%==============================================================
-
-{\scriptsize Two calibratable objects, not one, determine a sector's regime preference --- and in this economy they point in \emph{opposite} directions across sectors.}
-
-\vspace{-2pt}
-\begin{columns}[T]
-\column{0.5\textwidth}
-{\footnotesize \textbf{1. Direct FX exposure} (network- and rigidity-weighted import share):}
-\vspace{-6pt}
-\[
-\Gamma_i = \frac{[\Delta(I-\Omega\Delta)^{-1}\bm\omega_F]_i}{\kappa}
-\]
-\vspace{-6pt}
-{\footnotesize \textbf{2. Welfare weight} (centrality $\times$ stickiness):}
-\vspace{-6pt}
-\[
-\kappa_i = \lambda_{D,i}\,\varepsilon\,\frac{1-\hat\delta_i}{\hat\delta_i}
-\]
-
-\column{0.5\textwidth}
-{\tiny
-\begin{tabular}{lccc}
-\toprule
- & Resource & Manuf. & Services \\
-\midrule
-$\Gamma_i$ (FX exposure) & \textbf{0.234} & 0.054 & 0.006 \\
-$\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
-\bottomrule
-\end{tabular}
-}
-\end{columns}
-
-\vspace{1pt}
-{\scriptsize \textbf{The sector most exposed to the exchange rate on impact is the one welfare cares about least; the sector welfare cares about most is almost insulated from it directly.} A peg switches off $\Gamma_i\Delta e_t$ for everyone --- but it does not eliminate adjustment, it \emph{relocates} it to domestic prices, landing on the upstream sector because it sits at the border ($P^H$ is dominated by its price).}
-
-\vspace{1pt}
-{\scriptsize \textbf{Net effect (real $\kappa_i\mathrm{Var}^R(\pi_i)$, $\times10^4$):} Resource's relocated-adjustment cost under peg outweighs its avoided $\Gamma$-cost ($0.44\to0.59$) --- so despite the largest $\Gamma_i$, it still prefers \emph{float}. Services is insulated from both channels, so peg nearly halves its inflation variance ($16.96\to8.86$) --- and since $\kappa_3\gg\kappa_1,\kappa_2$, this one sector's preference dominates the aggregate ranking.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Sector-Level Winners and Losers}
+\begin{frame}{Welfare: Sector Preferences}
 %==============================================================
 
 \begin{columns}[t]
-\column{0.55\textwidth}
+\column{0.52\textwidth}
 \begin{center}
-{\tiny \textbf{Each sector's own price-dispersion cost, by regime ($\times10^4$)}}\\[2pt]
+{\tiny \textbf{Own dispersion cost by regime ($\times10^4$)}}\\[2pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, ybar, width=7.8cm, height=4.6cm, bar width=8pt,
+\begin{axis}[slide fig, ybar, width=7.2cm, height=4.3cm, bar width=8pt,
   symbolic x coords={Resource,Manuf.,Services}, xtick=data,
-  ymin=0, ymax=9.5, ylabel={\tiny welfare cost (own sector, $\times10^4$)},
+  ymin=0, ymax=9.5, ylabel={\tiny cost ($\times10^4$)},
   legend style={font=\tiny, at={(0.5,1.14)}, anchor=north, legend columns=3}]
 \addplot[fill=customgreen!85!black] coordinates {(Resource,0.219) (Manuf.,1.589) (Services,8.481)};
 \addlegendentry{Float}
@@ -1058,263 +661,301 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.40\textwidth}
-{\footnotesize \textbf{All three sectors agree on their first choice: managed float.} They disagree on the runner-up:}
-\begin{itemize}\setlength{\itemsep}{2pt}
-\item \footnotesize \textbf{Resource} (flexible, peripheral, most import-exposed): Managed $>$ Float $>$ Peg. Direct FX exposure makes the peg its worst option.
-\item \footnotesize \textbf{Manufacturing}: Managed $\gg$ \{Float $\approx$ Peg\} --- roughly indifferent between the two corner regimes.
-\item \footnotesize \textbf{Services} (sticky, central, low import exposure): Managed $>$ Peg $>$ Float. The persistence channel (previous slide) hurts it more than direct FX exposure does, so it would rather fix the exchange rate than float it.
-\end{itemize}
-\end{columns}
+\column{0.44\textwidth}
+{\scriptsize
+\[
+\Gamma_i = \frac{[\Delta(I-\Omega\Delta)^{-1}\bm\omega_F]_i}{\kappa},\qquad
+\kappa_i = \lambda_{D,i}\,\varepsilon\,\frac{1-\hat\delta_i}{\hat\delta_i}
+\]}
+{\tiny
+\begin{tabular}{lccc}
+\toprule
+ & Res. & Man. & Serv. \\
+\midrule
+$\Gamma_i$ & \textbf{0.234} & 0.054 & 0.006 \\
+$\kappa_i$ & 0.43 & 5.54 & \textbf{74.6} \\
+\bottomrule
+\end{tabular}}
 
-\vspace{1pt}
-{\scriptsize \textbf{Key point:} the sector that is most exposed to FX shocks directly (Resource) and the sector with the most at stake in the regime choice overall (Services) are not the same sector, and they even rank the two corner regimes in \emph{opposite} order --- a policymaker averaging across sectors could easily miss this.}
+\vspace{6pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item All: \textbf{Managed} first choice
+\item Resource (high $\Gamma$): Float $>$ Peg
+\item Services (high $\kappa$): Peg $>$ Float
+\end{itemize}}
+\end{columns}
 
 \end{frame}
 
 %==============================================================
-\section{Decomposition}
-%==============================================================
-\begin{frame}{Which Shock Actually Drives the Welfare Loss?}
+\begin{frame}{Shock Decomposition of Welfare Cost}
 %==============================================================
 
-{\footnotesize \textbf{The Welfare section pools all five shocks into one number.} Dynare's own \texttt{variance\_decomposition} (\%) splits each regime's total welfare loss by shock \emph{source}, with no re-estimation needed.}
-
-\vspace{2pt}
 \begin{center}
-{\tiny \textbf{Welfare loss by regime, decomposed by shock source ($\times10^4$)}}\\[2pt]
+{\tiny \textbf{Welfare loss by regime, by shock source ($\times10^4$)}}\\[2pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, ybar stacked, width=9.2cm, height=3.3cm, bar width=26pt,
+\begin{axis}[slide fig, ybar stacked, width=9.2cm, height=3.5cm, bar width=26pt,
   symbolic x coords={Float,Managed,Peg}, xtick=data,
   ymin=0, ymax=12.5, ylabel={\tiny welfare loss ($\times10^4$)},
   legend style={font=\tiny, at={(0.5,1.20)}, anchor=north, legend columns=3}]
 \addplot[fill=gray!45, draw=gray!70!black] coordinates {(Float,10.32) (Managed,3.29) (Peg,4.45)};
-\addlegendentry{TFP ($a_1,a_2,a_3$)}
+\addlegendentry{TFP}
 \addplot[fill=customgreen!70!black, draw=customgreen!85!black] coordinates {(Float,0.11) (Managed,0.82) (Peg,3.66)};
-\addlegendentry{Import price (FX channel)}
+\addlegendentry{Import price (FX)}
 \addplot[fill=sectorman!80!white, draw=sectorman] coordinates {(Float,0.05) (Managed,0.09) (Peg,0.57)};
 \addlegendentry{Foreign demand}
 \end{axis}
 \end{tikzpicture}
 \end{center}
 
-\vspace{1pt}
-{\footnotesize \textbf{The FX-vs-TFP intuition gets it backwards for float and managed:} in \emph{every} regime, TFP shocks -- not FX shocks -- are the dominant source of welfare loss (10.32 of Float's 10.48; 3.29 of Managed's 4.19). \textbf{Peg is the only regime where the FX channel is a first-order contributor} (3.66, $\approx$42\% of its 8.67 total) -- it has no instrument left to absorb it. \textbf{Float's FX-channel cost is nearly zero} (0.11, $S_t$ genuinely insulates) \textbf{but that same floating $S_t$ is what makes TFP shocks so costly} (persistence mechanism, Welfare section): regime choice looks like it's about FX exposure but is mostly about TFP-shock persistence.}
-
-\vspace{2pt}
-{\footnotesize \textit{Note: this decomposition currently spans TFP, import-price, and foreign-demand shocks. The newly added export-price/ToT shock (\texttt{eps\_pX}) is wired into the model and pipeline but not yet re-simulated -- rerun \texttt{run\_all\_regimes} to fold it into this chart.}}
-
-\end{frame}
-
-%==============================================================
-\section{Generalization}
-%==============================================================
-\begin{frame}{From ``An Oil Exporter'' to ``Which Structural Features Matter''}
-%==============================================================
-
-{\footnotesize \textbf{The calibration above is one economy.} The Theory section's result --- the DC index breaks down under a float because $\bm\phi^\top\Gamma=0$ and $\bm\phi^\top\mathcal{V}=\bm 0^\top$ generically cannot hold simultaneously --- is a statement about \emph{any} network with $\Gamma\not\propto\mathcal{B}$ (FX exposure not proportional to labor intensity). This section asks which structural features govern \emph{how costly} that breakdown is, using three re-solves of the full nonlinear model (not new shocks -- the same three regimes, the same welfare metric):}
-
-\vspace{6pt}
-\begin{enumerate}\setlength{\itemsep}{5pt}
-\item \footnotesize \textbf{Policy-space sensitivity ($\phi_s$):} for a fixed economy, how much FX stabilization is optimal? (already-calibrated managed-float rule, re-solved on a grid.)
-\item \footnotesize \textbf{Import-intensity level:} scale the whole import-cost-share vector $\Omega^F$ up/down, holding its \emph{relative} sectoral pattern fixed. Tests whether the peg-can-beat-float result is an artifact of this economy's degree of import dependence.
-\item \footnotesize \textbf{Import-exposure heterogeneity:} hold \emph{total} import intensity fixed but vary how unevenly it is spread across sectors (Resource/Manuf./Services). Tests the theorem directly: less heterogeneity should move $\Gamma$ closer to proportional, and the float/peg welfare gap should shrink.
-\end{enumerate}
-
 \vspace{4pt}
-{\footnotesize \textbf{Reading ahead:} if the managed-float result is fragile to (2)--(3), it is a fact about oil exporters; if it survives, it is a fact about production networks with heterogeneous FX exposure -- a much stronger claim.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Sensitivity: The Optimal Degree of FX Stabilization}
-%==============================================================
-
-{\footnotesize \textbf{Sensitivity sweep:} re-solved the managed-float regime for $\phi_s\in[0,2]$ ($\phi_s=0$ is the pure float limit). $\phi_s$ does not affect the steady state, so this isolates the policy trade-off cleanly.}
-
-\vspace{4pt}
-\begin{columns}[t]
-\column{0.58\textwidth}
-\begin{center}
-{\tiny \textbf{Total welfare loss vs.\ $\phi_s$ ($\times10^4$)}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
-  xlabel={\tiny FX-stabilization weight $\phi_s$}, ylabel={\tiny welfare loss ($\times10^4$)},
-  xmin=-0.05, xmax=2.05, ymin=3.5, ymax=11.0]
-\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,10.476)(0.10,4.603)(0.20,4.185)(0.30,4.189)(0.50,4.436)(0.75,4.797)(1.00,5.124)(1.50,5.649)(2.00,6.042)};
-\node[font=\tiny] at (axis cs:0.20,3.75) {min at $\phi_s\approx0.20$};
-\draw[dashed, gray!50, thin] (axis cs:0.30,3.5) -- (axis cs:0.30,4.189);
-\node[font=\tiny, gray!60] at (axis cs:0.55,3.85) {calibrated $\phi_s=0.30$};
-\end{axis}
-\end{tikzpicture}
-\end{center}
-\column{0.38\textwidth}
-{\footnotesize \textbf{Reading:}}
-\begin{itemize}\setlength{\itemsep}{4pt}
-\item \footnotesize Going from pure float ($\phi_s=0$) to just $\phi_s=0.10$ more than halves the welfare loss (10.48 $\to$ 4.60).
-\item \footnotesize The minimum is flat and wide: $\phi_s\in[0.2,0.3]$ is statistically indistinguishable, and the calibrated value (0.30) is very close to optimal.
-\item \footnotesize Beyond $\phi_s\approx0.3$, cost rises again --- too much FX stabilization crowds out output-gap stabilization from the same single interest-rate instrument.
-\end{itemize}
-\end{columns}
-
-\vspace{4pt}
-{\footnotesize \textbf{Bottom line:} a little FX stabilization goes a long way; a lot is counterproductive. Neither corner regime (float or peg) is optimal --- a modest, positive $\phi_s$ is.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Robustness: Import-Intensity Level}
-%==============================================================
-
-{\footnotesize \textbf{Sweep 1:} scale the whole import-cost-share vector $\Omega^F$ by $\kappa\in[0.25,2.5]$ ($\kappa=1$ is the baseline oil-exporter calibration), holding its relative sectoral pattern fixed. $\alpha_i$ absorbs the change so Cobb-Douglas shares still sum to 1.}
-
-\vspace{4pt}
-\begin{columns}[t]
-\column{0.58\textwidth}
-\begin{center}
-{\tiny \textbf{Total welfare loss vs.\ import intensity $\kappa$ ($\times10^4$)}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
-  xlabel={\tiny Import-intensity scale $\kappa$}, ylabel={\tiny welfare loss ($\times10^4$)},
-  xmin=0.1, xmax=2.6, ymin=3.5, ymax=16.0]
-\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.3pt] coordinates {(0.25,8.4700) (0.50,8.5102) (0.75,8.5787) (1.00,8.6723) (1.50,8.9278) (2.00,9.2687) (2.50,9.6950)};
-\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.3pt] coordinates {(0.25,3.9496) (0.50,4.0188) (0.75,4.0987) (1.00,4.1890) (1.50,4.4000) (2.00,4.6530) (2.50,4.9518)};
-\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.25,8.9429) (0.50,9.3791) (0.75,9.8919) (1.00,10.4759) (1.50,11.8446) (2.00,13.4696) (2.50,15.3481)};
-\end{axis}
-\end{tikzpicture}
-\end{center}
-\column{0.38\textwidth}
-{\footnotesize \textbf{Reading:}}
+{\footnotesize
 \begin{itemize}\setlength{\itemsep}{3pt}
-\item \footnotesize Ranking \textbf{managed $<$ peg $<$ float} holds at \emph{every} $\kappa$ from 0.25 to 2.5.
-\item \footnotesize All three losses rise with import dependence, float fastest: gap grows from 0.47 ($\kappa=0.25$) to 5.65 ($\kappa=2.5$).
-\item \footnotesize Managed float is the flattest line --- FX stabilization caps the escalating cost of floating.
-\end{itemize}
-\end{columns}
+\item \textbf{TFP dominates}, not FX, for Float \& Managed (10.32/10.48; 3.29/4.19)
+\item \textbf{FX channel matters only for Peg} (3.66, $\approx$42\% of total)
+\item Float: FX cost $\approx0$ (insulated) but TFP persistence high
+\end{itemize}}
 
-\vspace{2pt}
-{\footnotesize \textbf{Bottom line:} not an oil-exporter artifact --- it strengthens, if anything, as import dependence rises.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Robustness: Import-Exposure Heterogeneity}
-%==============================================================
-
-{\footnotesize \textbf{Sweep 2:} hold \emph{total} import intensity fixed but vary $\theta$, how unevenly $\Omega^F$ is spread across sectors ($\theta=0$: identical; $\theta=1$: baseline; $\theta=1.5$: more skewed). Tests whether $\Gamma\propto\mathcal{B}$ drives the cost of floating.}
-\vspace{1pt}
-\begin{columns}[t]
-\column{0.58\textwidth}
-\begin{center}
-{\tiny \textbf{Total welfare loss vs.\ exposure heterogeneity $\theta$ ($\times10^4$)}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
-  xlabel={\tiny Heterogeneity $\theta$}, ylabel={\tiny welfare loss ($\times10^4$)},
-  xmin=-0.05, xmax=1.55, ymin=4.0, ymax=12.0]
-\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.3pt] coordinates {(0.00,8.8131) (0.25,8.7566) (0.50,8.7132) (0.75,8.6845) (1.00,8.6723) (1.25,8.6789) (1.50,8.7072)};
-\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.3pt] coordinates {(0.00,4.3635) (0.25,4.3132) (0.50,4.2672) (0.75,4.2258) (1.00,4.1890) (1.25,4.1573) (1.50,4.1310)};
-\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,11.5105) (0.25,11.2287) (0.50,10.9619) (0.75,10.7107) (1.00,10.4759) (1.25,10.2586) (1.50,10.0600)};
-\end{axis}
-\end{tikzpicture}
-\end{center}
-\column{0.38\textwidth}
-{\footnotesize \textbf{Reading:}}
-\begin{itemize}\setlength{\itemsep}{3pt}
-\item \footnotesize Ranking \textbf{managed $<$ peg $<$ float} again holds at every $\theta$.
-\item \footnotesize \textbf{Unexpected:} the float-peg gap \emph{shrinks} as exposure gets \emph{more} uneven (2.70 at $\theta=0$ $\to$ 1.35 at $\theta=1.5$) --- opposite the naive $\Gamma\propto\mathcal{B}$ prediction.
-\item \footnotesize Why: $\alpha_i$ absorbs whatever $\Omega^F_i$ leaves over given \emph{fixed} $\Omega^H$, so flattening $\Omega^F$ disperses $\alpha_i$ instead of aligning $\Gamma$ with $\mathcal{B}$.
-\end{itemize}
-\end{columns}
-
-\vspace{2pt}
-{\footnotesize \textbf{Bottom line:} ranking is robust, but this design doesn't cleanly isolate $\Gamma\propto\mathcal{B}$ --- a fixed-$\alpha_i$ design is needed for that.}
+{\scriptsize \textit{Chart above: original 5-shock model. Export-price/ToT ($\varepsilon_{pX}$) and foreign risk-premium/UIP ($\varepsilon_{rp}$) shocks are now implemented and simulated (not yet folded into this chart): $\varepsilon_{rp}$ alone explains $\approx$78\% of Peg's $\pi^{DC}_t$ variance (zero monetary autonomy) and would raise Peg's total welfare loss well above Float's --- reverses part of the headline ranking. Full 7-shock re-numbering across all slides: Next Steps.}}
 
 \end{frame}
 
 %==============================================================
 \section{Conclusion}
 %==============================================================
-\begin{frame}{Summary: Key Messages}
+\begin{frame}{Generalization: Optimal FX Stabilization $\phi_s$}
 %==============================================================
 
+\begin{columns}[t]
+\column{0.58\textwidth}
+\begin{center}
+{\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$)}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
+  xlabel={\tiny $\phi_s$}, ylabel={\tiny welfare loss ($\times10^4$)},
+  xmin=-0.05, xmax=2.05, ymin=3.5, ymax=11.0]
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,10.476)(0.10,4.603)(0.20,4.185)(0.30,4.189)(0.50,4.436)(0.75,4.797)(1.00,5.124)(1.50,5.649)(2.00,6.042)};
+\node[font=\tiny] at (axis cs:0.20,3.75) {min $\approx0.20$};
+\draw[dashed, gray!50, thin] (axis cs:0.30,3.5) -- (axis cs:0.30,4.189);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.38\textwidth}
 {\footnotesize
-\begin{enumerate}\setlength{\itemsep}{3pt}
-\item \footnotesize \textbf{Free float is not the optimal regime, even though it directly targets the DC index.} Managed float has less than half the total welfare loss of pure float (4.19 vs.\ 10.48, $\times10^4$) and beats the hard peg too (8.67). This is the model's own solution, not an assumption.
-\item \footnotesize \textbf{Why:} floating turns the exchange rate into a slow, persistent state variable (via UIP and the near-unit-root NFA process) that feeds continuously back into every sector's marginal cost through $\Omega^F_i$, turning even domestic TFP shocks into long, drawn-out inflation. \textbf{Persistence, not on-impact volatility, drives the welfare cost.}
-\item \footnotesize \textbf{Every sector prefers managed float first}, but ranks the corner regimes oppositely: Resource (import-exposed, peripheral) ranks float over peg; Services (import-light, central) ranks peg over float.
-\item \footnotesize \textbf{The optimal FX stabilization is small but strictly positive}: welfare is minimized around $\phi_s\approx0.2$--$0.3$, with more than half the gain from just $\phi_s=0.10$.
-\item \footnotesize \textbf{The managed $<$ peg $<$ float ranking is robust} to import intensity ($\kappa\in[0.25,2.5]$) and exposure heterogeneity ($\theta\in[0,1.5]$) --- not an oil-exporter artifact. The heterogeneity gap moves opposite the naive $\Gamma\propto\mathcal{B}$ prediction since this design lets $\alpha_i$ absorb the $\Omega^F_i$ change; isolating that mechanism cleanly is future work.
-\item \footnotesize These are first-order welfare comparisons (order-2 pruning fails due to the price-level/ER unit root) --- rankings are indicative of the mechanism, not certainty-equivalent-exact.
-\end{enumerate}}
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item $\phi_s{=}0\to0.10$: loss $10.48\to4.60$
+\item Min flat, wide: $\phi_s\in[0.2,0.3]$
+\item Calibrated $\phi_s{=}0.30$ near-optimal
+\item Beyond $\approx0.3$: cost rises again
+\end{itemize}}
+\end{columns}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Next Steps}
+\begin{frame}{Generalization: Robustness}
 %==============================================================
 
-{\footnotesize \textbf{Open questions going forward:}}
-\begin{itemize}\setlength{\itemsep}{6pt}
-\item \footnotesize A price-level-anchored policy rule, to obtain a fully second-order-accurate welfare ranking.
-\item \footnotesize Formalizing the exchange-rate persistence mechanism analytically (a closed-form counterpart to the Generalization section's numerical result).
-\item \footnotesize A dedicated world-commodity-price/ToT shock on the export side (\texttt{eps\_pX}, now wired into the Dynare model) alongside the existing import-price shock -- rerun the pipeline and fold the new IRFs and welfare decomposition into the Shocks/Network/Decomposition sections.
-\item \footnotesize Sensitivity to Calvo stickiness $\delta_i$ and to the domestic network shares $\Omega^H$ (the import-side sensitivity is now done -- see Generalization).
-\end{itemize}
-
-\end{frame}
-
-%==============================================================
-\section*{Appendix: Additional Shock IRFs (Backup)}
-%==============================================================
-
-\begin{frame}{Results: IRFs to a Resource TFP Shock}
-%==============================================================
-{\scriptsize A 1\% Resource-sector (upstream, flexible, import-intensive) TFP improvement, $\rho_a=0.90$.}
-
-\vspace{1pt}
 \begin{columns}[t]
 \column{0.5\textwidth}
 \begin{center}
-{\tiny \textbf{Output gap $\tilde y_t$ (\%)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=0, ymax=0.10, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Welfare vs.\ import intensity $\kappa$}, title style={yshift=-3pt, font=\tiny}, width=6.3cm, height=4.2cm,
+  xlabel={\tiny scale $\kappa$}, ylabel={\tiny welfare loss ($\times10^4$)},
+  xmin=0.1, xmax=2.6, ymin=3.5, ymax=16.0]
+\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.1pt] coordinates {(0.25,8.4700) (0.50,8.5102) (0.75,8.5787) (1.00,8.6723) (1.50,8.9278) (2.00,9.2687) (2.50,9.6950)};
+\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.1pt] coordinates {(0.25,3.9496) (0.50,4.0188) (0.75,4.0987) (1.00,4.1890) (1.50,4.4000) (2.00,4.6530) (2.50,4.9518)};
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.1pt] coordinates {(0.25,8.9429) (0.50,9.3791) (0.75,9.8919) (1.00,10.4759) (1.50,11.8446) (2.00,13.4696) (2.50,15.3481)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Welfare vs.\ heterogeneity $\theta$}, title style={yshift=-3pt, font=\tiny}, width=6.3cm, height=4.2cm,
+  xlabel={\tiny heterogeneity $\theta$}, ylabel={\tiny welfare loss ($\times10^4$)},
+  xmin=-0.05, xmax=1.55, ymin=4.0, ymax=12.0]
+\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.1pt] coordinates {(0.00,8.8131) (0.25,8.7566) (0.50,8.7132) (0.75,8.6845) (1.00,8.6723) (1.25,8.6789) (1.50,8.7072)};
+\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.1pt] coordinates {(0.00,4.3635) (0.25,4.3132) (0.50,4.2672) (0.75,4.2258) (1.00,4.1890) (1.25,4.1573) (1.50,4.1310)};
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.1pt] coordinates {(0.00,11.5105) (0.25,11.2287) (0.50,10.9619) (0.75,10.7107) (1.00,10.4759) (1.25,10.2586) (1.50,10.0600)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{4pt}
+{\footnotesize \textbf{Managed $<$ Peg $<$ Float robust} across $\kappa\in[0.25,2.5]$ and $\theta\in[0,1.5]$. Heterogeneity gap \textbf{shrinks} with $\theta$ --- opposite naive $\Gamma\propto\mathcal{B}$ prediction ($\alpha_i$ absorbs $\Omega^F$ changes).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Conclusion}
+%==============================================================
+
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \textbf{Managed float optimal}: loss 4.19 vs.\ Float 10.48, Peg 8.67 ($\times10^4$)
+\item \textbf{Driver: ER persistence} (UIP $+$ near-unit-root NFA), not on-impact volatility
+\item \textbf{Sectors split}: Resource $\to$ Float $>$ Peg; Services $\to$ Peg $>$ Float
+\item \textbf{Optimal $\phi_s\approx0.2$--$0.3$}: small, strictly positive
+\item \textbf{Robust} to import intensity $\kappa$ and heterogeneity $\theta$
+\item First-order welfare only (order-2 fails: price-level/ER unit root)
+\item \textbf{Next:} price-level anchor (2nd-order welfare); \textbf{propagate new 7-shock welfare numbers} (ToT $\varepsilon_{pX}$, risk-premium $\varepsilon_{rp}$ now simulated --- Peg's loss rises sharply, Managed still wins) across all slides; $\delta_i,\Omega^H$ sensitivity
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\appendix
+\section*{Appendix: Divine Coincidence (DC) Index Details}
+%==============================================================
+\begin{frame}{Appendix: DC Index --- Definition and Insulation}
+%==============================================================
+
+\begin{columns}[t]
+\column{0.52\textwidth}
+{\footnotesize \textbf{Closed economy (Rubbo):} 1 channel (TFP), $\mathcal V$ rank-deficient $\Rightarrow$ unique DC index:}
+\vspace{-2pt}
+{\scriptsize\[ \bm\phi^\top\mathcal{V}=\bm 0^\top \Rightarrow \pi^{DC}_t = \textstyle\sum_i w^{DC}_i\pi_{it},\ w^{DC}_i\propto\lambda_{D,i}\tfrac{1-\hat\delta_i}{\hat\delta_i}\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Open economy: 2 channels} (TFP $+$ FX):}
+\vspace{-2pt}
+{\scriptsize\[ \underbrace{\bm\phi^\top\mathcal{V}=\bm 0^\top}_{\text{TFP}} \text{ and } \underbrace{\bm\phi^\top\Gamma = 0}_{\text{FX}} \Rightarrow \textbf{generically infeasible}\]}
+
+\vspace{2pt}
+{\footnotesize \textbf{Fix:} import nodes flexible ($\hat\delta_M{=}1\Rightarrow w_M{=}0$) $\Rightarrow$ DC well-defined again by construction. This is what the Taylor rules target throughout ($\pi^{DC}_t$); FX insulation itself is a quantitative question, shown at right.}
+
+\column{0.46\textwidth}
+\begin{center}
+{\tiny \textbf{$\pi^{DC}_t$, import-price shock}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, width=6.2cm, height=4.0cm,
+  xlabel={\tiny Quarters}, ylabel={\tiny $\pi^{DC}_t$ (\%)},
+  xmin=0.5, xmax=10.5, ymin=-0.03, ymax=0.21, xtick={2,4,6,8,10},
+  legend style={font=\tiny, at={(0.97,0.97)}, anchor=north east, row sep=-3pt}]
+\addplot[thick, gray!40, dotted] coordinates {(1,0.1928)(2,0.1005)(3,0.0475)(4,0.0166)(5,-0.0014)(6,-0.0116)(7,-0.0172)(8,-0.0198)(9,-0.0208)(10,-0.0207)};
+\addlegendentry{Peg}
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.0836)(2,0.0623)(3,0.0451)(4,0.0314)(5,0.0205)(6,0.0120)(7,0.0053)(8,0.0002)(9,-0.0037)(10,-0.0065)};
+\addlegendentry{Managed}
+\addplot[thick, customgreen!85!black] coordinates {(1,0.0264)(2,0.0222)(3,0.0185)(4,0.0153)(5,0.0126)(6,0.0103)(7,0.0084)(8,0.0068)(9,0.0055)(10,0.0044)};
+\addlegendentry{Float}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+{\scriptsize Float: smallest on impact (0.026\%) \& most persistent; Peg/Managed overshoot and reverse sign --- on-impact insulation $\ne$ full story.}
+\end{columns}
+
+\end{frame}
+
+%==============================================================
+\section*{Appendix: Additional Shock IRFs (Backup, not in 25-slide count)}
+%==============================================================
+\begin{frame}{IRFs: Resource TFP Shock}
+%==============================================================
+\vspace{-3pt}
+\begin{columns}[t]
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5064, ymax=0.0543, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0198)(2,-0.0498)(3,-0.0672)(4,-0.0776)(5,-0.0835)(6,-0.0863)(7,-0.0868)(8,-0.0857)(9,-0.0835)(10,-0.0803)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.0517)(2,-0.1265)(3,-0.1875)(4,-0.2400)(5,-0.2861)(6,-0.3272)(7,-0.3638)(8,-0.3965)(9,-0.4258)(10,-0.4521)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: TFP $A_{1t}$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.3139, ymax=1.0735, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.9000)(3,0.8100)(4,0.7290)(5,0.6561)(6,0.5905)(7,0.5314)(8,0.4783)(9,0.4305)(10,0.3874)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.0230, ymax=0.0933, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, gray!45, densely dotted] coordinates {(1,0.0358)(2,0.0774)(3,0.0865)(4,0.0848)(5,0.0795)(6,0.0730)(7,0.0664)(8,0.0601)(9,0.0542)(10,0.0488)};
 \addplot[thick, gray!60!black, dashed] coordinates {(1,0.0352)(2,0.0556)(3,0.0618)(4,0.0625)(5,0.0609)(6,0.0580)(7,0.0547)(8,0.0511)(9,0.0476)(10,0.0440)};
 \addplot[thick, customgreen!85!black] coordinates {(1,0.0462)(2,0.0565)(3,0.0567)(4,0.0536)(5,0.0494)(6,0.0450)(7,0.0408)(8,0.0368)(9,0.0332)(10,0.0298)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Exchange rate $S_t$ (\%, dep.\ $>0$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.50, ymax=0.05, xtick={2,4,6,8,10}]
-\addplot[thick, gray!45, densely dotted] coordinates {(1,0)(2,0)(3,0)(4,0)(5,0)(6,0)(7,0)(8,0)(9,0)(10,0)};
-\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0198)(2,-0.0498)(3,-0.0672)(4,-0.0776)(5,-0.0835)(6,-0.0863)(7,-0.0868)(8,-0.0857)(9,-0.0835)(10,-0.0803)};
-\addplot[thick, customgreen!85!black] coordinates {(1,-0.0517)(2,-0.1265)(3,-0.1875)(4,-0.2400)(5,-0.2861)(6,-0.3272)(7,-0.3638)(8,-0.3965)(9,-0.4258)(10,-0.4521)};
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1100, ymax=0.0178, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,-0.0421)(2,-0.0085)(3,0.0013)(4,0.0042)(5,0.0049)(6,0.0048)(7,0.0045)(8,0.0041)(9,0.0037)(10,0.0033)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0612)(2,-0.0292)(3,-0.0146)(4,-0.0071)(5,-0.0026)(6,0.0004)(7,0.0024)(8,0.0039)(9,0.0048)(10,0.0055)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.0977)(2,-0.0697)(3,-0.0554)(4,-0.0474)(5,-0.0417)(6,-0.0371)(7,-0.0332)(8,-0.0297)(9,-0.0267)(10,-0.0240)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
+\vspace{0pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral output gap components (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.05, ymax=0.06, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0441, ymax=0.0628, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0337)(2,-0.0076)(3,-0.0006)(4,0.0013)(5,0.0017)(6,0.0018)(7,0.0017)(8,0.0016)(9,0.0014)(10,0.0013)};
+\addplot[thick, sectorman] coordinates {(1,0.0355)(2,0.0492)(3,0.0525)(4,0.0511)(5,0.0479)(6,0.0439)(7,0.0399)(8,0.0361)(9,0.0326)(10,0.0293)};
+\addplot[thick, sectorserv] coordinates {(1,0.0340)(2,0.0357)(3,0.0346)(4,0.0324)(5,0.0299)(6,0.0274)(7,0.0248)(8,0.0225)(9,0.0202)(10,0.0182)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0441, ymax=0.0628, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0331)(2,-0.0087)(3,-0.0016)(4,0.0006)(5,0.0013)(6,0.0015)(7,0.0016)(8,0.0015)(9,0.0014)(10,0.0013)};
+\addplot[thick, sectorman] coordinates {(1,0.0364)(2,0.0433)(3,0.0462)(4,0.0460)(5,0.0440)(6,0.0411)(7,0.0379)(8,0.0347)(9,0.0316)(10,0.0287)};
+\addplot[thick, sectorserv] coordinates {(1,0.0318)(2,0.0211)(3,0.0172)(4,0.0159)(5,0.0155)(6,0.0154)(7,0.0152)(8,0.0149)(9,0.0145)(10,0.0140)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0441, ymax=0.0628, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.0319)(2,-0.0086)(3,-0.0018)(4,0.0003)(5,0.0011)(6,0.0013)(7,0.0013)(8,0.0013)(9,0.0012)(10,0.0011)};
 \addplot[thick, sectorman] coordinates {(1,0.0406)(2,0.0440)(3,0.0452)(4,0.0441)(5,0.0416)(6,0.0385)(7,0.0352)(8,0.0320)(9,0.0289)(10,0.0261)};
 \addplot[thick, sectorserv] coordinates {(1,0.0375)(2,0.0212)(3,0.0133)(4,0.0092)(5,0.0068)(6,0.0053)(7,0.0043)(8,0.0036)(9,0.0030)(10,0.0026)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral inflation $\pi_{it}$ (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.85, ymax=0.10, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.8820, ymax=0.1734, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.7234)(2,-0.0973)(3,0.0449)(4,0.0713)(5,0.0708)(6,0.0649)(7,0.0584)(8,0.0523)(9,0.0469)(10,0.0421)};
+\addplot[thick, sectorman] coordinates {(1,-0.0697)(2,-0.0316)(3,-0.0083)(4,0.0032)(5,0.0080)(6,0.0095)(7,0.0095)(8,0.0089)(9,0.0081)(10,0.0073)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0015)(2,-0.0001)(3,0.0006)(4,0.0009)(5,0.0010)(6,0.0010)(7,0.0010)(8,0.0009)(9,0.0008)(10,0.0006)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.8820, ymax=0.1734, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.7487)(2,-0.1318)(3,0.0236)(4,0.0603)(5,0.0662)(6,0.0641)(7,0.0599)(8,0.0554)(9,0.0509)(10,0.0466)};
+\addplot[thick, sectorman] coordinates {(1,-0.0954)(2,-0.0591)(3,-0.0285)(4,-0.0095)(5,0.0013)(6,0.0070)(7,0.0099)(8,0.0113)(9,0.0117)(10,0.0116)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0189)(2,-0.0171)(3,-0.0138)(4,-0.0103)(5,-0.0071)(6,-0.0043)(7,-0.0021)(8,-0.0003)(9,0.0011)(10,0.0021)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.8820, ymax=0.1734, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.7799)(2,-0.1774)(3,-0.0230)(4,0.0155)(5,0.0240)(6,0.0245)(7,0.0230)(8,0.0211)(9,0.0191)(10,0.0173)};
 \addplot[thick, sectorman] coordinates {(1,-0.1316)(2,-0.1015)(3,-0.0726)(4,-0.0530)(5,-0.0405)(6,-0.0324)(7,-0.0270)(8,-0.0232)(9,-0.0203)(10,-0.0179)};
 \addplot[thick, sectorserv] coordinates {(1,-0.0565)(2,-0.0561)(3,-0.0533)(4,-0.0494)(5,-0.0452)(6,-0.0411)(7,-0.0372)(8,-0.0336)(9,-0.0304)(10,-0.0274)};
@@ -1323,60 +964,115 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-\shockregimelegend
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
 
 \end{frame}
-
 %==============================================================
-\begin{frame}{Results: IRFs to a Manufacturing TFP Shock}
+\begin{frame}{IRFs: Manufacturing TFP Shock}
 %==============================================================
-{\scriptsize A 1\% Manufacturing-sector (mid-chain) TFP improvement, $\rho_a=0.90$.}
-
-\vspace{1pt}
+\vspace{-3pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Output gap $\tilde y_t$ (\%)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.12, ymax=0.16, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-1.0560, ymax=0.1711, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.0524)(2,-0.0289)(3,-0.0848)(4,-0.1227)(5,-0.1477)(6,-0.1634)(7,-0.1720)(8,-0.1754)(9,-0.1749)(10,-0.1716)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.0161)(2,-0.1533)(3,-0.2988)(4,-0.4255)(5,-0.5372)(6,-0.6363)(7,-0.7246)(8,-0.8035)(9,-0.8740)(10,-0.9372)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: TFP $A_{2t}$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.3139, ymax=1.0735, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.9000)(3,0.8100)(4,0.7290)(5,0.6561)(6,0.5905)(7,0.5314)(8,0.4783)(9,0.4305)(10,0.3874)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1227, ymax=0.1688, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, gray!45, densely dotted] coordinates {(1,-0.0945)(2,0.0508)(3,0.1132)(4,0.1363)(5,0.1406)(6,0.1360)(7,0.1275)(8,0.1175)(9,0.1073)(10,0.0973)};
 \addplot[thick, gray!60!black, dashed] coordinates {(1,0.0264)(2,0.0681)(3,0.0892)(4,0.0987)(5,0.1015)(6,0.1004)(7,0.0972)(8,0.0928)(9,0.0877)(10,0.0823)};
 \addplot[thick, customgreen!85!black] coordinates {(1,0.0805)(2,0.0938)(3,0.0962)(4,0.0929)(5,0.0868)(6,0.0797)(7,0.0725)(8,0.0656)(9,0.0591)(10,0.0532)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Exchange rate $S_t$ (\%, dep.\ $>0$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-1.00, ymax=0.10, xtick={2,4,6,8,10}]
-\addplot[thick, gray!45, densely dotted] coordinates {(1,0)(2,0)(3,0)(4,0)(5,0)(6,0)(7,0)(8,0)(9,0)(10,0)};
-\addplot[thick, gray!60!black, dashed] coordinates {(1,0.0524)(2,-0.0289)(3,-0.0848)(4,-0.1227)(5,-0.1477)(6,-0.1634)(7,-0.1720)(8,-0.1754)(9,-0.1749)(10,-0.1716)};
-\addplot[thick, customgreen!85!black] coordinates {(1,0.0161)(2,-0.1533)(3,-0.2988)(4,-0.4255)(5,-0.5372)(6,-0.6363)(7,-0.7246)(8,-0.8035)(9,-0.8740)(10,-0.9372)};
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1652, ymax=0.0303, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,-0.0864)(2,-0.0321)(3,-0.0072)(4,0.0042)(5,0.0092)(6,0.0111)(7,0.0114)(8,0.0110)(9,0.0102)(10,0.0092)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0855)(2,-0.0699)(3,-0.0446)(4,-0.0270)(5,-0.0147)(6,-0.0059)(7,0.0005)(8,0.0050)(9,0.0082)(10,0.0104)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.1452)(2,-0.1463)(3,-0.1260)(4,-0.1099)(5,-0.0970)(6,-0.0863)(7,-0.0771)(8,-0.0691)(9,-0.0621)(10,-0.0558)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
+\vspace{0pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral output gap components (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.14, ymax=0.24, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2248, ymax=0.2525, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0269)(2,-0.0067)(3,0.0009)(4,0.0037)(5,0.0045)(6,0.0046)(7,0.0043)(8,0.0040)(9,0.0036)(10,0.0033)};
+\addplot[thick, sectorman] coordinates {(1,-0.1786)(2,-0.0742)(3,-0.0262)(4,-0.0047)(5,0.0045)(6,0.0080)(7,0.0090)(8,0.0089)(9,0.0083)(10,0.0076)};
+\addplot[thick, sectorserv] coordinates {(1,0.1111)(2,0.1317)(3,0.1385)(4,0.1373)(5,0.1316)(6,0.1234)(7,0.1142)(8,0.1047)(9,0.0953)(10,0.0864)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2248, ymax=0.2525, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0147)(2,-0.0063)(3,-0.0011)(4,0.0017)(5,0.0030)(6,0.0036)(7,0.0037)(8,0.0036)(9,0.0035)(10,0.0032)};
+\addplot[thick, sectorman] coordinates {(1,-0.1350)(2,-0.0687)(3,-0.0338)(4,-0.0152)(5,-0.0053)(6,-0.0000)(7,0.0028)(8,0.0042)(9,0.0049)(10,0.0052)};
+\addplot[thick, sectorserv] coordinates {(1,0.1761)(2,0.1431)(3,0.1241)(4,0.1122)(5,0.1038)(6,0.0969)(7,0.0908)(8,0.0850)(9,0.0794)(10,0.0739)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2248, ymax=0.2525, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.0097)(2,-0.0049)(3,-0.0010)(4,0.0013)(5,0.0025)(6,0.0030)(7,0.0031)(8,0.0031)(9,0.0029)(10,0.0028)};
 \addplot[thick, sectorman] coordinates {(1,-0.1162)(2,-0.0606)(3,-0.0318)(4,-0.0167)(5,-0.0088)(6,-0.0046)(7,-0.0024)(8,-0.0012)(9,-0.0006)(10,-0.0003)};
 \addplot[thick, sectorserv] coordinates {(1,0.2063)(2,0.1594)(3,0.1290)(4,0.1083)(5,0.0931)(6,0.0814)(7,0.0718)(8,0.0638)(9,0.0568)(10,0.0507)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral inflation $\pi_{it}$ (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.55, ymax=0.05, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5738, ymax=0.1248, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0439)(2,0.0373)(3,0.0342)(4,0.0211)(5,0.0111)(6,0.0048)(7,0.0012)(8,-0.0009)(9,-0.0021)(10,-0.0028)};
+\addplot[thick, sectorman] coordinates {(1,-0.4718)(2,-0.1621)(3,-0.0247)(4,0.0322)(5,0.0527)(6,0.0572)(7,0.0551)(8,0.0506)(9,0.0455)(10,0.0405)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0316)(2,-0.0175)(3,-0.0077)(4,-0.0014)(5,0.0025)(6,0.0047)(7,0.0058)(8,0.0061)(9,0.0061)(10,0.0057)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5738, ymax=0.1248, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0220)(2,-0.0429)(3,-0.0416)(4,-0.0298)(5,-0.0191)(6,-0.0111)(7,-0.0053)(8,-0.0012)(9,0.0017)(10,0.0037)};
+\addplot[thick, sectorman] coordinates {(1,-0.4567)(2,-0.2069)(3,-0.0782)(4,-0.0119)(5,0.0217)(6,0.0381)(7,0.0454)(8,0.0477)(9,0.0474)(10,0.0458)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0462)(2,-0.0440)(3,-0.0366)(4,-0.0278)(5,-0.0194)(6,-0.0121)(7,-0.0060)(8,-0.0012)(9,0.0026)(10,0.0054)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5738, ymax=0.1248, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.0043)(2,-0.1278)(3,-0.1387)(4,-0.1267)(5,-0.1123)(6,-0.0994)(7,-0.0884)(8,-0.0789)(9,-0.0707)(10,-0.0634)};
 \addplot[thick, sectorman] coordinates {(1,-0.5062)(2,-0.2827)(3,-0.1659)(4,-0.1032)(5,-0.0686)(6,-0.0490)(7,-0.0374)(8,-0.0301)(9,-0.0252)(10,-0.0217)};
 \addplot[thick, sectorserv] coordinates {(1,-0.1139)(2,-0.1179)(3,-0.1143)(4,-0.1073)(5,-0.0989)(6,-0.0903)(7,-0.0820)(8,-0.0742)(9,-0.0670)(10,-0.0604)};
@@ -1385,60 +1081,115 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-\shockregimelegend
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
 
 \end{frame}
-
 %==============================================================
-\begin{frame}{Results: IRFs to a Services TFP Shock}
+\begin{frame}{IRFs: Services TFP Shock}
 %==============================================================
-{\scriptsize A 1\% Services-sector (downstream, sticky, low import exposure) TFP improvement, $\rho_a=0.90$.}
-
-\vspace{1pt}
+\vspace{-3pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Output gap $\tilde y_t$ (\%)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.60, ymax=0.10, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.7980, ymax=0.5428, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.3409)(2,0.2215)(3,0.1240)(4,0.0467)(5,-0.0130)(6,-0.0580)(7,-0.0911)(8,-0.1144)(9,-0.1301)(10,-0.1396)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.4130)(2,0.2491)(3,0.0926)(4,-0.0521)(5,-0.1837)(6,-0.3026)(7,-0.4095)(8,-0.5055)(9,-0.5914)(10,-0.6683)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: TFP $A_{3t}$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.3139, ymax=1.0735, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.9000)(3,0.8100)(4,0.7290)(5,0.6561)(6,0.5905)(7,0.5314)(8,0.4783)(9,0.4305)(10,0.3874)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.6264, ymax=0.1430, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, gray!45, densely dotted] coordinates {(1,-0.5519)(2,-0.2753)(3,-0.1260)(4,-0.0437)(5,0.0017)(6,0.0262)(7,0.0385)(8,0.0437)(9,0.0448)(10,0.0436)};
 \addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0715)(2,-0.0647)(3,-0.0505)(4,-0.0354)(5,-0.0218)(6,-0.0103)(7,-0.0012)(8,0.0059)(9,0.0112)(10,0.0150)};
 \addplot[thick, customgreen!85!black] coordinates {(1,0.0685)(2,0.0325)(3,0.0147)(4,0.0056)(5,0.0008)(6,-0.0018)(7,-0.0031)(8,-0.0038)(9,-0.0042)(10,-0.0043)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Exchange rate $S_t$ (\%, dep.\ $>0$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.70, ymax=0.45, xtick={2,4,6,8,10}]
-\addplot[thick, gray!45, densely dotted] coordinates {(1,0)(2,0)(3,0)(4,0)(5,0)(6,0)(7,0)(8,0)(9,0)(10,0)};
-\addplot[thick, gray!60!black, dashed] coordinates {(1,0.3409)(2,0.2215)(3,0.1240)(4,0.0467)(5,-0.0130)(6,-0.0580)(7,-0.0911)(8,-0.1144)(9,-0.1301)(10,-0.1396)};
-\addplot[thick, customgreen!85!black] coordinates {(1,0.4130)(2,0.2491)(3,0.0926)(4,-0.0521)(5,-0.1837)(6,-0.3026)(7,-0.4095)(8,-0.5055)(9,-0.5914)(10,-0.6683)};
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1891, ymax=0.0452, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,-0.1664)(2,-0.0706)(3,-0.0231)(4,0.0013)(5,0.0139)(6,0.0199)(7,0.0223)(8,0.0226)(9,0.0217)(10,0.0202)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0334)(2,-0.0795)(3,-0.0618)(4,-0.0447)(5,-0.0300)(6,-0.0180)(7,-0.0085)(8,-0.0011)(9,0.0044)(10,0.0085)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.0227)(2,-0.1077)(3,-0.1072)(4,-0.1011)(5,-0.0932)(6,-0.0851)(7,-0.0772)(8,-0.0698)(9,-0.0630)(10,-0.0568)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
+\vspace{0pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral output gap components (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.12, ymax=0.14, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5176, ymax=0.1820, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0044)(2,0.0140)(3,0.0167)(4,0.0155)(5,0.0134)(6,0.0115)(7,0.0099)(8,0.0086)(9,0.0076)(10,0.0067)};
+\addplot[thick, sectorman] coordinates {(1,-0.0977)(2,-0.0231)(3,0.0076)(4,0.0186)(5,0.0213)(6,0.0206)(7,0.0187)(8,0.0166)(9,0.0146)(10,0.0128)};
+\addplot[thick, sectorserv] coordinates {(1,-0.4499)(2,-0.2662)(3,-0.1503)(4,-0.0778)(5,-0.0330)(6,-0.0059)(7,0.0099)(8,0.0185)(9,0.0227)(10,0.0241)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5176, ymax=0.1820, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0397)(2,0.0228)(3,0.0158)(4,0.0124)(5,0.0104)(6,0.0091)(7,0.0081)(8,0.0074)(9,0.0067)(10,0.0062)};
+\addplot[thick, sectorman] coordinates {(1,0.0679)(2,0.0371)(3,0.0213)(4,0.0135)(5,0.0098)(6,0.0082)(7,0.0076)(8,0.0073)(9,0.0072)(10,0.0071)};
+\addplot[thick, sectorserv] coordinates {(1,-0.1791)(2,-0.1246)(3,-0.0875)(4,-0.0612)(5,-0.0420)(6,-0.0276)(7,-0.0169)(8,-0.0088)(9,-0.0027)(10,0.0018)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.5176, ymax=0.1820, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,0.0514)(2,0.0273)(3,0.0175)(4,0.0128)(5,0.0103)(6,0.0087)(7,0.0076)(8,0.0068)(9,0.0062)(10,0.0057)};
 \addplot[thick, sectorman] coordinates {(1,0.1143)(2,0.0645)(3,0.0367)(4,0.0214)(5,0.0131)(6,0.0085)(7,0.0059)(8,0.0043)(9,0.0034)(10,0.0028)};
 \addplot[thick, sectorserv] coordinates {(1,-0.0972)(2,-0.0593)(3,-0.0394)(4,-0.0287)(5,-0.0226)(6,-0.0189)(7,-0.0166)(8,-0.0150)(9,-0.0137)(10,-0.0127)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral inflation $\pi_{it}$ (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.22, ymax=0.40, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2735, ymax=0.4171, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.1883)(2,0.0840)(3,0.0976)(4,0.0688)(5,0.0420)(6,0.0232)(7,0.0111)(8,0.0035)(9,-0.0012)(10,-0.0040)};
+\addplot[thick, sectorman] coordinates {(1,-0.0963)(2,0.0302)(3,0.0634)(4,0.0600)(5,0.0456)(6,0.0304)(7,0.0179)(8,0.0086)(9,0.0021)(10,-0.0022)};
+\addplot[thick, sectorserv] coordinates {(1,-0.2067)(2,-0.1112)(3,-0.0509)(4,-0.0136)(5,0.0086)(6,0.0212)(7,0.0276)(8,0.0302)(9,0.0305)(10,0.0294)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2735, ymax=0.4171, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.2428)(2,0.0004)(3,-0.0512)(4,-0.0546)(5,-0.0468)(6,-0.0374)(7,-0.0288)(8,-0.0216)(9,-0.0157)(10,-0.0110)};
+\addplot[thick, sectorman] coordinates {(1,0.1371)(2,0.0397)(3,-0.0075)(4,-0.0268)(5,-0.0318)(6,-0.0303)(7,-0.0260)(8,-0.0211)(9,-0.0164)(10,-0.0123)};
+\addplot[thick, sectorserv] coordinates {(1,-0.1466)(2,-0.1001)(3,-0.0665)(4,-0.0419)(5,-0.0235)(6,-0.0099)(7,0.0003)(8,0.0077)(9,0.0130)(10,0.0167)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2735, ymax=0.4171, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,0.3502)(2,-0.0261)(3,-0.1185)(4,-0.1351)(5,-0.1310)(6,-0.1215)(7,-0.1108)(8,-0.1004)(9,-0.0907)(10,-0.0818)};
 \addplot[thick, sectorman] coordinates {(1,0.1876)(2,0.0280)(3,-0.0554)(4,-0.0940)(5,-0.1085)(6,-0.1104)(7,-0.1061)(8,-0.0992)(9,-0.0912)(10,-0.0832)};
 \addplot[thick, sectorserv] coordinates {(1,-0.1599)(2,-0.1286)(3,-0.1077)(4,-0.0928)(5,-0.0815)(6,-0.0723)(7,-0.0645)(8,-0.0579)(9,-0.0521)(10,-0.0469)};
@@ -1447,60 +1198,115 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-\shockregimelegend
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
 
 \end{frame}
-
 %==============================================================
-\begin{frame}{Results: IRFs to a Foreign-Demand Shock}
+\begin{frame}{IRFs: Foreign-Demand Shock}
 %==============================================================
-{\scriptsize A 1\% foreign-demand shock $D^*_t$ (raises export demand for the home bundle), $\rho_D=0.80$.}
-
-\vspace{1pt}
+\vspace{-3pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Output gap $\tilde y_t$ (\%)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=0, ymax=0.38, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.2674, ymax=0.0287, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.1755)(2,-0.1422)(3,-0.1148)(4,-0.0924)(5,-0.0739)(6,-0.0588)(7,-0.0465)(8,-0.0364)(9,-0.0282)(10,-0.0214)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.2388)(2,-0.2285)(3,-0.2184)(4,-0.2089)(5,-0.2001)(6,-0.1920)(7,-0.1846)(8,-0.1778)(9,-0.1716)(10,-0.1659)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: foreign demand $D^*_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.0303, ymax=1.1039, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.8000)(3,0.6400)(4,0.5120)(5,0.4096)(6,0.3277)(7,0.2621)(8,0.2097)(9,0.1678)(10,0.1342)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0340, ymax=0.3791, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, gray!45, densely dotted] coordinates {(1,0.3391)(2,0.2001)(3,0.1236)(4,0.0789)(5,0.0515)(6,0.0340)(7,0.0226)(8,0.0149)(9,0.0096)(10,0.0059)};
 \addplot[thick, gray!60!black, dashed] coordinates {(1,0.1153)(2,0.0914)(3,0.0724)(4,0.0572)(5,0.0451)(6,0.0354)(7,0.0277)(8,0.0215)(9,0.0165)(10,0.0126)};
 \addplot[thick, customgreen!85!black] coordinates {(1,0.0642)(2,0.0520)(3,0.0413)(4,0.0325)(5,0.0253)(6,0.0196)(7,0.0150)(8,0.0114)(9,0.0085)(10,0.0063)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\column{0.25\textwidth}
 \begin{center}
-{\tiny \textbf{Exchange rate $S_t$ (\%, dep.\ $>0$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.27, ymax=0.03, xtick={2,4,6,8,10}]
-\addplot[thick, gray!45, densely dotted] coordinates {(1,0)(2,0)(3,0)(4,0)(5,0)(6,0)(7,0)(8,0)(9,0)(10,0)};
-\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.1755)(2,-0.1422)(3,-0.1148)(4,-0.0924)(5,-0.0739)(6,-0.0588)(7,-0.0465)(8,-0.0364)(9,-0.0282)(10,-0.0214)};
-\addplot[thick, customgreen!85!black] coordinates {(1,-0.2388)(2,-0.2285)(3,-0.2184)(4,-0.2089)(5,-0.2001)(6,-0.1920)(7,-0.1846)(8,-0.1778)(9,-0.1716)(10,-0.1659)};
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0606, ymax=0.0871, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0728)(2,0.0292)(3,0.0097)(4,0.0003)(5,-0.0042)(6,-0.0063)(7,-0.0071)(8,-0.0072)(9,-0.0070)(10,-0.0066)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0056)(2,0.0159)(3,0.0122)(4,0.0091)(5,0.0067)(6,0.0047)(7,0.0032)(8,0.0019)(9,0.0009)(10,0.0001)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.0463)(2,-0.0114)(3,-0.0085)(4,-0.0066)(5,-0.0052)(6,-0.0041)(7,-0.0033)(8,-0.0027)(9,-0.0022)(10,-0.0018)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 \end{columns}
 
-\vspace{2pt}
+\vspace{0pt}
 \begin{columns}[t]
-\column{0.5\textwidth}
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral output gap components (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.005, ymax=0.045, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0230, ymax=0.2179, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0338)(2,0.0158)(3,0.0094)(4,0.0068)(5,0.0054)(6,0.0045)(7,0.0039)(8,0.0034)(9,0.0029)(10,0.0026)};
+\addplot[thick, sectorman] coordinates {(1,0.1107)(2,0.0570)(3,0.0309)(4,0.0180)(5,0.0113)(6,0.0076)(7,0.0055)(8,0.0041)(9,0.0031)(10,0.0024)};
+\addplot[thick, sectorserv] coordinates {(1,0.1946)(2,0.1273)(3,0.0833)(4,0.0542)(5,0.0348)(6,0.0219)(7,0.0132)(8,0.0074)(9,0.0036)(10,0.0010)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0230, ymax=0.2179, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0137)(2,0.0113)(3,0.0093)(4,0.0077)(5,0.0064)(6,0.0054)(7,0.0045)(8,0.0038)(9,0.0032)(10,0.0028)};
+\addplot[thick, sectorman] coordinates {(1,0.0343)(2,0.0265)(3,0.0207)(4,0.0163)(5,0.0129)(6,0.0102)(7,0.0081)(8,0.0064)(9,0.0051)(10,0.0040)};
+\addplot[thick, sectorserv] coordinates {(1,0.0673)(2,0.0537)(3,0.0425)(4,0.0333)(5,0.0259)(6,0.0199)(7,0.0151)(8,0.0112)(9,0.0082)(10,0.0058)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0230, ymax=0.2179, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,0.0097)(2,0.0096)(3,0.0085)(4,0.0073)(5,0.0062)(6,0.0053)(7,0.0045)(8,0.0038)(9,0.0032)(10,0.0028)};
 \addplot[thick, sectorman] coordinates {(1,0.0177)(2,0.0158)(3,0.0136)(4,0.0114)(5,0.0094)(6,0.0076)(7,0.0062)(8,0.0049)(9,0.0040)(10,0.0032)};
 \addplot[thick, sectorserv] coordinates {(1,0.0369)(2,0.0266)(3,0.0192)(4,0.0138)(5,0.0098)(6,0.0067)(7,0.0044)(8,0.0026)(9,0.0013)(10,0.0003)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
-\column{0.5\textwidth}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
 \begin{center}
-{\tiny \textbf{Sectoral inflation $\pi_{it}$ (\%, Float)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, width=6.1cm, height=2.65cm, xlabel={\tiny Quarters}, xmin=0.5, xmax=10.5, ymin=-0.09, ymax=0.02, xtick={2,4,6,8,10}]
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1043, ymax=0.2655, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.2297)(2,-0.0027)(3,-0.0390)(4,-0.0355)(5,-0.0269)(6,-0.0198)(7,-0.0149)(8,-0.0115)(9,-0.0091)(10,-0.0075)};
+\addplot[thick, sectorman] coordinates {(1,0.1548)(2,0.0423)(3,-0.0038)(4,-0.0194)(5,-0.0223)(6,-0.0204)(7,-0.0173)(8,-0.0143)(9,-0.0117)(10,-0.0097)};
+\addplot[thick, sectorserv] coordinates {(1,0.0601)(2,0.0337)(3,0.0169)(4,0.0063)(5,-0.0001)(6,-0.0039)(7,-0.0059)(8,-0.0069)(9,-0.0072)(10,-0.0072)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1043, ymax=0.2655, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0091)(2,0.0108)(3,0.0090)(4,0.0067)(5,0.0048)(6,0.0032)(7,0.0019)(8,0.0009)(9,0.0001)(10,-0.0005)};
+\addplot[thick, sectorman] coordinates {(1,0.0255)(2,0.0157)(3,0.0098)(4,0.0060)(5,0.0034)(6,0.0016)(7,0.0004)(8,-0.0006)(9,-0.0012)(10,-0.0017)};
+\addplot[thick, sectorserv] coordinates {(1,0.0167)(2,0.0133)(3,0.0102)(4,0.0076)(5,0.0055)(6,0.0037)(7,0.0022)(8,0.0010)(9,0.0001)(10,-0.0007)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1043, ymax=0.2655, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
 \addplot[thick, sectorres] coordinates {(1,-0.0685)(2,-0.0206)(3,-0.0072)(4,-0.0032)(5,-0.0017)(6,-0.0010)(7,-0.0007)(8,-0.0004)(9,-0.0003)(10,-0.0002)};
 \addplot[thick, sectorman] coordinates {(1,-0.0319)(2,-0.0201)(3,-0.0126)(4,-0.0082)(5,-0.0055)(6,-0.0039)(7,-0.0029)(8,-0.0023)(9,-0.0018)(10,-0.0015)};
 \addplot[thick, sectorserv] coordinates {(1,-0.0147)(2,-0.0128)(3,-0.0110)(4,-0.0092)(5,-0.0077)(6,-0.0065)(7,-0.0054)(8,-0.0045)(9,-0.0038)(10,-0.0032)};
@@ -1509,8 +1315,242 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \end{center}
 \end{columns}
 
-\vspace{2pt}
-\shockregimelegend
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
+
+\end{frame}
+%==============================================================
+\begin{frame}{IRFs: Export-Price / ToT Shock}
+%==============================================================
+\vspace{-3pt}
+\begin{columns}[t]
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.3048, ymax=0.0327, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.1944)(2,-0.1640)(3,-0.1380)(4,-0.1158)(5,-0.0969)(6,-0.0807)(7,-0.0669)(8,-0.0552)(9,-0.0453)(10,-0.0368)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.2690)(2,-0.2717)(3,-0.2721)(4,-0.2711)(5,-0.2692)(6,-0.2666)(7,-0.2635)(8,-0.2601)(9,-0.2565)(10,-0.2528)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: export price $P^{X}_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.1394, ymax=1.0922, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.8500)(3,0.7225)(4,0.6141)(5,0.5220)(6,0.4437)(7,0.3771)(8,0.3206)(9,0.2725)(10,0.2316)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0296, ymax=0.3990, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.3575)(2,0.2179)(3,0.1411)(4,0.0957)(5,0.0673)(6,0.0487)(7,0.0359)(8,0.0269)(9,0.0203)(10,0.0154)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.1146)(2,0.0959)(3,0.0802)(4,0.0671)(5,0.0560)(6,0.0467)(7,0.0388)(8,0.0322)(9,0.0265)(10,0.0218)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.0606)(2,0.0524)(3,0.0445)(4,0.0375)(5,0.0313)(6,0.0260)(7,0.0215)(8,0.0178)(9,0.0146)(10,0.0119)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0736, ymax=0.0995, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0828)(2,0.0359)(3,0.0142)(4,0.0034)(5,-0.0023)(6,-0.0053)(7,-0.0067)(8,-0.0074)(9,-0.0075)(10,-0.0074)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.0061)(2,0.0174)(3,0.0138)(4,0.0107)(5,0.0082)(6,0.0061)(7,0.0044)(8,0.0030)(9,0.0018)(10,0.0008)};
+\addplot[thick, customgreen!85!black] coordinates {(1,-0.0568)(2,-0.0193)(3,-0.0157)(4,-0.0131)(5,-0.0110)(6,-0.0094)(7,-0.0080)(8,-0.0068)(9,-0.0058)(10,-0.0050)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0220, ymax=0.2293, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0357)(2,0.0173)(3,0.0110)(4,0.0084)(5,0.0071)(6,0.0062)(7,0.0056)(8,0.0050)(9,0.0045)(10,0.0040)};
+\addplot[thick, sectorman] coordinates {(1,0.1169)(2,0.0620)(3,0.0355)(4,0.0222)(5,0.0153)(6,0.0115)(7,0.0090)(8,0.0074)(9,0.0061)(10,0.0051)};
+\addplot[thick, sectorserv] coordinates {(1,0.2050)(2,0.1386)(3,0.0946)(4,0.0650)(5,0.0448)(6,0.0310)(7,0.0213)(8,0.0145)(9,0.0097)(10,0.0063)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0220, ymax=0.2293, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0140)(2,0.0122)(3,0.0106)(4,0.0092)(5,0.0081)(6,0.0071)(7,0.0062)(8,0.0055)(9,0.0048)(10,0.0043)};
+\addplot[thick, sectorman] coordinates {(1,0.0342)(2,0.0279)(3,0.0231)(4,0.0192)(5,0.0161)(6,0.0136)(7,0.0114)(8,0.0096)(9,0.0081)(10,0.0068)};
+\addplot[thick, sectorserv] coordinates {(1,0.0664)(2,0.0558)(3,0.0466)(4,0.0386)(5,0.0318)(6,0.0261)(7,0.0212)(8,0.0171)(9,0.0136)(10,0.0107)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.0220, ymax=0.2293, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0098)(2,0.0104)(3,0.0097)(4,0.0087)(5,0.0078)(6,0.0069)(7,0.0061)(8,0.0054)(9,0.0048)(10,0.0042)};
+\addplot[thick, sectorman] coordinates {(1,0.0168)(2,0.0163)(3,0.0149)(4,0.0133)(5,0.0117)(6,0.0101)(7,0.0086)(8,0.0074)(9,0.0063)(10,0.0053)};
+\addplot[thick, sectorserv] coordinates {(1,0.0340)(2,0.0258)(3,0.0199)(4,0.0154)(5,0.0119)(6,0.0091)(7,0.0068)(8,0.0050)(9,0.0035)(10,0.0023)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1224, ymax=0.2926, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.2525)(2,0.0039)(3,-0.0370)(4,-0.0351)(5,-0.0273)(6,-0.0207)(7,-0.0160)(8,-0.0128)(9,-0.0105)(10,-0.0089)};
+\addplot[thick, sectorman] coordinates {(1,0.1729)(2,0.0521)(3,0.0013)(4,-0.0171)(5,-0.0216)(6,-0.0207)(7,-0.0183)(8,-0.0156)(9,-0.0132)(10,-0.0113)};
+\addplot[thick, sectorserv] coordinates {(1,0.0694)(2,0.0410)(3,0.0223)(4,0.0102)(5,0.0025)(6,-0.0023)(7,-0.0051)(8,-0.0068)(9,-0.0076)(10,-0.0079)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1224, ymax=0.2926, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.0081)(2,0.0117)(3,0.0104)(4,0.0083)(5,0.0062)(6,0.0045)(7,0.0031)(8,0.0019)(9,0.0009)(10,0.0002)};
+\addplot[thick, sectorman] coordinates {(1,0.0274)(2,0.0177)(3,0.0118)(4,0.0078)(5,0.0051)(6,0.0031)(7,0.0015)(8,0.0004)(9,-0.0005)(10,-0.0012)};
+\addplot[thick, sectorserv] coordinates {(1,0.0190)(2,0.0154)(3,0.0122)(4,0.0095)(5,0.0071)(6,0.0051)(7,0.0034)(8,0.0020)(9,0.0008)(10,-0.0001)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.1224, ymax=0.2926, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0822)(2,-0.0307)(3,-0.0155)(4,-0.0102)(5,-0.0077)(6,-0.0062)(7,-0.0051)(8,-0.0042)(9,-0.0035)(10,-0.0029)};
+\addplot[thick, sectorman] coordinates {(1,-0.0418)(2,-0.0289)(3,-0.0204)(4,-0.0150)(5,-0.0115)(6,-0.0092)(7,-0.0075)(8,-0.0063)(9,-0.0053)(10,-0.0045)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0218)(2,-0.0197)(3,-0.0175)(4,-0.0153)(5,-0.0134)(6,-0.0116)(7,-0.0101)(8,-0.0088)(9,-0.0076)(10,-0.0066)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
+
+\end{frame}
+%==============================================================
+\begin{frame}{IRFs: Foreign Risk-Premium (UIP) Shock}
+%==============================================================
+\vspace{-3pt}
+\begin{columns}[t]
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Exch.\ rate $S_t$ (\%, dep.$>$0)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.3665, ymax=2.8998, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,0.0000)(2,0.0000)(3,0.0000)(4,0.0000)(5,0.0000)(6,0.0000)(7,0.0000)(8,0.0000)(9,0.0000)(10,0.0000)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,1.9965)(2,1.3854)(3,0.9381)(4,0.6135)(5,0.3809)(6,0.2168)(7,0.1035)(8,0.0275)(9,-0.0212)(10,-0.0504)};
+\addplot[thick, customgreen!85!black] coordinates {(1,2.5837)(2,2.0290)(3,1.5908)(4,1.2492)(5,0.9857)(6,0.7846)(7,0.6330)(8,0.5203)(9,0.4382)(10,0.3800)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Shock: risk premium $RP_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=0.0303, ymax=1.1039, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, black] coordinates {(1,1.0000)(2,0.8000)(3,0.6400)(4,0.5120)(5,0.4096)(6,0.3277)(7,0.2621)(8,0.2097)(9,0.1678)(10,0.1342)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Output gap $\tilde y_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-3.3510, ymax=0.7811, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,-2.9511)(2,-1.2897)(3,-0.4893)(4,-0.1036)(5,0.0739)(6,0.1453)(7,0.1631)(8,0.1550)(9,0.1356)(10,0.1125)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,-0.2469)(2,-0.1432)(3,-0.0752)(4,-0.0313)(5,-0.0036)(6,0.0131)(7,0.0221)(8,0.0261)(9,0.0266)(10,0.0251)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.3812)(2,0.2729)(3,0.1986)(4,0.1448)(5,0.1048)(6,0.0746)(7,0.0516)(8,0.0341)(9,0.0208)(10,0.0108)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.25\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny CPI infl.\ $\pi^C_t$ (\%)}, title style={yshift=-3pt, font=\tiny}, width=3.85cm, height=2.2cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-0.7957, ymax=0.6170, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, gray!45, densely dotted] coordinates {(1,-0.6590)(2,-0.1205)(3,0.0850)(4,0.1555)(5,0.1678)(6,0.1551)(7,0.1329)(8,0.1084)(9,0.0852)(10,0.0646)};
+\addplot[thick, gray!60!black, dashed] coordinates {(1,0.1681)(2,-0.0944)(3,-0.0431)(4,-0.0100)(5,0.0105)(6,0.0222)(7,0.0279)(8,0.0296)(9,0.0286)(10,0.0261)};
+\addplot[thick, customgreen!85!black] coordinates {(1,0.4803)(2,0.0444)(3,0.0263)(4,0.0171)(5,0.0116)(6,0.0080)(7,0.0056)(8,0.0039)(9,0.0026)(10,0.0017)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-1.8423, ymax=0.5015, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.3021)(2,-0.0805)(3,-0.0152)(4,0.0038)(5,0.0085)(6,0.0090)(7,0.0085)(8,0.0079)(9,0.0075)(10,0.0072)};
+\addplot[thick, sectorman] coordinates {(1,-1.0334)(2,-0.3758)(3,-0.0948)(4,0.0160)(5,0.0523)(6,0.0577)(7,0.0516)(8,0.0424)(9,0.0333)(10,0.0255)};
+\addplot[thick, sectorserv] coordinates {(1,-1.6155)(2,-0.8334)(3,-0.3793)(4,-0.1234)(5,0.0131)(6,0.0786)(7,0.1030)(8,0.1047)(9,0.0948)(10,0.0798)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-1.8423, ymax=0.5015, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0535)(2,-0.0350)(3,-0.0222)(4,-0.0133)(5,-0.0071)(6,-0.0026)(7,0.0006)(8,0.0029)(9,0.0045)(10,0.0055)};
+\addplot[thick, sectorman] coordinates {(1,-0.1015)(2,-0.0519)(3,-0.0243)(4,-0.0088)(5,-0.0002)(6,0.0044)(7,0.0067)(8,0.0076)(9,0.0077)(10,0.0073)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0919)(2,-0.0563)(3,-0.0288)(4,-0.0091)(5,0.0037)(6,0.0113)(7,0.0148)(8,0.0156)(9,0.0145)(10,0.0122)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral output gap, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-1.8423, ymax=0.5015, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0007)(2,-0.0163)(3,-0.0161)(4,-0.0121)(5,-0.0078)(6,-0.0041)(7,-0.0010)(8,0.0014)(9,0.0031)(10,0.0044)};
+\addplot[thick, sectorman] coordinates {(1,0.1071)(2,0.0642)(3,0.0384)(4,0.0233)(5,0.0145)(6,0.0093)(7,0.0061)(8,0.0040)(9,0.0027)(10,0.0018)};
+\addplot[thick, sectorserv] coordinates {(1,0.2747)(2,0.2251)(3,0.1763)(4,0.1336)(5,0.0981)(6,0.0694)(7,0.0465)(8,0.0287)(9,0.0150)(10,0.0046)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0pt}
+\begin{columns}[t]
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Peg (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-2.9274, ymax=1.1378, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-2.5340)(2,0.4010)(3,0.7444)(4,0.5968)(5,0.4142)(6,0.2751)(7,0.1790)(8,0.1143)(9,0.0708)(10,0.0414)};
+\addplot[thick, sectorman] coordinates {(1,-1.5646)(2,-0.1650)(3,0.3326)(4,0.4386)(5,0.3965)(6,0.3129)(7,0.2297)(8,0.1604)(9,0.1071)(10,0.0679)};
+\addplot[thick, sectorserv] coordinates {(1,-0.4846)(2,-0.1654)(3,0.0119)(4,0.1015)(5,0.1383)(6,0.1446)(7,0.1346)(8,0.1168)(9,0.0965)(10,0.0764)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Managed (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-2.9274, ymax=1.1378, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,-0.0354)(2,-0.0076)(3,0.0149)(4,0.0284)(5,0.0347)(6,0.0362)(7,0.0348)(8,0.0315)(9,0.0274)(10,0.0228)};
+\addplot[thick, sectorman] coordinates {(1,-0.1739)(2,-0.0328)(3,0.0341)(4,0.0622)(5,0.0703)(6,0.0683)(7,0.0615)(8,0.0528)(9,0.0436)(10,0.0348)};
+\addplot[thick, sectorserv] coordinates {(1,-0.0677)(2,-0.0230)(3,0.0080)(4,0.0279)(5,0.0393)(6,0.0445)(7,0.0453)(8,0.0431)(9,0.0391)(10,0.0341)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.333\textwidth}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[slide fig, title={\tiny Sectoral inflation, Float (\%)}, title style={yshift=-3pt, font=\tiny}, width=5.3cm, height=2.0cm, xlabel={\tiny Q}, xmin=0.5, xmax=10.5, ymin=-2.9274, ymax=1.1378, xtick={2,6,10}, yticklabel=\empty, scaled y ticks=false]
+\addplot[thick, sectorres] coordinates {(1,0.7063)(2,0.1279)(3,-0.0136)(4,-0.0425)(5,-0.0428)(6,-0.0367)(7,-0.0298)(8,-0.0237)(9,-0.0186)(10,-0.0144)};
+\addplot[thick, sectorman] coordinates {(1,0.3139)(2,0.1774)(3,0.0943)(4,0.0476)(5,0.0223)(6,0.0088)(7,0.0018)(8,-0.0018)(9,-0.0035)(10,-0.0043)};
+\addplot[thick, sectorserv] coordinates {(1,0.1377)(2,0.1167)(3,0.0955)(4,0.0764)(5,0.0600)(6,0.0464)(7,0.0354)(8,0.0266)(9,0.0195)(10,0.0140)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{-2pt}
+{\scriptsize Peg \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet}}\quad Managed \textcolor{gray!60!black}{\textbf{- -}}\quad Float \textcolor{customgreen!85!black}{\textbf{---}}\quad Shock itself \textcolor{black}{\textbf{---}}.\quad By sector (Float): \textcolor{sectorres}{\textbf{---} Res.}\ \textcolor{sectorman}{\textbf{---} Man.}\ \textcolor{sectorserv}{\textbf{---} Serv.}}
 
 \end{frame}
 

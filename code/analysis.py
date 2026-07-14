@@ -32,7 +32,7 @@ RESULTS_DIR = os.path.join(REPO_ROOT, "results")
 FIGS_DIR = os.path.join(REPO_ROOT, "figs")
 
 REGIMES = ["float", "peg", "managed"]
-SHOCKS = ["eps_a1", "eps_a2", "eps_a3", "eps_pF", "eps_D", "eps_pX"]
+SHOCKS = ["eps_a1", "eps_a2", "eps_a3", "eps_pF", "eps_D", "eps_pX", "eps_rp"]
 SHOCK_LABELS = {
     "eps_a1": "TFP shock (Resource)",
     "eps_a2": "TFP shock (Manufacturing)",
@@ -40,6 +40,7 @@ SHOCK_LABELS = {
     "eps_pF": "Import price shock",
     "eps_D": "Foreign demand shock",
     "eps_pX": "Export price / ToT shock",
+    "eps_rp": "Foreign risk-premium (UIP) shock",
 }
 SECTOR_NAMES = ["Resource", "Manufacturing", "Services"]
 
@@ -154,6 +155,7 @@ SHOCK_GROUPS = {
     "Import price (FX)": ["eps_pF"],
     "Foreign demand": ["eps_D"],
     "Export price (ToT)": ["eps_pX"],
+    "Risk premium (UIP)": ["eps_rp"],
 }
 
 
