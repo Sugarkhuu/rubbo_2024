@@ -1,4 +1,5 @@
 function run_sweep_point(sweep_type, grid_value, regime)
+global oo_
 % One (grid_value, regime) point of a structural-generalization sweep.
 % Designed to be called in ITS OWN fresh MATLAB process (see
 % code/drive_sweeps.sh) so that a Dynare/MEX crash on one point never
@@ -10,9 +11,9 @@ function run_sweep_point(sweep_type, grid_value, regime)
 %             (numeric). regime: 'float'|'peg'|'managed'.
 %
 % Usage (from repo root, one call per point):
-%   matlab -batch "addpath('C:\dynare\7.0\matlab'); addpath('code'); run_sweep_point('impint', 0.25, 'float')"
+%   matlab -batch "addpath('C:\dynare\6.3\matlab'); addpath('code'); run_sweep_point('impint', 0.25, 'float')"
 
-addpath('C:\dynare\7.0\matlab');
+addpath('C:\dynare\6.3\matlab');
 
 master_files = struct('float', 'open_economy_network.mod', ...
                        'peg', 'open_economy_network_peg.mod', ...
@@ -48,7 +49,7 @@ txt = regexprep(txt, 'OF2\s*=\s*[\d.]+;', sprintf('OF2     = %.6f;', OF_k(2)));
 txt = regexprep(txt, 'OF3\s*=\s*[\d.]+;', sprintf('OF3     = %.6f;', OF_k(3)));
 
 tag = strrep(sprintf('%.4f', grid_value), '.', 'p');
-fname = sprintf('open_economy_network_%s_%s_%s', sweep_type, tag, regime);
+fname = sprintf('oen_%s_%s_%s', sweep_type, tag, regime);
 fid = fopen([fname '.mod'], 'w'); fwrite(fid, txt); fclose(fid);
 
 eval(sprintf('dynare %s.mod', fname));

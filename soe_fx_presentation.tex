@@ -1119,7 +1119,74 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 
 \end{frame}
 
-%__GENERALIZATION_SWEEPS_PLACEHOLDER__
+%==============================================================
+\begin{frame}{Robustness: Import-Intensity Level}
+%==============================================================
+
+{\footnotesize \textbf{Sweep 1:} scale the whole import-cost-share vector $\Omega^F$ by $\kappa\in[0.25,2.5]$ ($\kappa=1$ is the baseline oil-exporter calibration), holding its relative sectoral pattern fixed. $\alpha_i$ absorbs the change so Cobb-Douglas shares still sum to 1.}
+
+\vspace{4pt}
+\begin{columns}[t]
+\column{0.58\textwidth}
+\begin{center}
+{\tiny \textbf{Total welfare loss vs.\ import intensity $\kappa$ ($\times10^4$)}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
+  xlabel={\tiny Import-intensity scale $\kappa$}, ylabel={\tiny welfare loss ($\times10^4$)},
+  xmin=0.1, xmax=2.6, ymin=3.5, ymax=16.0]
+\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.3pt] coordinates {(0.25,8.4700) (0.50,8.5102) (0.75,8.5787) (1.00,8.6723) (1.50,8.9278) (2.00,9.2687) (2.50,9.6950)};
+\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.3pt] coordinates {(0.25,3.9496) (0.50,4.0188) (0.75,4.0987) (1.00,4.1890) (1.50,4.4000) (2.00,4.6530) (2.50,4.9518)};
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.25,8.9429) (0.50,9.3791) (0.75,9.8919) (1.00,10.4759) (1.50,11.8446) (2.00,13.4696) (2.50,15.3481)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.38\textwidth}
+{\footnotesize \textbf{Reading:}}
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \footnotesize Ranking \textbf{managed $<$ peg $<$ float} holds at \emph{every} $\kappa$ from 0.25 to 2.5.
+\item \footnotesize All three losses rise with import dependence, float fastest: gap grows from 0.47 ($\kappa=0.25$) to 5.65 ($\kappa=2.5$).
+\item \footnotesize Managed float is the flattest line --- FX stabilization caps the escalating cost of floating.
+\end{itemize}
+\end{columns}
+
+\vspace{2pt}
+{\footnotesize \textbf{Bottom line:} not an oil-exporter artifact --- it strengthens, if anything, as import dependence rises.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Robustness: Import-Exposure Heterogeneity}
+%==============================================================
+
+{\footnotesize \textbf{Sweep 2:} hold \emph{total} import intensity fixed but vary $\theta$, how unevenly $\Omega^F$ is spread across sectors ($\theta=0$: identical; $\theta=1$: baseline; $\theta=1.5$: more skewed). Tests whether $\Gamma\propto\mathcal{B}$ drives the cost of floating.}
+\vspace{1pt}
+\begin{columns}[t]
+\column{0.58\textwidth}
+\begin{center}
+{\tiny \textbf{Total welfare loss vs.\ exposure heterogeneity $\theta$ ($\times10^4$)}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, width=8.2cm, height=4.6cm,
+  xlabel={\tiny Heterogeneity $\theta$}, ylabel={\tiny welfare loss ($\times10^4$)},
+  xmin=-0.05, xmax=1.55, ymin=4.0, ymax=12.0]
+\addplot[thick, gray!45, densely dotted, mark=*, mark size=1.3pt] coordinates {(0.00,8.8131) (0.25,8.7566) (0.50,8.7132) (0.75,8.6845) (1.00,8.6723) (1.25,8.6789) (1.50,8.7072)};
+\addplot[thick, gray!60!black, dashed, mark=*, mark size=1.3pt] coordinates {(0.00,4.3635) (0.25,4.3132) (0.50,4.2672) (0.75,4.2258) (1.00,4.1890) (1.25,4.1573) (1.50,4.1310)};
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,11.5105) (0.25,11.2287) (0.50,10.9619) (0.75,10.7107) (1.00,10.4759) (1.25,10.2586) (1.50,10.0600)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.38\textwidth}
+{\footnotesize \textbf{Reading:}}
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \footnotesize Ranking \textbf{managed $<$ peg $<$ float} again holds at every $\theta$.
+\item \footnotesize \textbf{Unexpected:} the float-peg gap \emph{shrinks} as exposure gets \emph{more} uneven (2.70 at $\theta=0$ $\to$ 1.35 at $\theta=1.5$) --- opposite the naive $\Gamma\propto\mathcal{B}$ prediction.
+\item \footnotesize Why: $\alpha_i$ absorbs whatever $\Omega^F_i$ leaves over given \emph{fixed} $\Omega^H$, so flattening $\Omega^F$ disperses $\alpha_i$ instead of aligning $\Gamma$ with $\mathcal{B}$.
+\end{itemize}
+\end{columns}
+
+\vspace{2pt}
+{\footnotesize \textbf{Bottom line:} ranking is robust, but this design doesn't cleanly isolate $\Gamma\propto\mathcal{B}$ --- a fixed-$\alpha_i$ design is needed for that.}
+
+\end{frame}
 
 %==============================================================
 \section{Conclusion}
@@ -1128,12 +1195,13 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 %==============================================================
 
 {\footnotesize
-\begin{enumerate}\setlength{\itemsep}{5pt}
+\begin{enumerate}\setlength{\itemsep}{3pt}
 \item \footnotesize \textbf{Free float is not the optimal regime, even though it directly targets the DC index.} Managed float has less than half the total welfare loss of pure float (4.19 vs.\ 10.48, $\times10^4$) and beats the hard peg too (8.67). This is the model's own solution, not an assumption.
-\item \footnotesize \textbf{Why:} floating turns the exchange rate into a slow, persistent state variable (via UIP and the near-unit-root NFA process) that feeds continuously back into every sector's marginal cost through $\Omega^F_i$. This transforms even purely \emph{domestic} TFP shocks into long, drawn-out inflation, whereas a peg resolves the same shock via a fast one-time price adjustment. \textbf{Persistence, not on-impact volatility, is what drives the welfare cost.}
-\item \footnotesize \textbf{Every sector prefers managed float first}, but ranks the two corner regimes oppositely: Resource (import-exposed, flexible, peripheral) ranks float over peg; Services (import-light, sticky, central) ranks peg over float. The sector most exposed to FX shocks and the sector with the most at stake in the regime choice are different sectors.
-\item \footnotesize \textbf{The optimal amount of FX stabilization is small but strictly positive}: welfare is minimized around $\phi_s\approx0.2$--$0.3$, with more than half the gain captured by just $\phi_s=0.10$; too much FX stabilization crowds out output-gap stabilization from the same instrument.
-\item \footnotesize These are first-order (order-1) welfare comparisons (order-2 pruning fails here due to the price-level/ER unit root implied by an inflation-only Taylor rule) --- rankings should be read as indicative of the mechanism, not certainty-equivalent-exact.
+\item \footnotesize \textbf{Why:} floating turns the exchange rate into a slow, persistent state variable (via UIP and the near-unit-root NFA process) that feeds continuously back into every sector's marginal cost through $\Omega^F_i$, turning even domestic TFP shocks into long, drawn-out inflation. \textbf{Persistence, not on-impact volatility, drives the welfare cost.}
+\item \footnotesize \textbf{Every sector prefers managed float first}, but ranks the corner regimes oppositely: Resource (import-exposed, peripheral) ranks float over peg; Services (import-light, central) ranks peg over float.
+\item \footnotesize \textbf{The optimal FX stabilization is small but strictly positive}: welfare is minimized around $\phi_s\approx0.2$--$0.3$, with more than half the gain from just $\phi_s=0.10$.
+\item \footnotesize \textbf{The managed $<$ peg $<$ float ranking is robust} to import intensity ($\kappa\in[0.25,2.5]$) and exposure heterogeneity ($\theta\in[0,1.5]$) --- not an oil-exporter artifact. The heterogeneity gap moves opposite the naive $\Gamma\propto\mathcal{B}$ prediction since this design lets $\alpha_i$ absorb the $\Omega^F_i$ change; isolating that mechanism cleanly is future work.
+\item \footnotesize These are first-order welfare comparisons (order-2 pruning fails due to the price-level/ER unit root) --- rankings are indicative of the mechanism, not certainty-equivalent-exact.
 \end{enumerate}}
 
 \end{frame}

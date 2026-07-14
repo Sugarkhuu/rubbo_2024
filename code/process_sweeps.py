@@ -1,7 +1,7 @@
 """
 Post-process the two structural-generalization sweeps
-(sweep_import_intensity.m -> results/import_intensity_sweep.csv,
- sweep_import_heterogeneity.m -> results/import_heterogeneity_sweep.csv)
+(run_sweep_point.m('impint', ...) -> results/impint_sweep.csv,
+ run_sweep_point.m('ofhet', ...) -> results/ofhet_sweep.csv)
 into total welfare loss by regime x grid point, using the SAME formula as
 code/analysis.py's compute_welfare (Rubbo Prop. 3). Network objects
 (lambda_D, dhat) are unaffected by OF/ALPHA changes (they depend only on
@@ -9,10 +9,9 @@ OH21, OH32, BH_i, DELTA_i), so results/network_objects.csv and
 results/params.csv from the baseline run apply unchanged to every grid
 point in both sweeps.
 
-Writes results/import_intensity_welfare.csv and
-results/import_heterogeneity_welfare.csv (grid_value, regime, total),
-and prints pgfplots \\addplot coordinate strings for direct use in
-soe_fx_presentation.tex.
+Writes results/impint_welfare.csv and results/ofhet_welfare.csv
+(grid_value, regime, total), and prints pgfplots \\addplot coordinate
+strings for direct use in soe_fx_presentation.tex.
 """
 
 import os
@@ -66,5 +65,5 @@ def process(sweep_csv, grid_col, out_csv):
 
 
 if __name__ == "__main__":
-    process("import_intensity_sweep.csv", "kappa", "import_intensity_welfare.csv")
-    process("import_heterogeneity_sweep.csv", "theta", "import_heterogeneity_welfare.csv")
+    process("impint_sweep.csv", "kappa", "impint_welfare.csv")
+    process("ofhet_sweep.csv", "theta", "ofhet_welfare.csv")
