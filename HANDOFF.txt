@@ -1,0 +1,109 @@
+PROJECT HANDOFF: SOE Extension of Rubbo (2024) -- Presentation Restructuring
+=============================================================================
+Repo: rubbo_2024 (paths below assume repo root). Presentation deadline:
+July 22, 2026. See CLAUDE.md in repo root for full project context.
+
+WHAT THIS SESSION DID
+----------------------
+Gave research-advisor feedback on restructuring soe_fx_presentation.tex (a
+Beamer deck: "Exchange Rate Regimes in Production Networks"), then executed
+it. Core recommendation adopted: make the DC-breakdown theorem the spine --
+Rubbo's divine-coincidence index survives with one cost-push channel (TFP)
+but generically breaks under a float because the exchange rate is a SECOND
+channel (Gamma) not proportional to labor intensity (B). Everything
+downstream should test/quantify that.
+
+Verified the existing Dynare pipeline is real (not synthetic -- cross-
+checked results/*.csv values against hardcoded slide numbers, e.g.
+-0.7799% IRF match). Three regime .mod files (open_economy_network.mod =
+float, _peg, _managed), driven by code/run_all_regimes.m. MATLAB at
+C:\Program Files\MATLAB\R2021b\bin\matlab, Dynare at C:\dynare\7.0\matlab.
+
+PRESENTATION RESTRUCTURING (DONE)
+----------------------------------
+Reorganized soe_fx_presentation.tex (backup at soe_fx_presentation.tex.bak):
+
+- Results section: import-price shock is now the featured "mechanism
+  shock" (retitled "the Mechanism Shock"); moved Resource/Manufacturing/
+  Services TFP-shock IRF frames and the Foreign-Demand shock IRF frame
+  into a new Appendix (Backup) section at the end.
+- New \section{Generalization}: added an intro frame explaining the
+  structural-sensitivity exercise; moved the existing phi_s sensitivity
+  sweep frame into it; left a placeholder marker
+  %__GENERALIZATION_SWEEPS_PLACEHOLDER__ where two new frames need to go
+  once sweep data is ready.
+- Updated nav bar macro (\navsectionlist) to include "Generalization" as
+  an 8th section, updated the loop bound \ifnum\i<8.
+- Updated the "Pipeline" frame text (fewer/reframed questions) and "Next
+  Steps" bullets (removed the now-being-answered "alternative import
+  shares" bullet, added ToT-shock-as-future-work note).
+- NOT YET DONE: add the two generalization result frames' actual content,
+  and a Conclusion bullet summarizing the generalization finding.
+
+NEW STRUCTURAL-GENERALIZATION SWEEPS (IN PROGRESS, HIT A SNAG)
+-----------------------------------------------------------------
+Per the "generalize beyond one oil-exporter calibration" recommendation,
+built two comparative statics (both scale Omega^F_i import-cost shares,
+with ALPHA_i absorbing the change so Cobb-Douglas shares still sum to 1):
+
+1. Import-intensity level (kappa in {0.25,...,2.5}): scales the whole
+   import-share vector proportionally.
+2. Import-exposure heterogeneity (theta in {0,...,1.5}): holds total
+   import intensity fixed, varies how UNEVENLY it's spread across
+   sectors -- the direct quantitative test of the Gamma proportional to B
+   theorem.
+
+FIRST ATTEMPT FAILED: code/sweep_import_intensity.m (single MATLAB
+session looping over all 21 grid x regime points) CRASHED MATLAB after
+~4-5 iterations, and since it only wrote CSV output at the very end, all
+progress was lost.
+
+REDESIGNED FOR ROBUSTNESS (this is where the session stopped):
+code/run_sweep_point.m -- a function that does exactly ONE (grid_value,
+regime) point, meant to be called in its own fresh `matlab -batch`
+process, appending one row immediately to results/impint_sweep.csv or
+results/ofhet_sweep.csv. This survives crashes (only that one point is
+lost, not the whole sweep).
+
+STILL NEEDED (NEXT STEPS)
+---------------------------
+1. Write a driver (shell/PowerShell loop) that calls
+   run_sweep_point('impint', kappa, regime) and
+   run_sweep_point('ofhet', theta, regime) once per fresh MATLAB process
+   for all 7x3 + 7x3 = 42 combos. Something like:
+
+     for kappa in 0.25 0.5 0.75 1.0 1.5 2.0 2.5; do
+       for regime in float peg managed; do
+         matlab -batch "addpath('code'); run_sweep_point('impint', $kappa, '$regime')"
+       done
+     done
+
+   (same pattern for 'ofhet'/theta). The old
+   code/sweep_import_intensity.m / sweep_import_heterogeneity.m
+   (single-session versions) are superseded -- can delete or ignore.
+
+2. Run code/process_sweeps.py to compute welfare (x10^4, same formula as
+   code/analysis.py's compute_welfare, reusing results/network_objects.csv
+   + results/params.csv since those don't depend on OF/ALPHA) and emit
+   pgfplots coordinate strings. NOTE: this machine only had a Windows
+   Store Python stub, no real Python -- check if the work PC has one,
+   otherwise redo this step in MATLAB or by hand.
+
+3. Insert the two new frames at %__GENERALIZATION_SWEEPS_PLACEHOLDER__
+   using those coordinates.
+
+4. Add a Conclusion bullet stating whether the managed-float result is
+   robust to import intensity/heterogeneity (this is the paper's
+   "generalization" payoff -- expect the float/peg welfare gap to shrink
+   as heterogeneity theta -> 0, confirming the Gamma proportional to B
+   mechanism).
+
+5. Compile and sanity-check the deck (Ctrl+Alt+B / latexmk), verify no
+   broken cross-references from the section moves, check frame counts are
+   still 39 total.
+
+NOT ATTEMPTED (EXPLICITLY DEFERRED, FLAGGED AS FUTURE WORK IN THE DECK)
+---------------------------------------------------------------------------
+- Unifying import-price + foreign-demand into a single terms-of-trade
+  shock (would require reworking the trade block -- flagged as too risky
+  to do without more validation, left as a "Next Steps" bullet instead).
