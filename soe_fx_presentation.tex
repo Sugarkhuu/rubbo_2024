@@ -36,7 +36,9 @@
 \setlength{\headheight}{1.25cm}
 \setbeamertemplate{navigation symbols}{}
 
-\newcommand{\navsectionlist}{Motivation,Baseline,Model,Solution,Theory,Results,Generalization,Conclusion}
+% 12 numbered sections (Motivation ... Conclusion); Appendix uses \section*
+% and is deliberately excluded from this bar and from \value{section}.
+\newcommand{\navsectionlist}{Motivation,Literature,Paper,Model,Theory,Calib,Shocks,Network,Welfare,Decomp,General,Conclusion}
 \setbeamertemplate{headline}{%
   \ifnum\value{section}>0
     \vskip1pt
@@ -48,7 +50,7 @@
       \else
         \textcolor{gray!55}{\ \name\ }%
       \fi
-      \ifnum\i<8 {\textcolor{gray!35}{$\,\triangleright\,$}}\fi
+      \ifnum\i<12 {\textcolor{gray!35}{$\,\triangleright\,$}}\fi
     }}
   \fi
 }
@@ -62,6 +64,7 @@
 \newcommand{\ty}{\tilde{y}}
 \newcommand{\tA}{\tilde{A}}
 \newcommand{\bom}{\bm{\omega}_F}
+\newcommand{\shockregimelegend}{{\scriptsize Top row (Peg / Managed / Float): \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet} Peg}\quad \textcolor{gray!60!black}{\textbf{- -} Managed}\quad \textcolor{customgreen!85!black}{\textbf{---} Float}.\quad Bottom row (Float regime, by sector): \textcolor{sectorres}{\textbf{---} Resource}\quad \textcolor{sectorman}{\textbf{---} Manuf.}\quad \textcolor{sectorserv}{\textbf{---} Services}.}}
 
 \pgfplotsset{
   slide fig/.style={
@@ -109,7 +112,7 @@
 \end{enumerate}}
 
 \vspace{6pt}
-{\footnotesize \textbf{This paper puts them together.} Once imported inputs enter a multi-sector network, the exchange rate becomes a \emph{second} cost-push channel that hits sectors asymmetrically depending on their import centrality and their position in the domestic supply chain. Does the DC index --- or any analog --- survive?}
+{\footnotesize \textbf{This paper puts them together.} Once imported inputs enter a multi-sector network, the exchange rate becomes a \emph{second} cost-push channel that hits sectors asymmetrically depending on their import centrality and their position in the domestic supply chain. Does the DC index --- or any analog --- survive, and which FX regime is actually optimal once network structure is taken seriously?}
 
 \end{frame}
 
@@ -136,6 +139,40 @@ oriented, and dominates final consumption.}
 \end{frame}
 
 %==============================================================
+\begin{frame}{Headline Result: Managed Float Wins the Regime Comparison}
+%==============================================================
+
+{\footnotesize \textbf{Jump to the answer first, mechanism after:} solving the full nonlinear open-economy network model for all three FX regimes gives a clear --- and non-obvious --- welfare ranking.}
+
+\vspace{4pt}
+\begin{columns}[t]
+\column{0.46\textwidth}
+\begin{center}
+{\tiny \textbf{Total welfare loss ($\times10^4$, first-order moments)}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, xbar, width=6.3cm, height=4.0cm, bar width=13pt,
+  symbolic y coords={Peg,Managed,Float}, ytick=data,
+  xmin=0, xmax=12.5, xlabel={\tiny welfare loss ($\times10^4$)}, nodes near coords,
+  nodes near coords style={font=\tiny}]
+\addplot[fill=customgreen!45!white, draw=customgreen!70!black] coordinates {(10.48,Float) (4.19,Managed) (8.67,Peg)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\column{0.50\textwidth}
+{\footnotesize \textbf{Managed float dominates both corner regimes} --- less than half the loss of free float, and lower than a hard peg too. This is the model's own solution to the FX-regime choice, not an assumption.}
+
+\vspace{6pt}
+{\footnotesize \textbf{Why this is surprising:} float directly targets the divine-coincidence index and should, on the textbook intuition, be (weakly) best. It is not --- floating turns the exchange rate into a slow, persistent state variable that keeps feeding cost-push shocks back into the network (mechanism in the Welfare section).}
+\end{columns}
+
+\vspace{6pt}
+{\footnotesize \textbf{Roadmap:} Literature $\to$ This paper $\to$ Model $\to$ Theory (why DC targeting could fail to survive) $\to$ Calibration $\to$ Shocks/IRFs $\to$ network amplification $\to$ welfare cost $\to$ shock decomposition.}
+
+\end{frame}
+
+%==============================================================
+\section{Literature}
+%==============================================================
 \begin{frame}{Literature}
 %==============================================================
 
@@ -150,72 +187,12 @@ oriented, and dominates final consumption.}
 \end{itemize}}
 
 \vspace{4pt}
-{\footnotesize \textbf{Gap:} no existing paper combines a multi-sector Calvo network \emph{and} a genuine open-economy block (UIP, imported inputs, FX regimes) to ask whether the DC-targeting result survives.}
+{\footnotesize \textbf{Gap:} no existing paper combines a multi-sector Calvo network \emph{and} a genuine open-economy block (UIP, imported inputs, FX regimes) to ask which FX regime is optimal, and whether the DC-targeting result survives.}
 
 \end{frame}
 
 %==============================================================
-\section{Baseline}
-%==============================================================
-\begin{frame}{Rubbo (2024): What Carries Over}
-%==============================================================
-
-\begin{columns}[t]
-\column{0.56\textwidth}
-
-{\footnotesize \textbf{Closed-economy system} ($N$ sectors, Calvo $\hat\delta_i$, IO network $\Omega$):}
-\vspace{-3pt}
-{\scriptsize\begin{align*}
-\text{IS:} &\quad \ty_t = \mathbb{E}\ty_{t+1} - \tfrac{1}{\gamma}(i_t - \mathbb{E}\pi^C_{t+1} - r^{nat}_t) \\[1pt]
-\text{MC:} &\quad \bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t \\[1pt]
-\text{NKPC:} &\quad \bpi_t = \rho(I{-}\mathcal{V})\mathbb{E}\bpi_{t+1} + \mathcal{B}(\gamma{+}\varphi)\ty_t - \mathcal{V}\bm{\chi}_t \\[1pt]
-\text{Policy:} &\quad i_t = r^{nat}_t + \phi_\pi\pi^C_t + \phi_y\ty_t
-\end{align*}}
-
-\vspace{3pt}
-{\footnotesize \textbf{Lemma 1:} natural output $=$ Domar-weighted TFP, $\;y^{nat}_t=\sum_i\lambda_i a_{it}$.
-
-\textbf{Proposition 1 (DC index):} unique index with \emph{no} cost-push:}
-\vspace{-4pt}
-\[\footnotesize \pi^{DC}_t = \rho\,\mathbb{E}\pi^{DC}_{t+1} + \tfrac{\gamma+\varphi}{\Lambda^{DC}}\ty_t,\quad w^{DC}_i \propto \lambda_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\]
-
-\column{0.40\textwidth}
-
-{\footnotesize \textbf{Why DC is unique:} $\mathcal{V}=\Delta(I-\Omega\Delta)^{-1}$ has rank $N{-}1$ on the space of cost-push shocks $\Rightarrow$ a one-dimensional null space $\Rightarrow$ exactly one index $\bm\phi$ with $\bm\phi^\top\mathcal{V}=\bm 0^\top$.}
-
-\vspace{6pt}
-{\footnotesize \textbf{One shock, one channel:} in the closed economy, only TFP shocks $\bm\chi_t$ enter the cost-push term. That is exactly why a single index can null it out.}
-
-\vspace{6pt}
-{\footnotesize \textbf{The open question we ask:} with a \emph{second} cost-push channel (the exchange rate), can the same trick still null out both simultaneously?}
-
-\end{columns}
-\end{frame}
-
-%==============================================================
-\begin{frame}{Why the Divine Coincidence Matters}
-%==============================================================
-
-{\scriptsize \textbf{Where the name comes from} (Blanchard \& Gal\'i 2007, \emph{JEEA}): in the canonical one-sector NK model, if the \emph{only} distortion is nominal price stickiness, then stabilizing inflation, closing the output gap, and maximizing welfare are the \emph{same} objective --- one instrument, one target, no tradeoff. It is called ``divine'' because this is fragile: any second distortion (real wage rigidity, markup or cost-push shocks) breaks it and forces a genuine tradeoff.}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why sectoral heterogeneity threatens it:} with $N$ sectors resetting prices at different rates $\delta_i$, an arbitrary index --- plain CPI, say --- behaves like a model with an extra distortion: stabilizing it no longer stabilizes the output gap. Rubbo's Proposition 1 shows the coincidence is not lost, only \emph{hidden}: exactly one Domar- and stickiness-weighted index restores it (Baseline slide above).}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why it matters in practice:}}
-\begin{itemize}\setlength{\itemsep}{0pt}
-\item \scriptsize It gives a central bank a single, well-defined, model-consistent target whose stabilization \emph{alone} delivers the fully efficient (flexible-price) allocation --- no discretionary weighing of inflation against output.
-\item \scriptsize It shows plain CPI targeting is \emph{not} optimal once sectors differ in stickiness: the wedge between CPI inflation and $\pi^{DC}_t$ is exactly the welfare-relevant cost-push term a CPI-targeting central bank would be missing.
-\item \scriptsize It is not merely a price index: by Proposition 3, $\pi^{DC}_t\equiv0$ for all $t$ exactly minimizes the model's quadratic welfare loss --- ``divine coincidence'' and ``welfare-optimal policy'' are the same statement.
-\end{itemize}
-
-\vspace{2pt}
-{\scriptsize \textbf{Why it recurs on almost every slide that follows:} the paper is organized around one question --- does this single tradeoff-free target survive once the exchange rate becomes a \emph{second} source of cost-push shocks. Every quantitative result below is, implicitly, a test of how ``divine'' the coincidence remains once the economy is open.}
-
-\end{frame}
-
-%==============================================================
-\section{Model}
+\section{This Paper}
 %==============================================================
 \begin{frame}{This Paper: Contribution and Approach}
 %==============================================================
@@ -223,7 +200,7 @@ oriented, and dominates final consumption.}
 {\footnotesize \textbf{What we do:}}
 \begin{itemize}\setlength{\itemsep}{4pt}
 \item \footnotesize Extend Rubbo's network Phillips curve to a small open economy: imported intermediate inputs (with an import-cost-share matrix $\Omega^F$), imported final consumption, UIP with a debt-elastic premium.
-\item \footnotesize Ask whether the DC index survives when the exchange rate is a second cost-push channel, and quantify the welfare cost of float / peg / managed-float regimes.
+\item \footnotesize Ask which FX regime (float / peg / managed float) is welfare-optimal in a multi-sector network, and whether the DC index survives when the exchange rate is a second cost-push channel.
 \item \footnotesize Calibrate to a 3-sector oil-exporting economy (Resource $\to$ Manufacturing $\to$ Services).
 \end{itemize}
 
@@ -232,6 +209,8 @@ oriented, and dominates final consumption.}
 
 \end{frame}
 
+%==============================================================
+\section{Model}
 %==============================================================
 \begin{frame}{Notation: Households, Firms, and the Network}
 %==============================================================
@@ -332,7 +311,7 @@ $p^{F*}_t,\,D^*_t$ & import-price, foreign-demand shocks, AR(1) \\
 \end{columns}
 
 \vspace{10pt}
-{\footnotesize All variables denote log-deviations from steady state in the linearized formulas (Baseline slide); the model-setup slides that follow use the exact nonlinear level variables (capital letters), which is what is actually solved and simulated.}
+{\footnotesize All variables denote log-deviations from steady state in the linearized formulas (Theory section); the model-setup slides that follow use the exact nonlinear level variables (capital letters), which is what is actually solved and simulated.}
 
 \end{frame}
 
@@ -485,7 +464,7 @@ P_{it}^\#/P_{it} = \tfrac{\varepsilon}{\varepsilon-1}\,X1_{it}/X2_{it}
 \]
 
 \vspace{4pt}
-{\footnotesize \textbf{Why this matters:} log-linearizing this exact recursion around the steady state is what \emph{produces} Rubbo's adjusted slope $\hat\delta_i=\tfrac{\delta_i(1-\beta(1-\delta_i))}{1-\beta\delta_i(1-\delta_i)}$, which appears throughout the Baseline and DC-index slides --- it is a derived object, not a primitive of the model.}
+{\footnotesize \textbf{Why this matters:} log-linearizing this exact recursion around the steady state is what \emph{produces} Rubbo's adjusted slope $\hat\delta_i=\tfrac{\delta_i(1-\beta(1-\delta_i))}{1-\beta\delta_i(1-\delta_i)}$, which appears throughout the Theory section --- it is a derived object, not a primitive of the model.}
 
 \end{frame}
 
@@ -570,7 +549,108 @@ Managed float & $i_t = \bar\imath + \phi_\pi\pi^{DC}_t + \phi_y\tilde y_t + \phi
 \end{frame}
 
 %==============================================================
-\section{Solution}
+\section{Theory}
+%==============================================================
+\begin{frame}{Rubbo (2024): What Carries Over}
+%==============================================================
+
+\begin{columns}[t]
+\column{0.56\textwidth}
+
+{\footnotesize \textbf{Closed-economy system} ($N$ sectors, Calvo $\hat\delta_i$, IO network $\Omega$):}
+\vspace{-3pt}
+{\scriptsize\begin{align*}
+\text{IS:} &\quad \ty_t = \mathbb{E}\ty_{t+1} - \tfrac{1}{\gamma}(i_t - \mathbb{E}\pi^C_{t+1} - r^{nat}_t) \\[1pt]
+\text{MC:} &\quad \bm{mc}_t = \bm{\alpha}w_t + \Omega\bm{p}_t - \log\mathbf{A}_t \\[1pt]
+\text{NKPC:} &\quad \bpi_t = \rho(I{-}\mathcal{V})\mathbb{E}\bpi_{t+1} + \mathcal{B}(\gamma{+}\varphi)\ty_t - \mathcal{V}\bm{\chi}_t \\[1pt]
+\text{Policy:} &\quad i_t = r^{nat}_t + \phi_\pi\pi^C_t + \phi_y\ty_t
+\end{align*}}
+
+\vspace{3pt}
+{\footnotesize \textbf{Lemma 1:} natural output $=$ Domar-weighted TFP, $\;y^{nat}_t=\sum_i\lambda_i a_{it}$.
+
+\textbf{Proposition 1 (DC index):} unique index with \emph{no} cost-push:}
+\vspace{-4pt}
+\[\footnotesize \pi^{DC}_t = \rho\,\mathbb{E}\pi^{DC}_{t+1} + \tfrac{\gamma+\varphi}{\Lambda^{DC}}\ty_t,\quad w^{DC}_i \propto \lambda_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\]
+
+\column{0.40\textwidth}
+
+{\footnotesize \textbf{Why DC is unique:} $\mathcal{V}=\Delta(I-\Omega\Delta)^{-1}$ has rank $N{-}1$ on the space of cost-push shocks $\Rightarrow$ a one-dimensional null space $\Rightarrow$ exactly one index $\bm\phi$ with $\bm\phi^\top\mathcal{V}=\bm 0^\top$.}
+
+\vspace{6pt}
+{\footnotesize \textbf{One shock, one channel:} in the closed economy, only TFP shocks $\bm\chi_t$ enter the cost-push term. That is exactly why a single index can null it out.}
+
+\vspace{6pt}
+{\footnotesize \textbf{The open question we ask:} with a \emph{second} cost-push channel (the exchange rate), can the same trick still null out both simultaneously?}
+
+\end{columns}
+\end{frame}
+
+%==============================================================
+\begin{frame}{Why the Divine Coincidence Matters}
+%==============================================================
+
+{\scriptsize \textbf{Where the name comes from} (Blanchard \& Gal\'i 2007, \emph{JEEA}): in the canonical one-sector NK model, if the \emph{only} distortion is nominal price stickiness, then stabilizing inflation, closing the output gap, and maximizing welfare are the \emph{same} objective --- one instrument, one target, no tradeoff. It is called ``divine'' because this is fragile: any second distortion (real wage rigidity, markup or cost-push shocks) breaks it and forces a genuine tradeoff.}
+
+\vspace{2pt}
+{\scriptsize \textbf{Why sectoral heterogeneity threatens it:} with $N$ sectors resetting prices at different rates $\delta_i$, an arbitrary index --- plain CPI, say --- behaves like a model with an extra distortion: stabilizing it no longer stabilizes the output gap. Rubbo's Proposition 1 shows the coincidence is not lost, only \emph{hidden}: exactly one Domar- and stickiness-weighted index restores it (previous slide).}
+
+\vspace{2pt}
+{\scriptsize \textbf{Why it matters in practice:}}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \scriptsize It gives a central bank a single, well-defined, model-consistent target whose stabilization \emph{alone} delivers the fully efficient (flexible-price) allocation --- no discretionary weighing of inflation against output.
+\item \scriptsize It shows plain CPI targeting is \emph{not} optimal once sectors differ in stickiness: the wedge between CPI inflation and $\pi^{DC}_t$ is exactly the welfare-relevant cost-push term a CPI-targeting central bank would be missing.
+\item \scriptsize It is not merely a price index: by Proposition 3, $\pi^{DC}_t\equiv0$ for all $t$ exactly minimizes the model's quadratic welfare loss --- ``divine coincidence'' and ``welfare-optimal policy'' are the same statement.
+\end{itemize}
+
+\vspace{2pt}
+{\scriptsize \textbf{Why it recurs on almost every slide that follows:} the paper is organized around one question --- does this single tradeoff-free target survive once the exchange rate becomes a \emph{second} source of cost-push shocks. Every quantitative result below is, implicitly, a test of how ``divine'' the coincidence remains once the economy is open.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Open-Economy Divine Coincidence: Does It Survive?}
+%==============================================================
+
+{\footnotesize \textbf{Closed economy (Rubbo):} one cost-push channel (TFP) $\Rightarrow$ DC index exists uniquely because a rank-deficient matrix $\mathcal{V}$ has a one-dimensional null space, and one index can sit in it.}
+
+\vspace{6pt}
+{\footnotesize \textbf{Open economy: two cost-push channels.} TFP \emph{and} the exchange rate now shift sectoral marginal cost. A single weight vector would need to null out \emph{both} simultaneously:}
+\vspace{-4pt}
+\[\footnotesize \underbrace{\bm\phi^\top\mathcal{V}=\bm 0^\top}_{\text{TFP channel}} \quad\text{and}\quad \underbrace{\bm\phi^\top\Gamma = 0}_{\text{FX channel}}\]
+{\footnotesize Two conditions, one free vector $\Rightarrow$ generically no solution: \textbf{DC breaks down under a float.}}
+
+\vspace{6pt}
+{\footnotesize \textbf{But:} import nodes can be modeled as fully flexible upstream sectors ($\hat\delta_M=1$) in an augmented network. Fully flexible nodes get \emph{zero} DC weight ($w_M=0$ since $(1-\hat\delta_M)/\hat\delta_M=0$), so Rubbo's Proposition 1 still applies to the \emph{augmented} network --- the DC index (as coded here) remains well-defined and insulates against domestic TFP shocks by construction. Whether it \emph{also} nulls the FX channel in the calibrated network is the quantitative question tackled below.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Regime Comparison: Theoretical Predictions}
+%==============================================================
+
+{\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & \textbf{Float} & \textbf{Peg} & \textbf{Managed} \\
+\midrule
+Exchange rate & fully endogenous & fixed & partially stabilized \\
+FX cost-push absorbed by & $S_t$ adjustment & domestic $\pi_i,\,y$ & split \\
+Monetary independence & full & none (residual $i_t$) & full \\
+Pass-through of import shocks & low (if $\phi_\pi$ high) & proportional to $\mathcal{M}_i$ & intermediate \\
+DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & yes \\
+\bottomrule
+\end{tabular}}
+
+\vspace{10pt}
+{\footnotesize \textbf{Naive expectation:} float should dominate on inflation stabilization since it directly targets $\pi^{DC}_t$; peg transmits import shocks directly, scaled by $\mathcal{M}_i$; managed sits in between.
+
+\textbf{Preview: the quantitative results overturn part of this.} Solving the actual nonlinear model shows free float is \emph{not} the best regime here --- see the Welfare section, below.}
+
+\end{frame}
+
+%==============================================================
+\section{Calibration}
 %==============================================================
 \begin{frame}{Solution Method: Nonlinear, Not Pre-Linearized}
 %==============================================================
@@ -669,50 +749,7 @@ w^{DC}_i \propto \lambda_{D,i}\,\frac{1-\hat\delta_i}{\hat\delta_i}
 \end{frame}
 
 %==============================================================
-\section{Theory}
-%==============================================================
-\begin{frame}{Open-Economy Divine Coincidence: Does It Survive?}
-%==============================================================
-
-{\footnotesize \textbf{Closed economy (Rubbo):} one cost-push channel (TFP) $\Rightarrow$ DC index exists uniquely because a rank-deficient matrix $\mathcal{V}$ has a one-dimensional null space, and one index can sit in it.}
-
-\vspace{6pt}
-{\footnotesize \textbf{Open economy: two cost-push channels.} TFP \emph{and} the exchange rate now shift sectoral marginal cost. A single weight vector would need to null out \emph{both} simultaneously:}
-\vspace{-4pt}
-\[\footnotesize \underbrace{\bm\phi^\top\mathcal{V}=\bm 0^\top}_{\text{TFP channel}} \quad\text{and}\quad \underbrace{\bm\phi^\top\Gamma = 0}_{\text{FX channel}}\]
-{\footnotesize Two conditions, one free vector $\Rightarrow$ generically no solution: \textbf{DC breaks down under a float.}}
-
-\vspace{6pt}
-{\footnotesize \textbf{But:} import nodes can be modeled as fully flexible upstream sectors ($\hat\delta_M=1$) in an augmented network. Fully flexible nodes get \emph{zero} DC weight ($w_M=0$ since $(1-\hat\delta_M)/\hat\delta_M=0$), so Rubbo's Proposition 1 still applies to the \emph{augmented} network --- the DC index (as coded here) remains well-defined and insulates against domestic TFP shocks by construction. Whether it \emph{also} nulls the FX channel in the calibrated network is the quantitative question tackled below.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Regime Comparison: Theoretical Predictions}
-%==============================================================
-
-{\footnotesize
-\begin{tabular}{@{}lccc@{}}
-\toprule
- & \textbf{Float} & \textbf{Peg} & \textbf{Managed} \\
-\midrule
-Exchange rate & fully endogenous & fixed & partially stabilized \\
-FX cost-push absorbed by & $S_t$ adjustment & domestic $\pi_i,\,y$ & split \\
-Monetary independence & full & none (residual $i_t$) & full \\
-Pass-through of import shocks & low (if $\phi_\pi$ high) & proportional to $\mathcal{M}_i$ & intermediate \\
-DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & yes \\
-\bottomrule
-\end{tabular}}
-
-\vspace{10pt}
-{\footnotesize \textbf{Naive expectation:} float should dominate on inflation stabilization since it directly targets $\pi^{DC}_t$; peg transmits import shocks directly, scaled by $\mathcal{M}_i$; managed sits in between.
-
-\textbf{Preview: the quantitative results overturn part of this.} Solving the actual nonlinear model shows free float is \emph{not} the best regime here --- see Results.}
-
-\end{frame}
-
-%==============================================================
-\section{Results}
+\section{Shocks}
 %==============================================================
 \begin{frame}{From Theory to Quantification}
 %==============================================================
@@ -729,16 +766,13 @@ DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & ye
 \item \footnotesize Does the DC index stay close to zero (insulation property), or does it visibly move under the float?
 \item \footnotesize What is the welfare ranking of float vs.\ peg vs.\ managed float, and what drives it -- output-gap volatility or sector-level price dispersion?
 \item \footnotesize Is the driver on-impact volatility, or something slower (persistence)?
-\item \footnotesize How much of this depends on \emph{this particular} calibration -- i.e.\ does the ranking generalize? (Generalization section, after Results.)
+\item \footnotesize How much of this depends on \emph{this particular} calibration -- i.e.\ does the ranking generalize? (Generalization section, later in the deck.)
 \end{enumerate}
 
 \vspace{6pt}
 {\footnotesize \textbf{Headline (surprising) answer:} free float is \emph{not} the best regime here. Managed float dominates on almost every margin, and even the hard peg beats pure float on \emph{total} welfare. The next slides show why -- and then show how general that conclusion is.}
 
 \end{frame}
-%==============================================================
-\newcommand{\shockregimelegend}{{\scriptsize Top row (Peg / Managed / Float): \textcolor{gray!55}{\textbf{\textbullet\textbullet\textbullet} Peg}\quad \textcolor{gray!60!black}{\textbf{- -} Managed}\quad \textcolor{customgreen!85!black}{\textbf{---} Float}.\quad Bottom row (Float regime, by sector): \textcolor{sectorres}{\textbf{---} Resource}\quad \textcolor{sectorman}{\textbf{---} Manuf.}\quad \textcolor{sectorserv}{\textbf{---} Services}.}}
-
 %==============================================================
 \begin{frame}{Results: IRFs to an Import-Price Shock --- the Mechanism Shock}
 %==============================================================
@@ -801,6 +835,8 @@ DC index well defined? & yes (augmented network) & n/a ($S_t$ not a choice) & ye
 
 \end{frame}
 
+%==============================================================
+\section{Network}
 %==============================================================
 \begin{frame}{Results: Sectoral Heterogeneity and Network Centrality}
 %==============================================================
@@ -887,6 +923,8 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \end{frame}
 
 %==============================================================
+\section{Welfare}
+%==============================================================
 \begin{frame}{Results: Welfare Cost by Regime --- The Headline Finding}
 %==============================================================
 
@@ -925,36 +963,7 @@ Output gap & 0.064 & 0.115 & 0.339 \\
 \end{columns}
 
 \vspace{6pt}
-{\footnotesize \textbf{Welfare measure} (Rubbo Prop.\ 3, adapted): $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\lambda_{D,i}\varepsilon_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\mathrm{Var}(\pi_{it})\big]$, evaluated on Dynare's own order-1 theoretical variances (see caveat on order vs.\ welfare, two slides back). \textbf{Float has the lowest output-gap cost of all three (0.19) but by far the largest Services-dispersion cost (8.48, driven by the persistence channel above) --- managed float is the only regime that is not dominated on some margin.}}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Which Shock Actually Drives the Welfare Loss?}
-%==============================================================
-
-{\footnotesize \textbf{The slide above pools all five shocks into one number.} Dynare's own \texttt{variance\_decomposition} (\%) splits each regime's total welfare loss by shock \emph{source}, with no re-estimation needed.}
-
-\vspace{2pt}
-\begin{center}
-{\tiny \textbf{Welfare loss by regime, decomposed by shock source ($\times10^4$)}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, ybar stacked, width=9.2cm, height=3.3cm, bar width=26pt,
-  symbolic x coords={Float,Managed,Peg}, xtick=data,
-  ymin=0, ymax=12.5, ylabel={\tiny welfare loss ($\times10^4$)},
-  legend style={font=\tiny, at={(0.5,1.20)}, anchor=north, legend columns=3}]
-\addplot[fill=gray!45, draw=gray!70!black] coordinates {(Float,10.32) (Managed,3.29) (Peg,4.45)};
-\addlegendentry{TFP ($a_1,a_2,a_3$)}
-\addplot[fill=customgreen!70!black, draw=customgreen!85!black] coordinates {(Float,0.11) (Managed,0.82) (Peg,3.66)};
-\addlegendentry{Import price (FX channel)}
-\addplot[fill=sectorman!80!white, draw=sectorman] coordinates {(Float,0.05) (Managed,0.09) (Peg,0.57)};
-\addlegendentry{Foreign demand}
-\end{axis}
-\end{tikzpicture}
-\end{center}
-
-\vspace{1pt}
-{\footnotesize \textbf{The FX-vs-TFP intuition gets it backwards for float and managed:} in \emph{every} regime, TFP shocks -- not FX shocks -- are the dominant source of welfare loss (10.32 of Float's 10.48; 3.29 of Managed's 4.19). \textbf{Peg is the only regime where the FX channel is a first-order contributor} (3.66, $\approx$42\% of its 8.67 total) -- it has no instrument left to absorb it. \textbf{Float's FX-channel cost is nearly zero} (0.11, $S_t$ genuinely insulates) \textbf{but that same floating $S_t$ is what makes TFP shocks so costly} (persistence mechanism, next slide): regime choice looks like it's about FX exposure but is mostly about TFP-shock persistence.}
+{\footnotesize \textbf{Welfare measure} (Rubbo Prop.\ 3, adapted): $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\lambda_{D,i}\varepsilon_i\tfrac{1-\hat\delta_i}{\hat\delta_i}\mathrm{Var}(\pi_{it})\big]$, evaluated on Dynare's own order-1 theoretical variances (see caveat on order vs.\ welfare, Calibration section). \textbf{Float has the lowest output-gap cost of all three (0.19) but by far the largest Services-dispersion cost (8.48, driven by the persistence channel below) --- managed float is the only regime that is not dominated on some margin.}}
 
 \end{frame}
 
@@ -1060,6 +1069,40 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 
 \vspace{1pt}
 {\scriptsize \textbf{Key point:} the sector that is most exposed to FX shocks directly (Resource) and the sector with the most at stake in the regime choice overall (Services) are not the same sector, and they even rank the two corner regimes in \emph{opposite} order --- a policymaker averaging across sectors could easily miss this.}
+
+\end{frame}
+
+%==============================================================
+\section{Decomposition}
+%==============================================================
+\begin{frame}{Which Shock Actually Drives the Welfare Loss?}
+%==============================================================
+
+{\footnotesize \textbf{The Welfare section pools all five shocks into one number.} Dynare's own \texttt{variance\_decomposition} (\%) splits each regime's total welfare loss by shock \emph{source}, with no re-estimation needed.}
+
+\vspace{2pt}
+\begin{center}
+{\tiny \textbf{Welfare loss by regime, decomposed by shock source ($\times10^4$)}}\\[2pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, ybar stacked, width=9.2cm, height=3.3cm, bar width=26pt,
+  symbolic x coords={Float,Managed,Peg}, xtick=data,
+  ymin=0, ymax=12.5, ylabel={\tiny welfare loss ($\times10^4$)},
+  legend style={font=\tiny, at={(0.5,1.20)}, anchor=north, legend columns=3}]
+\addplot[fill=gray!45, draw=gray!70!black] coordinates {(Float,10.32) (Managed,3.29) (Peg,4.45)};
+\addlegendentry{TFP ($a_1,a_2,a_3$)}
+\addplot[fill=customgreen!70!black, draw=customgreen!85!black] coordinates {(Float,0.11) (Managed,0.82) (Peg,3.66)};
+\addlegendentry{Import price (FX channel)}
+\addplot[fill=sectorman!80!white, draw=sectorman] coordinates {(Float,0.05) (Managed,0.09) (Peg,0.57)};
+\addlegendentry{Foreign demand}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\vspace{1pt}
+{\footnotesize \textbf{The FX-vs-TFP intuition gets it backwards for float and managed:} in \emph{every} regime, TFP shocks -- not FX shocks -- are the dominant source of welfare loss (10.32 of Float's 10.48; 3.29 of Managed's 4.19). \textbf{Peg is the only regime where the FX channel is a first-order contributor} (3.66, $\approx$42\% of its 8.67 total) -- it has no instrument left to absorb it. \textbf{Float's FX-channel cost is nearly zero} (0.11, $S_t$ genuinely insulates) \textbf{but that same floating $S_t$ is what makes TFP shocks so costly} (persistence mechanism, Welfare section): regime choice looks like it's about FX exposure but is mostly about TFP-shock persistence.}
+
+\vspace{2pt}
+{\footnotesize \textit{Note: this decomposition currently spans TFP, import-price, and foreign-demand shocks. The newly added export-price/ToT shock (\texttt{eps\_pX}) is wired into the model and pipeline but not yet re-simulated -- rerun \texttt{run\_all\_regimes} to fold it into this chart.}}
 
 \end{frame}
 
@@ -1214,7 +1257,7 @@ $\kappa_i$ (welfare weight) & 0.43 & 5.54 & \textbf{74.6} \\
 \begin{itemize}\setlength{\itemsep}{6pt}
 \item \footnotesize A price-level-anchored policy rule, to obtain a fully second-order-accurate welfare ranking.
 \item \footnotesize Formalizing the exchange-rate persistence mechanism analytically (a closed-form counterpart to the Generalization section's numerical result).
-\item \footnotesize Replacing the import-price/foreign-demand shock pair with a single terms-of-trade shock, with separate import-/export-price shocks moved to a robustness appendix -- standard in the FX-regime literature and a cleaner mapping to the Theory section's $\Gamma$ object.
+\item \footnotesize A dedicated world-commodity-price/ToT shock on the export side (\texttt{eps\_pX}, now wired into the Dynare model) alongside the existing import-price shock -- rerun the pipeline and fold the new IRFs and welfare decomposition into the Shocks/Network/Decomposition sections.
 \item \footnotesize Sensitivity to Calvo stickiness $\delta_i$ and to the domestic network shares $\Omega^H$ (the import-side sensitivity is now done -- see Generalization).
 \end{itemize}
 

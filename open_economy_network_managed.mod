@@ -72,6 +72,7 @@ var
   BSTAR I             // net foreign assets, gross nominal interest rate
   EX IM               // real exports, real imports (composite units)
   DSTAR               // foreign demand shifter
+  PX                   // export price / commodity ToT shifter (world price of home export bundle)
   A1 A2 A3            // sectoral TFP levels
   piDC y_gap          // DC inflation index (policy target), output gap (Lemma 1)
   y_gap1 y_gap2 y_gap3  // sector-level contributions to y_gap (Domar-weighted, pre-sum)
@@ -81,7 +82,7 @@ var
 // -------------------------------------------------------------------------
 // EXOGENOUS SHOCKS
 // -------------------------------------------------------------------------
-varexo eps_a1 eps_a2 eps_a3 eps_pF eps_D;
+varexo eps_a1 eps_a2 eps_a3 eps_pF eps_D eps_pX;
 
 // -------------------------------------------------------------------------
 // PARAMETERS
@@ -97,7 +98,7 @@ parameters
   PSI THETA_S KAPEX_SCALE BSTARBAR   // open-economy: NFA premium, export elasticity, export scale, NFA target
   ISTAR                          // steady-state foreign gross rate (pinned by BETA)
   PHI_PI PHI_Y PHI_S             // policy
-  RHO_A RHO_PF RHO_D             // shock persistence
+  RHO_A RHO_PF RHO_D RHO_PX       // shock persistence
   LAMBDA_D1 LAMBDA_D2 LAMBDA_D3   // Domar / domestic-supplier centrality (derived)
   DHAT1 DHAT2 DHAT3               // adjusted Calvo parameters (derived, reporting/weights only)
   WDC1 WDC2 WDC3                   // DC-index weights (derived)
@@ -147,6 +148,7 @@ PHI_S   = 0.30;
 RHO_A   = 0.90;
 RHO_PF  = 0.85;
 RHO_D   = 0.80;
+RHO_PX  = 0.85;      // export price/ToT shock persistence (commodity prices: persistent, mirrors RHO_PF)
 
 ISTAR = 1/BETA;   // pins down the foreign nominal rate so UIP + Euler are
                   // jointly consistent with a zero-inflation steady state
@@ -272,10 +274,14 @@ BSTAR = (I(-1)/PIC)*BSTAR(-1) + (PH*EX - PFH*IM)/PC;
 //----------------------------------------------------------------
 // [9] Export demand and total import demand
 //     EX: reduced-form ROW demand for the home composite good,
-//         decreasing in the real exchange rate PH/PFH, increasing in DSTAR
+//         decreasing in the real exchange rate PH/PFH, increasing in DSTAR,
+//         and shifted by PX (an exogenous world commodity-price/ToT term,
+//         distinct from DSTAR: DSTAR moves ROW demand at a given relative
+//         price, PX moves the terms on which that demand is offered --
+//         e.g. a Resource-sector world price boom)
 //     IM: final imported consumption + imported intermediate inputs
 //----------------------------------------------------------------
-EX = KAPEX_SCALE*DSTAR*(PH/PFH)^(-THETA_S);
+EX = KAPEX_SCALE*DSTAR*PX*(PH/PFH)^(-THETA_S);
 IM = CF + OF1*MC1*Y1/PFH + OF2*MC2*Y2/PFH + OF3*MC3*Y3/PFH;
 
 //----------------------------------------------------------------
@@ -312,6 +318,7 @@ log(A2) = RHO_A *log(A2(-1))  + eps_a2;
 log(A3) = RHO_A *log(A3(-1))  + eps_a3;
 log(PF) = RHO_PF*log(PF(-1))  + eps_pF;
 log(DSTAR) = RHO_D*log(DSTAR(-1)) + eps_D;
+log(PX) = RHO_PX*log(PX(-1)) + eps_pX;
 
 //----------------------------------------------------------------
 // [13] Reporting: nominal GDP = absorption + net exports
@@ -337,7 +344,7 @@ end;
 // -------------------------------------------------------------------------
 steady_state_model;
 A1 = 1; A2 = 1; A3 = 1;
-PF = 1; DSTAR = 1; S = 1;
+PF = 1; DSTAR = 1; PX = 1; S = 1;
 PFH = S*PF;
 MU = EPS/(EPS-1);
 
@@ -369,6 +376,7 @@ var eps_a2  = 0.01^2;
 var eps_a3  = 0.01^2;
 var eps_pF  = 0.01^2;
 var eps_D   = 0.01^2;
+var eps_pX  = 0.01^2;
 end;
 
 // -------------------------------------------------------------------------
@@ -397,4 +405,4 @@ stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap y_gap1 
 // economically meaningless -- their IRFs do not decay back to zero,
 // which is the expected, correct behavior of a pure inflation/output-gap
 // Taylor rule with no price-level anchor).
-stoch_simul(order=1, irf=40, periods=0, nomoments, nocorr, nodecomposition, noprint) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR S GDP EX IM C P1 P2 P3;
+stoch_simul(order=1, irf=40, periods=0, nomoments, nocorr, nodecomposition, noprint) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR S GDP EX IM C P1 P2 P3 PX;

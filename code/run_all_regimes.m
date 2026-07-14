@@ -14,7 +14,7 @@ regimes = {'float', 'peg', 'managed'};
 modfiles = struct('float', 'open_economy_network', ...
                    'peg', 'open_economy_network_peg', ...
                    'managed', 'open_economy_network_managed');
-shock_names = {'eps_a1','eps_a2','eps_a3','eps_pF','eps_D'};
+shock_names = {'eps_a1','eps_a2','eps_a3','eps_pF','eps_D','eps_pX'};
 moment_vars = {'piDC','PIC','y_gap','y_gap1','y_gap2','y_gap3','PI1','PI2','PI3','I','BSTAR'};
 irf_vars = {'piDC','PIC','y_gap','y_gap1','y_gap2','y_gap3','PI1','PI2','PI3','S','I','BSTAR','GDP','EX','IM','C','P1','P2','P3'};
 

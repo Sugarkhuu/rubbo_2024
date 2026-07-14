@@ -32,13 +32,14 @@ RESULTS_DIR = os.path.join(REPO_ROOT, "results")
 FIGS_DIR = os.path.join(REPO_ROOT, "figs")
 
 REGIMES = ["float", "peg", "managed"]
-SHOCKS = ["eps_a1", "eps_a2", "eps_a3", "eps_pF", "eps_D"]
+SHOCKS = ["eps_a1", "eps_a2", "eps_a3", "eps_pF", "eps_D", "eps_pX"]
 SHOCK_LABELS = {
     "eps_a1": "TFP shock (Resource)",
     "eps_a2": "TFP shock (Manufacturing)",
     "eps_a3": "TFP shock (Services)",
     "eps_pF": "Import price shock",
     "eps_D": "Foreign demand shock",
+    "eps_pX": "Export price / ToT shock",
 }
 SECTOR_NAMES = ["Resource", "Manufacturing", "Services"]
 
@@ -152,6 +153,7 @@ SHOCK_GROUPS = {
     "TFP": ["eps_a1", "eps_a2", "eps_a3"],
     "Import price (FX)": ["eps_pF"],
     "Foreign demand": ["eps_D"],
+    "Export price (ToT)": ["eps_pX"],
 }
 
 
@@ -171,7 +173,8 @@ def compute_welfare_by_shock(variances: pd.DataFrame, vardec: pd.DataFrame,
     function's per-shock welfare contributions over shocks reproduces
     compute_welfare()'s "total" column exactly, for every regime.
     Grouped into TFP (eps_a1-3) / Import-price (FX channel) / Foreign
-    demand, since that's the economically meaningful split (SHOCK_GROUPS).
+    demand / Export-price (ToT), since that's the economically meaningful
+    split (SHOCK_GROUPS).
     """
     gamma_phi = params["GAMMA"] + params["VARPHI"]
     lam = net_obj.loc["lambda_D"].values
