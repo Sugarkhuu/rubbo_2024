@@ -18,8 +18,13 @@ open_economy_network_phis_*/
 open_economy_network_phis_*.mod
 oen_impint_*/
 oen_impint_*.mod
++oen_impint_*/
 oen_ofhet_*/
 oen_ofhet_*.mod
++oen_ofhet_*/
+oen_netdens_*/
+oen_netdens_*.mod
++oen_netdens_*/
 
 # LaTeX artifacts if they end up at root anyway
 *.aux

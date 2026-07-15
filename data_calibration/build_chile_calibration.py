@@ -241,8 +241,19 @@ def main():
     domar = betaH @ leontief_inv                        # lambda_D,i
     import_centrality = leontief_inv @ OmegaF           # M_i = [(I-OmegaH)^-1 Omega^F 1]_i
 
-    delta_hat = np.array([0.90, 0.50, 0.10])  # placeholder derived Calvo slopes (delta_i not in IO data)
-    dc_weight_raw = domar * (1 - delta_hat) / delta_hat
+    # Raw Calvo reset probabilities: NOT identifiable from IO data. No
+    # country-specific sector-level price-microdata estimate was found for
+    # Chile, so this uses the SAME literature-sourced default as the
+    # open_economy_network_{chile,korea,czechia}.mod files (kept in sync by
+    # hand -- see the DELTA1-3 comment block there for the full derivation):
+    # euro-area monthly price-change frequencies (Dhyne et al. 2005/ECB IPN)
+    # converted to a quarterly Calvo reset probability via
+    # delta_q = 1-(1-f_monthly)^3, cross-checked against Nakamura & Steinsson
+    # (2008) US PPI durations for the Manufacturing sector.
+    BETA = 0.99
+    delta = np.array([0.90, 0.31, 0.16])  # Resource, Manufacturing, Services (see .mod file for sourcing)
+    dhat = delta * (1 - BETA * (1 - delta)) / (1 - BETA * delta * (1 - delta))
+    dc_weight_raw = domar * (1 - dhat) / dhat
     dc_weight = dc_weight_raw / dc_weight_raw.sum()
 
     results = {
@@ -256,9 +267,12 @@ def main():
         "export_share_of_own_output": [round(x, 4) for x in export_share],
         "domar_weight": [round(x, 4) for x in domar],
         "import_centrality": [round(x, 4) for x in import_centrality],
-        "dc_weight_placeholder_delta": {
-            "note": "delta_i not identifiable from IO data; placeholder Calvo slopes used, replace with estimated stickiness",
-            "delta_hat_used": list(delta_hat),
+        "dc_weight_literature_delta": {
+            "note": "delta_i (Calvo reset prob.) not identifiable from IO data; literature-sourced default "
+                    "(Dhyne et al. 2005 / ECB IPN, cross-checked vs. Nakamura & Steinsson 2008), "
+                    "same value used in the .mod file -- see its DELTA1-3 comment for the full derivation.",
+            "delta_raw_used": [round(x, 4) for x in delta],
+            "dhat_derived": [round(x, 4) for x in dhat],
             "dc_weight": [round(x, 4) for x in dc_weight],
         },
     }

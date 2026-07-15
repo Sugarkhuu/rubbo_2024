@@ -206,6 +206,47 @@ def compute_welfare_by_shock(variances: pd.DataFrame, vardec: pd.DataFrame,
     return pd.DataFrame(rows).set_index(["regime", "shock_group"])
 
 
+def compute_welfare_by_shock_sector(variances: pd.DataFrame, vardec: pd.DataFrame,
+                                     net_obj: pd.DataFrame, params: dict) -> pd.DataFrame:
+    """
+    Same as compute_welfare_by_shock, but keeps each sector's
+    kappa_i*Var(pi_i) contribution SEPARATE by shock group instead of
+    summing across sectors -- this is the only welfare-consistent way to
+    ask "does sector i prefer regime X because of its OWN trade exposure
+    (import-price / export-ToT / foreign-demand shocks) or because of
+    something else (TFP, risk premium)?" The output-gap term is not
+    included here since it has no sector index (see compute_welfare
+    docstring) -- this table is price-dispersion-only, by construction.
+
+    Returns a DataFrame indexed by (regime, shock_group, sector) with
+    columns price_disp (= kappa_i * Var(pi_i) * pct_shock) and its share
+    of that sector's total price-dispersion loss in that regime.
+    """
+    lam = net_obj.loc["lambda_D"].values
+    dhat = net_obj.loc["dhat"].values
+    eps = params["EPS"]
+    disp_weight = lam * eps * (1 - dhat) / dhat
+
+    rows = []
+    for regime in variances.index:
+        sub = vardec[vardec["regime"] == regime].set_index("variable")
+        var_pi = variances.loc[regime, ["PI1", "PI2", "PI3"]].values
+        sector_total = disp_weight * var_pi  # kappa_i * Var(pi_i), no shock split
+
+        for group_name, shocks in SHOCK_GROUPS.items():
+            pct_pi = sub.loc[["PI1", "PI2", "PI3"], shocks].sum(axis=1).values / 100.0
+            w_pi = 0.5 * disp_weight * var_pi * pct_pi
+            for i, sector in enumerate(SECTOR_NAMES):
+                rows.append({
+                    "regime": regime,
+                    "shock_group": group_name,
+                    "sector": sector,
+                    "price_disp": w_pi[i],
+                    "share_of_sector_total": w_pi[i] / (0.5 * sector_total[i]),
+                })
+    return pd.DataFrame(rows).set_index(["regime", "shock_group", "sector"])
+
+
 # ══════════════════════════════════════════════════════════════════════════
 # 3. FIGURES
 # ══════════════════════════════════════════════════════════════════════════

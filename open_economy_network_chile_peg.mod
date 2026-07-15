@@ -103,11 +103,30 @@ VARPHI  = 2.00;
 EPS     = 8.00;      // within-sector elasticity of substitution (all sectors)
 
 // Raw Calvo reset probabilities (delta_i in proofs.tex, NOT dhat_i) --
-// NOT identifiable from IO data, kept at the original literature-style
-// calibration (same as open_economy_network.mod).
-DELTA1  = 0.75;      // Resource: flexible (commodity prices)
-DELTA2  = 0.50;      // Manufacturing: intermediate stickiness
-DELTA3  = 0.25;      // Services: sticky
+// NOT identifiable from IO data (no country-specific sector-level
+// price-microdata estimate was found for Chile, Korea, or Czechia, so all
+// three use this SAME literature-sourced default rather than the original
+// hand-picked 0.75/0.50/0.25 stylized numbers). Built from monthly
+// frequency-of-price-change estimates converted to a quarterly Calvo
+// reset probability via delta_q = 1-(1-f_monthly)^3:
+//   Resource:      avg(energy 78.0%, unprocessed food 28.3%) = 53.15%/mo
+//                  -> delta_q = 0.90   [Dhyne et al. 2005 / ECB IPN]
+//   Manufacturing: avg(processed food 13.7%, non-energy industrial
+//                  goods 9.2%) = 11.45%/mo -> delta_q = 0.31
+//                  [Dhyne et al. 2005 / ECB IPN; cross-checked against
+//                  Nakamura & Steinsson (2008) US PPI finished-goods
+//                  duration of 8.7 months -> delta_q = 0.31, near-identical]
+//   Services:      5.6%/mo -> delta_q = 0.16  [Dhyne et al. 2005 / ECB IPN]
+// Source: E. Dhyne et al. (2005/2006), "Price Setting in the Euro Area:
+// Some Stylized Facts from Individual Consumer Price Data", as summarized
+// in ECB Occasional Paper "Inflation Persistence and Price-Setting
+// Behaviour in the Euro Area" (Table 4.1); Nakamura & Steinsson (2008 QJE),
+// "Five Facts about Prices". This is a euro-area/US average, not a
+// Chile/Korea/Czechia-specific estimate -- see the note in
+// data_calibration/*_calibration_results.json.
+DELTA1  = 0.90;      // Resource: flexible (energy + unprocessed food)
+DELTA2  = 0.31;      // Manufacturing: processed/industrial goods
+DELTA3  = 0.16;      // Services: sticky
 
 // Value-added shares: DATA (Banco Central de Chile, Cuadrante de valor
 // agregado, sheet 23 of Cuadros 12x12, aggregated Resource/Manuf/Services).

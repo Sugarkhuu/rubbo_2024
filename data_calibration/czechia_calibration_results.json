@@ -1,0 +1,78 @@
+{
+  "source": "Eurostat naio_10_cp1700 (Symmetric input-output table at basic prices, product by product), geo=CZ, time=2022",
+  "sectors": [
+    "Resource",
+    "Manufacturing",
+    "Services"
+  ],
+  "gross_output_mnEUR2022": {
+    "Resource": 17151.9,
+    "Manufacturing": 321687.9,
+    "Services": 318139.5
+  },
+  "OmegaH": [
+    [
+      0.1244,
+      0.1667,
+      0.1521
+    ],
+    [
+      0.0207,
+      0.2624,
+      0.1432
+    ],
+    [
+      0.0035,
+      0.0672,
+      0.2798
+    ]
+  ],
+  "OmegaF": [
+    0.156,
+    0.3178,
+    0.1009
+  ],
+  "alpha": [
+    0.4008,
+    0.2559,
+    0.5486
+  ],
+  "betaH": [
+    0.0312,
+    0.3144,
+    0.6544
+  ],
+  "export_share_of_own_output": [
+    0.2814,
+    0.5346,
+    0.0875
+  ],
+  "domar_weight": [
+    0.0523,
+    0.5314,
+    1.0254
+  ],
+  "import_centrality": [
+    0.3009,
+    0.4754,
+    0.1859
+  ],
+  "dc_weight_literature_delta": {
+    "note": "delta_i (Calvo reset prob.) not identifiable from IO data; literature-sourced default (Dhyne et al. 2005 / ECB IPN, cross-checked vs. Nakamura & Steinsson 2008), same value used in the .mod file -- see its DELTA1-3 comment for the full derivation.",
+    "delta_raw_used": [
+      0.9,
+      0.31,
+      0.16
+    ],
+    "dhat_derived": [
+      0.8902,
+      0.1246,
+      0.0311
+    ],
+    "dc_weight": [
+      0.0002,
+      0.1045,
+      0.8953
+    ]
+  }
+}

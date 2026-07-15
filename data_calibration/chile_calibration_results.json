@@ -57,17 +57,22 @@
     0.2847,
     0.1189
   ],
-  "dc_weight_placeholder_delta": {
-    "note": "delta_i not identifiable from IO data; placeholder Calvo slopes used, replace with estimated stickiness",
-    "delta_hat_used": [
+  "dc_weight_literature_delta": {
+    "note": "delta_i (Calvo reset prob.) not identifiable from IO data; literature-sourced default (Dhyne et al. 2005 / ECB IPN, cross-checked vs. Nakamura & Steinsson 2008), same value used in the .mod file -- see its DELTA1-3 comment for the full derivation.",
+    "delta_raw_used": [
       0.9,
-      0.5,
-      0.1
+      0.31,
+      0.16
+    ],
+    "dhat_derived": [
+      0.8902,
+      0.1246,
+      0.0311
     ],
     "dc_weight": [
-      0.0008,
-      0.0369,
-      0.9624
+      0.0002,
+      0.072,
+      0.9277
     ]
   }
 }

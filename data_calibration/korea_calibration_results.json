@@ -1,0 +1,78 @@
+{
+  "source": "Bank of Korea, 2022 Input-Output Tables (Producer's price, Large-Sized, 33-sector)",
+  "sectors": [
+    "Resource",
+    "Manufacturing",
+    "Services"
+  ],
+  "gross_output_mnKRW2022": {
+    "Resource": 77482269.0,
+    "Manufacturing": 2963615849.0,
+    "Services": 2681063107.0
+  },
+  "OmegaH": [
+    [
+      0.0444,
+      0.3106,
+      0.147
+    ],
+    [
+      0.0147,
+      0.3624,
+      0.1238
+    ],
+    [
+      0.005,
+      0.143,
+      0.2438
+    ]
+  ],
+  "OmegaF": [
+    0.0404,
+    0.2409,
+    0.0508
+  ],
+  "alpha": [
+    0.4576,
+    0.2582,
+    0.5574
+  ],
+  "betaH": [
+    0.0176,
+    0.2494,
+    0.733
+  ],
+  "export_share_of_own_output": [
+    0.0179,
+    0.2888,
+    0.0747
+  ],
+  "domar_weight": [
+    0.034,
+    0.6505,
+    1.0826
+  ],
+  "import_centrality": [
+    0.1983,
+    0.4108,
+    0.1461
+  ],
+  "dc_weight_literature_delta": {
+    "note": "delta_i (Calvo reset prob.) not identifiable from IO data; literature-sourced default (Dhyne et al. 2005 / ECB IPN, cross-checked vs. Nakamura & Steinsson 2008), same value used in the .mod file -- see its DELTA1-3 comment for the full derivation.",
+    "delta_raw_used": [
+      0.9,
+      0.31,
+      0.16
+    ],
+    "dhat_derived": [
+      0.8902,
+      0.1246,
+      0.0311
+    ],
+    "dc_weight": [
+      0.0001,
+      0.1192,
+      0.8807
+    ]
+  }
+}
