@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath, amssymb}
+\usepackage{bm}
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{booktabs}
@@ -308,6 +309,45 @@
 \end{enumerate}
 
 \textbf{Relation to this paper:} The benchmark SOE NK model that we extend. Galí-Monacelli have no production network (one sector, no intermediate inputs), so their ``divine coincidence'' is the standard one-sector result. We show that adding (i) multiple sectors with heterogeneous stickiness and IO linkages (Rubbo) and (ii) import inputs in production ($\bm{\omega}_F > 0$) breaks their divine coincidence result even under a float.
+
+%--------------------------------------------------------------
+\subsection{Qiu, Wang, Xu and Zanetti (2026) --- Monetary Policy in Open Economies with Production Networks}
+\label{lit:qwxz}
+
+\textbf{Citation:} Qiu, Z., Wang, Y., Xu, L., and Zanetti, F. (2026). Monetary Policy in Open Economies with Production Networks. \textit{Journal of Monetary Economics}, 159, 103918. (Working paper since Oct.\ 2024, LSE CFM Discussion Paper 2025-01.)
+
+\textbf{Question:} What sectoral inflation index should monetary policy target to close the output gap in a small open economy with \emph{both} domestic input-output linkages and cross-border trade linkages, and how do the two interact?
+
+\textbf{Model:} \emph{Static} (one-period) SOE combining Galí-Monacelli's one-sector open economy with Rubbo's multi-sector production-network framework: Cobb-Douglas production with domestic and CES-aggregated imported intermediate inputs, static Calvo-style price rigidity, sector-specific export taxes/subsidies restoring the flexible-price optimum, and \emph{balanced trade} pinning down the nominal exchange rate. No capital, no financial assets, no UIP, no dynamics.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item The output gap is a weighted average of sectoral markup wedges; the weight on each sector (the ``OG weight'') decomposes into three channels: CPI, expenditure-switching, and profit (export-profit and imported-factor sub-channels) --- the latter two are specific to the open economy and absent from Rubbo's closed-economy weights.
+    \item Derives an open-economy divine coincidence (DC) index generalizing Rubbo's; targeting it to zero closes the output gap, but --- as in Rubbo's closed economy --- full divine coincidence (zero welfare loss) still fails, because the within-sector, across-sector, and (new) cross-border misallocation terms are not simultaneously zeroed by output-gap targeting. \textbf{Reached independently, via a structurally different mechanism than our result.}
+    \item Calibrated to WIOD (43 countries $\times$ 56 sectors, 2014): output-gap targeting is close to the constrained-optimal policy and substantially outperforms PPI targeting (ignores openness) and CPI targeting (ignores both openness and IO), with the improvement rising with the economy's openness (e.g.\ 95\% of the achievable welfare gap closed for Luxembourg vs.\ 67\% for Mexico vs.\ 5\% for the near-closed US).
+    \item Names ``relax[ing] the assumption of financial autarky'' as their \emph{first, top-priority} item for future research --- i.e.\ exactly the UIP/NFA/incomplete-markets machinery this project is built around.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The single closest paper in the literature --- an independent, contemporaneous derivation of an open-economy DC index reaching the \emph{same} qualitative conclusion (divine coincidence breaks down in a multi-sector open economy) through a different channel structure (their three-part OG weight vs.\ our import-cost-share pass-through vector $\Gamma$). But their model is static, has no UIP, no NFA, and --- crucially --- no exchange-rate-\emph{regime} choice; money supply targets an inflation index while $S$ floats implicitly throughout. Their own stated next step is precisely our starting point. Our contribution is the dynamic financial block (debt-elastic UIP wedge, near-unit-root NFA) and the explicit peg/float/managed-float comparison this enables, showing that once that block is added, the risk-premium/UIP channel --- not the terms-of-trade or expenditure-switching channels they emphasize --- becomes the dominant determinant of the FX-regime welfare ranking.
+
+%--------------------------------------------------------------
+\subsection{Silva (2024) --- Inflation in Disaggregated Small Open Economies}
+\label{lit:silva}
+
+\textbf{Citation:} Silva, A. (2024). Inflation in Disaggregated Small Open Economies. Federal Reserve Bank of Boston Working Paper 24-12; NBER; arXiv:2410.00705.
+
+\textbf{Question:} How does domestic production-network structure shape a small open economy's CPI sensitivity to sectoral technology, factor-price, and import-price shocks, and does this matter quantitatively for observed inflation episodes?
+
+\textbf{Model:} SOE with domestic input-output linkages and international trade in intermediate and final goods; derives closed-form CPI elasticities to sectoral shocks as a function of the IO structure, distinguishing sectors' \emph{direct} import/export exposure from their \emph{indirect} exposure transmitted through domestic supply chains.
+
+\textbf{Key results:}
+\begin{enumerate}
+    \item Indirect exporting (via domestic supply chains) \emph{dampens} the pass-through of domestic cost shocks into CPI inflation; indirect importing \emph{amplifies} CPI sensitivity to import-price shocks.
+    \item Using country-level IO data --- including \textbf{Chile} and the UK --- shows these network-adjusted elasticities matter quantitatively for explaining the 2021--2022 inflation surge, beyond what a representative-sector model implies.
+    \item Purely positive/empirical: no monetary policy design, no welfare comparison, no exchange-rate-regime analysis.
+\end{enumerate}
+
+\textbf{Relation to this paper:} The closest empirical precedent for a network-adjusted pass-through framework applied specifically to \textbf{Chilean} data, and a useful external cross-check for the magnitude of our $\Gamma$ (FX pass-through) vector's Chile calibration. Silva's framework is positive (explains observed inflation), not normative (compares FX/monetary regimes) --- the natural division of labor is that Silva validates the network-amplified pass-through mechanism empirically, while we use an analogous mechanism inside a full monetary/FX-regime welfare comparison.
 
 %--------------------------------------------------------------
 \subsection{Corsetti, Dedola and Leduc (2010) --- Optimal Monetary Policy in Open Economies}

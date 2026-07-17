@@ -82,7 +82,13 @@ premium that stationarizes net foreign assets and flag first-order welfare
 risk from it — exactly right here. Closest to us: an ECB working paper by
 Gnocato, Montes-Galdón & Stamato, and Kalemli-Özcan et al., both put a network
 *inside* an open economy — but they fix the Taylor rule and never compare FX
-regimes; details are in the appendix if asked.
+regimes. Closer still: Qiu, Wang, Xu & Zanetti, just out in the Journal of
+Monetary Economics, derive an open-economy divine coincidence index and
+independently find it breaks down too — but their model is static, has no
+UIP or net foreign assets, and never compares exchange rate regimes; their
+own conclusion actually names relaxing that financial-autarky assumption as
+their top item for future work, which is exactly where we start. Details are
+in the appendix if asked.
 
 The gap: nobody puts network, open economy, and FX regime choice together in
 one model. We get Galí–Monacelli's ranking — peg dominated — but through a
