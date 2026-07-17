@@ -249,10 +249,11 @@ is enormous — 76.83 of Peg's 102.05, about 75%. That single shock is what
 reverses the naive ranking: Peg is not remotely competitive with Float or
 Managed once it's included.
 
-One caveat I'll return to at the end: this is first-order welfare. The
+One check I'll return to at the end: this started as first-order welfare. The
 risk-premium channel — a nonlinear debt-elastic premium interacting with a
 near-unit-root process — is exactly where a second-order solution could move
-this magnitude the most."
+this magnitude the most, and it turns out it does move most here, by 0.7% —
+small enough that the ranking is untouched."
 
 ## Mechanisms: Why Each Regime Costs What It Costs (1:00)
 "Zooming out to *why*, in words, before more numbers. Two forces are always
@@ -353,16 +354,19 @@ regimes.
 Versus the literature: we get Galí–Monacelli's ranking — peg dominated — but
 through a different channel, risk-premium rather than terms of trade.
 
-Important caveat: this is first-order dynamics with a second-order welfare
-functional — Rubbo's own approach — and it's only valid if the steady state
-is efficient. The UIP wedge and the near-unit-root NFA process are
-distortions Rubbo's closed economy never had, and that's exactly the
-combination Kim–Kim and Schmitt-Grohé–Uribe flag as risky for this kind of
-welfare accounting.
+One thing I checked rather than just flagged: the headline numbers started as
+first-order dynamics with a second-order welfare functional — Rubbo's own
+approach — valid only if the steady state is efficient. The UIP wedge and the
+near-unit-root NFA process are distortions Rubbo's closed economy never had,
+exactly the combination Kim–Kim and Schmitt-Grohé–Uribe flag as risky for
+this kind of welfare accounting. So I solved the model to a genuine order-2,
+pruned, simulated at 260,000 periods, and recomputed welfare from the raw
+second moments rather than the linear variance. The loss rises by at most
+2% in any regime, Peg's risk-premium channel moves the most as expected, and
+the ranking — Managed below Float below Peg — is unchanged.
 
-Next step, top priority: a true second-order solution — since the
-risk-premium channel is exactly where first- and second-order welfare are
-most likely to diverge. Thanks — happy to take questions."
+Next step: a genuinely many-sector calibration from OECD TiVA data, beyond
+the 3-sector real IO tables we have now. Thanks — happy to take questions."
 
 ---
 
@@ -404,14 +408,22 @@ solve that by scalar root-finding rather than assuming it away.
 
 **Q4. You flag first-order welfare as a caveat — how worried should we
 actually be, given Kim–Kim's critique of first-order welfare comparisons?**
-A: Fairly worried specifically for the risk-premium channel, less so
-elsewhere. Kim–Kim's point bites hardest when there's a first-order-relevant
-distortion at steady state — here that's the UIP wedge and the near-unit-root
-NFA process, which Rubbo's closed economy never had to deal with. TFP and
-domestic-network channels should be on firmer ground since they're closer to
-Rubbo's original efficient-steady-state setting. That asymmetry is exactly
-why second-order is the top item on the next-steps list, not a generic
-disclaimer.
+A: I checked this directly rather than leaving it as a disclaimer. Kim–Kim's
+point bites hardest when there's a first-order-relevant distortion at steady
+state — here that's the UIP wedge and the near-unit-root NFA process, which
+Rubbo's closed economy never had to deal with. I re-solved the model to
+order 2 with Kim-Kim-Schaumburg pruning (simulated, 260k periods, since the
+Taylor rule leaves price levels with a unit root so analytic order-2 moments
+aren't available), and recomputed welfare from the raw second moment E[X^2]
+rather than the linear variance — so any risk-adjusted mean shift shows up.
+It does show up: Peg's risk-adjusted output gap sits about 45 basis points
+below zero on average, an order of magnitude bigger than Float or Managed,
+and NFA carries a bigger precautionary buffer under Peg too. But because
+welfare is quadratic, squaring a small mean shift keeps its contribution
+under 0.5% of the loss in every regime — almost all of the ~1-2% correction
+is a modest variance increase in the pruned second-order policy function,
+not the risk-adjusted-steady-state channel itself. Net effect: loss rises at
+most 2%, ranking unchanged.
 
 **Q5. How were phi-pi, phi-y, phi-s, theta-star, and psi chosen — estimated,
 or picked?**

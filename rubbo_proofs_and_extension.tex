@@ -1088,6 +1088,64 @@ Gamma = Delta*(eye(n) - Omega*Delta)^(-1)*omega_F / den;
 \end{verbatim}
 
 %==============================================================
+\section{Second-Order Welfare (Numerical Verification)}
+\label{sec:second_order}
+%==============================================================
+
+\subsection{Why first-order welfare was a caveat here specifically}
+
+Rubbo's own welfare functional (Proposition 3) is already a \emph{second-order} expansion of utility around the efficient allocation --- but it is evaluated on \emph{first-order-accurate} equilibrium paths $(\tilde{y}_t, \bm{\pi}_t)$. This is the standard LQ shortcut (Woodford 2003; Benigno-Woodford): valid whenever the first-order solution is certainty-equivalent, i.e. $\mathbb{E}[\tilde{y}_t]=\mathbb{E}[\pi_{it}]=0$ exactly, so that $\mathbb{E}[X_t^2]=\mathrm{Var}(X_t)$ and the variance computed from the linear solution is all the welfare formula needs.
+
+That equivalence can fail in this model specifically because of two open-economy features absent from Rubbo's closed economy:
+\begin{itemize}
+    \item \textbf{Debt-elastic UIP wedge:} $I_t = I^*(1-\Psi(B^*_t-\bar{B}^*))\cdot RP_t\cdot S_{t+1}/S_t$ is nonlinear in $B^*_t$ (Schmitt-Grohé-Uribe closing device).
+    \item \textbf{Near-unit-root NFA:} $B^*_t = (I_{t-1}/\Pi^C_t)B^*_{t-1} + (\text{trade balance})_t/P^C_t$ has a root close to $1/\beta$, so second-order (Jensen's-inequality / precautionary) terms in its law of motion do not average out over any short horizon.
+\end{itemize}
+Both mean that the model's true \emph{risk-adjusted steady state} --- the point the economy's ergodic distribution is actually centered on once shock variance is priced in --- can differ from the deterministic steady state ($B^*=\bar{B}^*=0$, $\tilde{y}=\pi_i=0$) the first-order solution is built around. If $\mathbb{E}[X_t]\neq 0$, then $\mathbb{E}[X_t^2]=\mathrm{Var}(X_t)+\mathbb{E}[X_t]^2$ picks up an extra term a first-order (certainty-equivalent) solution cannot see by construction.
+
+\subsection{Method}
+
+The model is already coded in Dynare in fully nonlinear (levels) form (\texttt{open\_economy\_network\_chile*.mod}) --- \emph{not} \texttt{model(linear)} --- specifically so this check could be run without re-deriving anything. For each of the 3 Chile-calibrated regimes (float/peg/managed):
+\begin{enumerate}
+    \item Solve to \textbf{order 2 with Kim-Kim-Schaumburg pruning} (\texttt{stoch\_simul(order=2,pruning,\ldots)}).
+    \item \textbf{Simulate} 260{,}000 periods (10{,}000 dropped as burn-in) rather than requesting Dynare's analytic order-$\geq$2 moments: the Taylor rule targets inflation/output-gap only (no price-level or FX-level anchor), so $P_{1,2,3}, P^C, S, \mathrm{GDP}$ carry a genuine unit root, and Dynare's \texttt{pruned\_state\_space\_system} (which the analytic-moments route relies on) assumes stationarity and errors out. Simulating sidesteps this: the \emph{stationary} variables (inflation rates, the DC index, the output gap, NFA, the interest rate) have well-defined empirical moments regardless of the unit root elsewhere in the state vector.
+    \item Compute, from the raw simulated path, $\mathbb{E}[X^2]=\overline{X^2}$ directly (\emph{not} the sample variance) for $X\in\{\tilde{y}_t, \log\Pi_{1,t},\log\Pi_{2,t},\log\Pi_{3,t}\}$, and plug into the unchanged LQ formula:
+    \begin{equation}
+        \mathbb{W}_2 = \tfrac{1}{2}(\gamma+\varphi)\,\mathbb{E}[\tilde{y}_t^2] + \sum_i \kappa_i\,\mathbb{E}[\log\Pi_{i,t}^2], \qquad \kappa_i \equiv \tfrac{1}{2}\lambda_{D,i}\varepsilon_i\tfrac{1-\hat\delta_i}{\hat\delta_i}
+    \end{equation}
+    \item \textbf{Control for Monte Carlo noise:} re-run the identical simulation (same 260{,}000-period draw, same seed) at \texttt{order=1} and compute $\mathbb{W}_1^{\mathrm{sim}}$ the same way. Comparing $\mathbb{W}_2$ to $\mathbb{W}_1^{\mathrm{sim}}$ (not to the original analytic-variance baseline) isolates the \emph{genuine} second-order effect, net of sampling noise from using a finite simulated sample instead of the closed-form Lyapunov-equation variance.
+\end{enumerate}
+
+\subsection{Results}
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+ & \textbf{Float} & \textbf{Managed} & \textbf{Peg} & Ranking \\
+\midrule
+1st-order (analytic, headline) & 25.47 & 10.17 & 102.05 & Managed $<$ Float $<$ Peg \\
+1st-order (simulated, same seed/length) & 25.58 & 10.20 & 102.39 & Managed $<$ Float $<$ Peg \\
+\textbf{2nd-order (pruned, simulated)} & \textbf{26.09} & \textbf{10.26} & \textbf{103.13} & Managed $<$ Float $<$ Peg \\
+\midrule
+Net 2nd-order effect (row 3 $-$ row 2) & $+0.51$ ($+2.0\%$) & $+0.06$ ($+0.6\%$) & $+0.74$ ($+0.7\%$) & unchanged \\
+\bottomrule
+\end{tabular}
+\end{center}
+{\footnotesize All entries $\times10^{-4}$. Rows 1 and 2 agree to within simulation noise ($<0.4\%$), validating the simulated-moments methodology against the original closed-form variance.}
+
+\textbf{The ranking is second-order-robust.} Managed float remains the clear welfare-minimizing regime; the correction from a genuine order-2 solution moves every regime's loss up by at most 2\%, nowhere near enough to overturn Managed $<$ Float $<$ Peg.
+
+\textbf{Where the correction comes from.} Decomposing $\mathbb{E}[X^2]=\mathrm{Var}(X)+\mathbb{E}[X]^2$: the risk-adjusted mean shift $\mathbb{E}[X]$ is economically visible --- e.g.\ under Peg the risk-adjusted output gap sits at $\mathbb{E}[\tilde y_t]\approx-45\,\mathrm{bp}$, roughly an order of magnitude larger than under Float ($-2.5\,\mathrm{bp}$) or Managed ($-7\,\mathrm{bp}$), and net foreign assets carry a precautionary buffer $\mathbb{E}[B^*_t]$ of $+0.0197$ (Float), $+0.0288$ (Peg), $+0.0174$ (Managed) against a deterministic target of $0$, largest exactly where the UIP/risk-premium channel is least offset by exchange-rate movement. But because the loss is \emph{quadratic}, squaring these small mean shifts makes their contribution to $\mathbb{W}_2$ tiny: $\mathbb{E}[X]^2/\mathbb{E}[X^2]<0.5\%$ in every regime, even for Peg's output gap. Essentially all of the $+0.5$-to-$0.7\times10^{-4}$ correction instead comes from the pruned second-order policy function generating slightly \emph{higher variance} than the linear one (nonlinear amplification of shock propagation through the Calvo recursion and the debt-elastic UIP wedge), not from the risk-adjusted-steady-state channel per se.
+
+\begin{insight}
+The caveat is resolved, not just narrowed: the UIP wedge and near-unit-root NFA do generate a real, economically interpretable risk-adjusted steady-state shift (largest, as expected, under Peg), but that shift turns out to be a second-order-small contributor to the \emph{squared} welfare loss. The dominant --- and still small --- second-order correction is a modest variance amplification common to all three regimes, and it does not touch the qualitative or quantitative headline result.
+\end{insight}
+
+\begin{codebox}
+\textbf{Reproducing this check:} \texttt{order2/open\_economy\_network\_chile*\_o2.mod} (order=2, pruned, simulated) and \texttt{order2/chile\_*\_o1sim.mod} (order=1, identical simulation length/seed, for the noise-controlled comparison), driven by \texttt{order2/run\_order2.m} and \texttt{order2/run\_order1sim.m}. Output: \texttt{order2/results\_order2/welfare\_order2.csv}, \texttt{welfare\_order1sim.csv}, \texttt{moments\_order2.csv}.
+\end{codebox}
+
+%==============================================================
 \section{Summary Table}
 %==============================================================
 

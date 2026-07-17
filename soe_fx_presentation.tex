@@ -654,7 +654,7 @@ Services & 0.119 & 0.036 & $<$0.0001 & \textbf{276.3} \\
 \item \textbf{Ranking:} Managed $<$ Float $\ll$ Peg --- Peg no longer competitive
 \end{itemize}}
 
-{\scriptsize \textit{Caveat: 1st-order welfare --- this channel is where 2nd-order could move most (see Conclusion).}}
+{\scriptsize \textit{2nd-order check: this is the channel a genuine order-2 solution could move most --- it does move most, but only $+0.7\%$ (see Conclusion \& appendix).}}
 
 \end{frame}
 
@@ -854,14 +854,51 @@ Services & 0.119 & 0.036 & $<$0.0001 & \textbf{276.3} \\
 \item \textbf{Ranking robust} to $\kappa,\theta,\rho$ (network density) \& to Korea/Czechia calibrations; the \emph{gap} is not
 \item \textbf{Network channel isolated} (stylized network, $\rho$ dial): $\rho{=}0\to1$ adds only $+0.35$ to Managed vs.\ $+6.98$ Float, $+10.30$ Peg --- \textbf{denser networks favor Managed most}, and reallocate the network's sectoral burden (Services gains under Peg, loses under Float)
 \item \textbf{Vs.\ literature:} same ranking as Gal\'i--Monacelli, different channel (risk-premium, not ToT)
-\item \textbf{Caveat:} 1st-order welfare; UIP wedge \& near-unit-root NFA are new distortions
-\item \textbf{Next:} order-2 solution
+\item \textbf{2nd-order-verified} (Dynare order=2, pruned, simulated): loss rises $\le2\%$ net of MC noise, ranking unchanged --- see appendix
+\item \textbf{Next:} many-sector OECD TiVA calibration (beyond the 3-sector Chile/Korea/Czechia data)
 \end{itemize}}
 
 \end{frame}
 
 %==============================================================
 \appendix
+\section*{Appendix: Second-Order Welfare Check (Backup)}
+%==============================================================
+\begin{frame}{Appendix: Is the Ranking Robust to a Genuine 2nd-Order Solution?}
+%==============================================================
+
+{\footnotesize \textbf{Why this was a caveat:} Rubbo's LQ welfare formula is 2nd-order in utility, but evaluated on \emph{1st-order} (certainty-equivalent) paths --- valid only if $\mathbb{E}[\tilde y_t]=\mathbb{E}[\pi_{it}]=0$ exactly. Two open-economy features can break that: the \textbf{debt-elastic UIP wedge} (nonlinear in $B^*_t$) and the \textbf{near-unit-root NFA} process --- both mean the true \emph{risk-adjusted} steady state can sit away from the deterministic one.}
+
+\vspace{4pt}
+{\footnotesize \textbf{Method:} the model is already coded nonlinear (levels) in Dynare. Solve to \textbf{order 2 with pruning}, \textbf{simulate} 260k periods (analytic order-$\ge2$ moments are unavailable: the Taylor rule leaves price levels/S with a unit root). Compute $\mathbb{E}[X^2]$ directly (not $\mathrm{Var}$) so any risk-adjusted mean shift is captured. Control for simulation noise with an identical-seed order=1 run.}
+
+\vspace{6pt}
+\begin{center}
+{\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
+\midrule
+1st-order (analytic, headline) & 25.47 & 10.17 & 102.05 \\
+1st-order (simulated, same seed) & 25.58 & 10.20 & 102.39 \\
+\textbf{2nd-order (pruned, simulated)} & \textbf{26.09} & \textbf{10.26} & \textbf{103.13} \\
+\midrule
+Net 2nd-order effect & $+2.0\%$ & $+0.6\%$ & $+0.7\%$ \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\vspace{4pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \textbf{Ranking survives}: Managed $<$ Float $<$ Peg at 2nd order, correction $\le2\%$ everywhere
+\item \textbf{Risk-adjusted means are real but small}: e.g.\ Peg's output gap sits $\approx-45$bp on average (vs.\ $-2.5$bp Float, $-7$bp Managed) --- an order of magnitude larger, and NFA carries a precautionary buffer $\mathbb{E}[B^*_t]=+0.029$ under Peg vs.\ target $0$, largest where the UIP channel is least offset by $S_t$
+\item \textbf{But squared loss barely notices}: $\mathbb{E}[X]^2/\mathbb{E}[X^2]<0.5\%$ in every regime --- almost all of the 2nd-order correction is a modest \textbf{variance amplification} from the pruned nonlinear policy function, not the risk-adjusted-mean channel
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \section*{Appendix: Divine Coincidence (DC) Index Details}
 %==============================================================
 \begin{frame}{Appendix: DC Index --- Definition and Insulation}
