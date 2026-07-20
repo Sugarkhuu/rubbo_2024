@@ -1,88 +1,59 @@
 \documentclass[aspectratio=43, 10pt]{beamer}
-\title{\textbf{Exchange Rate Regimes in Production Networks}}
-\subtitle{A Small Open Economy Extension of Rubbo (2024)}
+\title{\textbf{Exchange rate and Production network}}
+\subtitle{Macro Internal Seminar} % Gomes, Haliossos, and Ramadorai (2021)
 \author{Sugarkhuu Radnaa}
 \institute[]{Bonn Graduate School of Economics}
 \date{July, 2026}
 \usetheme{default}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{tgheros}
-\renewcommand{\familydefault}{\sfdefault}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage[table]{xcolor}
-\usepackage{booktabs}
+\usepackage{ amssymb }
+\usepackage{xcolor}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamercolor{itemize item}{fg=customgreen}
+\setbeamertemplate{frametitle}[default][left]
+\setbeamertemplate{items}[circle]
+\definecolor{customgreen}{RGB}{255, 255, 255} %{10, 43, 19}
+\setbeamercolor{frametitle}{bg=customgreen, fg=black}
+\setbeamerfont{frametitle}{size=\Large, series=\bfseries}
+\setlength{\headheight}{1.5cm} % Adjust as needed
 \usepackage{natbib}
 \usepackage{mathtools}
 \usepackage{bm}
+
+\setbeamercolor{author in head/foot}{fg=black,bg=white}
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Footer: title left, page number right
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.8\paperwidth,ht=2.5ex,dp=1.5ex,leftskip=1em]{author in head/foot}%
+      \scriptsize\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.5ex,dp=1.5ex,rightskip=1em plus1fil]{author in head/foot}%
+      \scriptsize\hfill\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+
+% -- required by the deck's IRF plots, tables, and backup-slide numbering
+% (kept even though the rest of the template above is simplified/plain)
+\usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{pgffor}
 \usepackage{pgfplots}
 \usepackage{appendixnumberbeamer}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta, positioning}
-
-\setbeamercolor{normal text}{fg=black}
-\setbeamercolor{title}{fg=black}
-\setbeamercolor{subtitle}{fg=black}
-\setbeamercolor{itemize item}{fg=customgreen}
-\setbeamercolor{itemize subitem}{fg=customgreen!60!black}
-\setbeamercolor{section in toc}{fg=black}
 \hypersetup{colorlinks=false}
-\setbeamertemplate{items}[circle]
-\definecolor{customgreen}{RGB}{10, 43, 19}
-\setbeamercolor{frametitle}{bg=customgreen, fg=white}
+
+% -- sector/shock colors used throughout the IRF and mechanism slides
 \definecolor{sectorres}{RGB}{124, 58, 237}
 \definecolor{sectorman}{RGB}{217, 119, 6}
 \definecolor{sectorserv}{RGB}{8, 145, 178}
 \definecolor{riskred}{RGB}{220, 38, 38}
-\setlength{\headheight}{1.25cm}
-\setbeamertemplate{navigation symbols}{}
-
-% -- accent-underlined frame title (adds a thin separator below the green bar)
-\setbeamertemplate{frametitle}{%
-  \nointerlineskip
-  \begin{beamercolorbox}[wd=\paperwidth,leftskip=1em,ht=1.25cm,dp=0pt,vmode]{frametitle}
-    \vbox to 1.25cm{\vfil\usebeamerfont{frametitle}\insertframetitle\vfil}
-  \end{beamercolorbox}%
-  {\color{customgreen!45!white}\rule{\paperwidth}{0.6pt}}%
-}
-
-% -- colored emphasis: bold text picks up the theme accent instead of flat black
-\let\plainbf\textbf
-\renewcommand{\textbf}[1]{\textcolor{customgreen!55!black}{\plainbf{#1}}}
-
-% -- theme-colored table rules
-\arrayrulecolor{customgreen!55!black}
-
-% -- section markers on the outline page
-\setbeamertemplate{section in toc}{\color{customgreen!60!black}\bfseries\inserttocsectionnumber.~\inserttocsection}
-
-% 4 numbered sections (Intro ... Conclusion); Appendix uses \section*
-% and is deliberately excluded from this bar, from \value{section}, and from
-% the 25-slide budget (backup only).
-\newcommand{\navsectionlist}{Intro,Model,Results,Conclusion}
-\setbeamertemplate{headline}{%
-  \ifnum\value{section}>0
-    \vskip1pt
-    \hspace*{1em}%
-    {\tiny
-    \foreach \name [count=\i] in \navsectionlist {%
-      \ifnum\i=\value{section}
-        \colorbox{customgreen}{\textcolor{white}{\strut\ \name\ }}%
-      \else
-        \textcolor{gray!55}{\ \name\ }%
-      \fi
-      \ifnum\i<4 {\textcolor{gray!35}{$\,\triangleright\,$}}\fi
-    }}
-  \fi
-}
-
-\setbeamertemplate{footline}{%
-  \hspace*{1em}\scriptsize\insertframenumber{} / \inserttotalframenumber%
-  \hfill%
-}
 
 \newcommand{\bpi}{\bm{\pi}}
 \newcommand{\ty}{\tilde{y}}
@@ -108,11 +79,11 @@
 %--------------------------------------------------------------
 \begin{frame}
   \titlepage
-  \vspace{-6pt}
-  {\centering\color{customgreen}\rule{0.35\textwidth}{0.8pt}\par}
-  \begin{center}
-    \small Building on: Rubbo (2024) \emph{Networks, Phillips Curves, and Monetary Policy}
-  \end{center}
+  % \vspace{-6pt}
+  % {\centering\color{customgreen}\rule{0.35\textwidth}{0.8pt}\par}
+  % \begin{center}
+  %   \small Building on: Rubbo (2024) \emph{Networks, Phillips Curves, and Monetary Policy}
+  % \end{center}
 \end{frame}
 
 %==============================================================
@@ -236,6 +207,341 @@
 %==============================================================
 \section{Model}
 %==============================================================
+%% my slides
+
+%------------------------------------------------
+\begin{frame}{Model Components}
+
+\small
+
+\textbf{Small open economy:} home is a price- and rate-taker in world markets --- foreign price $P_t^{F*}$, foreign rate $i^*$, and foreign demand $D_t^*$ are exogenous; home cannot affect them.
+
+\vspace{0.15cm}
+
+Six building blocks, presented in order:
+
+\vspace{0.15cm}
+
+\begin{enumerate}\setlength\itemsep{4pt}
+\item \textbf{Households} --- consumption/labor choice, foreign bond holdings
+\item \textbf{Firms: technology} --- Cobb-Douglas production, marginal cost
+\item \textbf{Production network} --- Leontief inverse, Domar weights
+\item \textbf{Foreign sector} --- law of one price, UIP, net foreign assets
+\item \textbf{Equilibrium} --- goods, labor, asset market clearing
+\item \textbf{Firms: price setting} --- Calvo pricing, Phillips curve
+\item \textbf{Monetary policy} --- float / peg / managed float
+\end{enumerate}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Households}
+
+\small
+
+The representative household maximizes
+
+\[
+E_0\sum_{t=0}^{\infty}\beta^t
+\left[
+\frac{C_t^{1-\gamma}}{1-\gamma}
+-
+\frac{L_t^{1+\varphi}}{1+\varphi}
+\right]
+\]
+
+subject to the budget constraint:
+
+\[
+P_t^CC_t+B_t+S_tB_t^*=W_tL_t+\Pi_t+(1{+}i_{t-1})B_{t-1}+(1{+}i^*)\big[1-\psi(\hat b^*_{t-1}-\bar b^*)\big]S_tB_{t-1}^*
+\]
+
+{\scriptsize $B_t$ (domestic bond) nets to zero in equilibrium --- identical households, no domestic counterparty.}
+
+The consumption aggregator (home bundle, Cobb-Douglas across sectors, vs.\ imports) is:
+
+\[
+C_t=
+\left[
+\omega^{1/\eta}(C_t^H)^{\frac{\eta-1}{\eta}}
++
+(1-\omega)^{1/\eta}(C_t^F)^{\frac{\eta-1}{\eta}}
+\right]^{\frac{\eta}{\eta-1}},
+\qquad
+C_t^H=\prod_i(C_{it}^H)^{\beta_i^H}
+\]
+
+{\footnotesize where:}
+
+{\scriptsize
+\begin{tabular}{@{}llll@{}}
+$C_t,L_t$: cons., labor & $\beta,\gamma,\varphi$: disc., RRA, Frisch$^{-1}$ & $P_t^C$: CPI & $W_t$: wage \\
+$B_t,B_t^*$: dom./for.\ bond & $i_{t-1},i^*$: dom./for.\ rate & $S_t$: exch.\ rate & $\Pi_t$: profits \\
+$\psi,\bar b^*$: debt prem., target & $C_t^H,C_t^F$: home/for.\ goods & $\omega,\eta$: bias, elast.\ & $\beta_i^H$: sector $i$ share \\
+\end{tabular}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Firms: Technology}
+
+\small
+
+A unit mass of firms $f\in[0,1]$ share the \emph{same} Cobb-Douglas technology, each producing a differentiated variety:
+
+\[
+Y_{ift}=A_{it}\,L_{ift}^{\alpha_i}\prod_j X_{ijft}^{\Omega^H_{ij}}\,M_{ift}^{\Omega^F_i}
+\]
+
+Varieties aggregate via a CES (Dixit-Stiglitz) index; firm $f$ faces isoelastic demand:
+
+\[
+Y_{it}=\Big(\int_0^1 Y_{ift}^{\frac{\varepsilon_i-1}{\varepsilon_i}}df\Big)^{\frac{\varepsilon_i}{\varepsilon_i-1}},
+\qquad
+Y_{ift}=\Big(\frac{P_{ift}}{P_{it}}\Big)^{-\varepsilon_i}Y_{it}
+\]
+
+CRS $\Rightarrow$ marginal cost is \textbf{common across firms} in sector $i$:
+
+\[
+MC_{it}=\frac{W_t^{\alpha_i}\prod_j P_{jt}^{\Omega^H_{ij}}\,(S_tP_t^{F*})^{\Omega^F_i}}{A_{it}}
+\]
+
+\textbf{Two cost-push channels:} $MC_{it}$ moves with $A_{it}$ (TFP) \emph{and} $S_t$ (import cost). Absent frictions, firms would set $P_{ift}=\frac{\varepsilon_i}{\varepsilon_i-1}MC_{it}$ (markup over cost); with \textbf{Calvo pricing}, only a fraction $\delta_i$ resets each period --- mechanics \& Phillips curve: later slide.
+
+{\scriptsize where:}
+
+{\scriptsize
+\begin{tabular}{@{}llll@{}}
+$Y_{ift}$: firm $f$ output & $\varepsilon_i$: sector elast.\ & $P_{ift}$: firm $f$ price & $P_{it}$: sector price idx.\ \\
+$MC_{it}$: marg.\ cost & $W_t$: wage & $P_{jt}$: sector $j$ price & $S_t P_t^{F*}$: import price \\
+\end{tabular}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Production Network}
+
+\small
+
+Stacking each firm's input shares $\Omega^H_{ij}$, $\Omega^F_i$ across sectors gives the \textbf{input-output network} $\Omega^H\in\mathbb R^{N\times N}$ and import-exposure vector $\bm\omega_F\in\mathbb R^N$.
+
+\vspace{0.15cm}
+
+The \textbf{Leontief inverse} sums direct and indirect linkages:
+
+\[
+(I-\Omega^H)^{-1}=I+\Omega^H+(\Omega^H)^2+\cdots
+\]
+
+applied to consumption shares $\bm\beta^H$ (Households) it gives each sector's \textbf{Domar weight} (total GDP sales share); applied to $\bm\omega_F$, its total foreign exposure:
+
+\[
+\bm\lambda^\top=(\bm\beta^H)^\top(I-\Omega^H)^{-1},
+\qquad
+\mathcal M=(I-\Omega^H)^{-1}\bm\omega_F
+\]
+
+{\footnotesize where:}
+
+{\footnotesize
+\begin{tabular}{@{}llll@{}}
+$\Omega^H_{ij}$: dom.\ input share & $\Omega^F_i$: import share & $\bm\omega_F=(\Omega^F_1,\dots,\Omega^F_N)^\top$ & $(I-\Omega^H)^{-1}$: Leontief inverse \\
+$\bm\beta^H$: cons.\ shares (Households) & $\bm\lambda$: Domar weights & \multicolumn{2}{l}{$\mathcal M$: total (direct+indirect) foreign exposure} \\
+\end{tabular}}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Firms: Price Setting}
+
+\footnotesize
+
+Calvo pricing through the network delivers the (vector) Phillips curve:
+
+\[
+\bm\pi_t=\rho(I-\mathcal V)\mathbb E_t\bm\pi_{t+1}+\mathcal B(\gamma+\varphi)\tilde y_t-\mathcal V\bm\chi_t+\Gamma\Delta e_t
+\]
+
+\textbf{Same amplifier, two shocks:} $\mathcal B,\Gamma$ are the \emph{same} rigidity-adjusted operator $\tilde A\equiv\Delta(I-\Omega^H\Delta)^{-1}$, applied to labor share $\bm\alpha$ vs.\ import share $\bm\omega_F$:
+
+\[
+\mathcal B=\frac{\tilde A\bm\alpha}{\kappa},
+\qquad
+\Gamma=\frac{\tilde A\bm\omega_F}{\kappa}
+\]
+
+\textbf{Only relative shocks matter:} $\mathcal V\mathbf 1=\mathbf 0$ --- uniform TFP shocks create no cost-push; only sector-specific gaps $\bm\chi_t=(I-\Omega^H)^{-1}\log\mathbf A_t-\bm p_{t-1}$ do.
+
+{\footnotesize where:}
+
+{\scriptsize
+\begin{tabular}{@{}llll@{}}
+$\bm\pi_t,\tilde y_t$: infl., gap & $\bm\chi_t$: TFP cost-push & $\Delta e_t$: exch.\ rate chg.\ & $\kappa$: GE scalar \\
+$\mathcal B,\Gamma$: PC slope, FX pass-thru\ & $\mathcal V$: TFP cost-push matrix & \multicolumn{2}{l}{$\tilde A$: rigidity-adj.\ Leontief} \\
+\end{tabular}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Foreign Sector}
+
+\footnotesize
+
+$P_t^{F*}$, $i^*$, $D_t^*$ are exogenous AR(1) processes. Law of one price:
+
+\[
+P_t^{FH}=S_tP_t^{F*}
+\]
+
+UIP, with a debt-elastic risk premium closing the model (Schmitt-Grohé--Uribe) and $RP_t$ the risk-premium shock studied below:
+
+\[
+i_t = i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
+\]
+
+NFA accumulates the trade balance; exports respond to relative prices:
+
+\[
+\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^HEX_t-P_t^{FH}IM_t}{P_t^C},
+\qquad
+EX_t=\kappa_{EX}D_t^*\Big(\frac{P_t^H}{P_t^{FH}}\Big)^{-\theta^*}
+\]
+
+\textbf{Two channels} to the domestic economy:
+
+\[
+\hat s_t+\hat p_t^{F*}\ \rightarrow\ MC_{it}\ \rightarrow\ \pi_{it}
+\quad\text{(cost-push)}
+\qquad
+\hat s_t\ \rightarrow\ EX_t\ \rightarrow\ \tilde y_t\ \rightarrow\ \pi_{it}
+\quad\text{(demand)}
+\]
+
+{\footnotesize where:}
+
+{\footnotesize
+\begin{tabular}{@{}llll@{}}
+$P_t^{FH}$: import price & $\hat b_t^*$: NFA (scaled) & $i_{t-1}$: dom.\ rate & $\Pi_t^C$: CPI infl.\ \\
+$EX_t,IM_t$: exports, imports & $\kappa_{EX}$: export scale & $D_t^*$: for.\ demand & $\theta^*$: export elast.\ \\
+$\hat s_t$: log exch.\ rate & $\hat p_t^{F*}$: log for.\ price & \multicolumn{2}{l}{$\tilde y_t$: output gap} \\
+$i^*$: foreign rate (fixed) & $\psi(\cdot)$: debt-elastic wedge & \multicolumn{2}{l}{$RP_t$: risk-premium shock (AR(1))} \\
+\end{tabular}}
+
+\end{frame}
+
+
+
+%------------------------------------------------
+\begin{frame}{Monetary Policy Regimes}
+
+\small
+
+Three exchange-rate regimes are compared. All target the \textbf{DC index $\pi_t^{DC}$, not CPI inflation}: Rubbo (2024) shows CPI targeting does \emph{not} achieve divine coincidence even in the closed economy --- $\pi_t^{DC}$ is the closed-economy-optimal benchmark, so it is the natural rule to test for survival once the economy is opened.
+
+\vspace{0.3cm}
+
+\textbf{Free float}
+
+\[
+\hat i_t
+=
+\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t
+\]
+
+The exchange rate adjusts endogenously.
+
+\vspace{0.3cm}
+
+\textbf{Hard peg}
+
+\[
+\hat s_t=0
+\]
+
+Adjustment occurs through domestic inflation and output.
+
+\vspace{0.3cm}
+
+\textbf{Managed float}
+
+\[
+\hat i_t
+=
+\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t+\phi_s\hat s_t
+\]
+
+The central bank partially stabilizes the exchange rate.
+
+\vspace{0.2cm}
+
+{\footnotesize
+\begin{tabular}{@{}llll@{}}
+$\hat i_t$: policy rate & $\pi_t^{DC}$: DC index & $\tilde y_t$: output gap & $\hat s_t$: exchange rate \\
+$\phi_\pi,\phi_y$: inflation, output resp.\ & \multicolumn{2}{l}{$\phi_s$: exchange-rate stabilization weight} \\
+\end{tabular}}
+
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Equilibrium System}
+
+\footnotesize
+
+Everything above collapses to four blocks --- this is what is actually coded up and simulated in Dynare.
+
+\textbf{Phillips curve} (vector, network-amplified, two cost-push channels):
+
+\[
+\bm\pi_t=\rho(I-\mathcal V)\mathbb E_t\bm\pi_{t+1}+\mathcal B(\gamma+\varphi)\tilde y_t-\mathcal V\bm\chi_t+\Gamma\Delta e_t
+\]
+
+\textbf{IS curve} (aggregate demand; open economy adds the same relative-price term as the cost-push channel above):
+
+\[
+\tilde y_t=\mathbb E_t\tilde y_{t+1}-\frac{1}{\gamma}\big(i_t-\mathbb E_t\pi_t^C-r_t^{\mathrm{nat}}\big)-\frac{\eta(1-\omega)}{\gamma}\mathbb E_t\Delta\big(\hat s_t+\hat p_t^{F*}-\hat p_t^H\big)
+\]
+
+\textbf{Foreign sector} (UIP closes the FX block; NFA is the only state carried across regimes):
+
+\[
+i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t,
+\qquad
+\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^HEX_t-P_t^{FH}IM_t}{P_t^C}
+\]
+
+\textbf{Policy rule} (regime-dependent; the only block that changes across Float/Peg/Managed --- same rules as previous slide):
+
+\[
+\hat i_t=
+\begin{cases}
+\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t & \text{Float}\\[2pt]
+\text{residual (}\hat s_t=0\text{)} & \text{Peg}\\[2pt]
+\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t+\phi_s\hat s_t & \text{Managed}
+\end{cases}
+\]
+
+{\scriptsize $i_t$ above is the level rate (Households, Foreign Sector); $\hat i_t$ is its log-deviation, the Taylor-rule instrument (Monetary Policy Regimes).}
+
+{\scriptsize where:}
+
+{\scriptsize
+\begin{tabular}{@{}lll@{}}
+$r_t^{\mathrm{nat}}$: natural real rate & $\hat p_t^H$: log home price idx.\ & $\omega,\eta$: home bias, elast.\ \\
+$\psi(\cdot),RP_t$: debt wedge, risk-prem.\ & $\pi_t^{DC}$: DC index (target) & $\mathcal B,\Gamma,\mathcal V$: PC coefficients \\
+\end{tabular}}
+
+\end{frame}
+
+
+%% my slides
+
+
 \begin{frame}{Model: Overview}
 %==============================================================
 
