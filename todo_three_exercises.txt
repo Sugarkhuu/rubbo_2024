@@ -1,0 +1,151 @@
+THREE FOLLOW-UP EXERCISES -- SOE FX PRESENTATION PROJECT
+==========================================================
+Written 2026-07-21. Each task below is self-contained (no prior
+conversation context assumed) so it can be handed to a separate agent/session.
+
+Priority order (payoff per effort): #3 (psi sweep) > #1 (network vs
+no-network, real Chile calibration) > #2 (sector-specific exports, FULL
+version -- user has decided to do the full build, not the cheap static one).
+
+None of these three should touch soe_fx_presentation.tex until the new
+numbers exist and have been sanity-checked.
+
+==========================================================
+TASK #3 (do first): psi-sensitivity sweep (risk-premium/UIP robustness)
+==========================================================
+
+Context: The presentation's central mechanism claim is that Peg's welfare
+loss is 75% attributable to a risk-premium/UIP shock (eps_rp), not terms-
+of-trade. This rests on a debt-elastic risk-premium closing device
+(Schmitt-Grohe-Uribe 2003 style), calibrated at psi=0.020 (PSI in
+open_economy_network_chile.mod:158, entering the UIP condition
+`I = ISTAR*(1 - PSI*(BSTAR - BSTARBAR)) * RP * S(+1)/S`). That literature
+has a known pitfall: calibrating psi too close to zero can create a
+near-unit-root/knife-edge numerical blowup in NFA dynamics that's a
+linearization artifact, not real economics. An existing 2nd-order
+nonlinear check already found the aggregate ranking robust (loss moves
+<=2%) -- but that only tests whether NONLINEARITY is the problem, not
+whether the SPECIFIC psi=0.020 value is doing unreasonable work.
+
+Steps:
+1. Build code/sweep_psi.m, mirroring the existing pattern in
+   code/sweep_import_intensity.m exactly (that script scales OF_base by a
+   grid factor, regenerates per-grid-point .mod files, runs Dynare,
+   extracts oo_.var, writes a CSV -- same mechanics apply here with PSI as
+   the scaled parameter instead of OF).
+2. Grid: scale PSI from roughly 0.25x to 4x baseline (e.g. 0.005, 0.01,
+   0.02, 0.04, 0.08). PSI does NOT enter the steady state (only the
+   UIP/dynamics block), so NO steady-state re-derivation is needed --
+   cheapest of all three sweeps to build.
+3. For each grid point, regenerate open_economy_network_psi_<k>_<regime>.mod
+   for all three regimes (float/peg/managed), run dynare, and collect the
+   same moment_vars list already used elsewhere (piDC,PIC,y_gap,y_gap1,
+   y_gap2,y_gap3,PI1,PI2,PI3,I,BSTAR).
+4. Feed the results through code/analysis.py::compute_welfare_by_shock
+   (already exists) to get the risk-premium shock's percentage share of
+   Peg's total loss at each psi value.
+5. Write results/psi_sweep.csv and check: is the ~75% figure stable
+   across the grid, or does it concentrate/blow up specifically near the
+   calibrated psi=0.020 value?
+
+Deliverable: a table/chart of risk-premium's % share of Peg's welfare
+loss vs. psi, answering whether the 75% headline number is robust or
+fragile to this one closing-device parameter.
+
+==========================================================
+TASK #1 (do second): Network vs. no-network, on the ACTUAL Chile
+calibration (not the stylized proxy)
+==========================================================
+
+Context: The existing "Isolating the Network Channel" slide already tests
+"does the production network matter" -- but it uses a STYLIZED triangular
+network (OH21_BASE=0.20, OH32_BASE=0.25, scaled by a dial rho), not
+Chile's actual dense calibrated Omega^H matrix (all 9 entries populated:
+[[0.075,0.153,0.193],[0.099,0.202,0.145],[0.002,0.058,0.266]], order
+Resource/Manuf./Services). So the existing "network premium" numbers are
+illustrative, not tied to the paper's actual headline calibration (Float
+25.47 / Managed 10.17 / Peg 102.05, x10^-4).
+
+Steps:
+1. Take open_economy_network_chile.mod (+ _peg, _managed variants) and
+   create a "no-network" counterfactual: zero out ALL off-diagonal AND
+   diagonal entries of Omega^H (OH11,OH12,OH13,OH21,OH22,OH23,OH31,OH32,
+   OH33 -> 0) -- matching the definition already used in the stylized
+   sweep (no self-loops either, i.e. each sector uses only labor +
+   imports).
+2. Let ALPHA_i absorb the freed-up cost share: ALPHA_i = 1 - 0 - OF_i
+   (same mechanism already used in sweep_import_intensity.m /
+   sweep_import_heterogeneity.m for their own reparametrizations).
+3. Re-derive the steady state in soe_ss_solve_dense.m for this
+   zero-network case -- needed because removing Omega^H materially
+   changes labor shares and relative prices, but this is more contained
+   than Task #2 since no new equations are added, only existing
+   parameters zeroed.
+4. Re-simulate all three regimes (float/peg/managed) with this real,
+   zero-network Chile calibration.
+5. Recompute welfare (code/analysis.py::compute_welfare) and compare
+   directly against the actual baseline totals (25.47/10.17/102.05) --
+   this gives a real "network premium" number for Chile specifically,
+   replacing the stylized proxy's illustrative one.
+6. Optionally recompute the per-sector welfare premium breakdown
+   (mirroring the existing sector-level bar chart) using real Chile
+   numbers instead of the stylized network's.
+
+Deliverable: a Chile-specific "with network" vs. "without network"
+welfare comparison, with real numbers tied to the paper's actual headline
+calibration rather than the stylized robustness proxy.
+
+==========================================================
+TASK #2 (do third): Sector-specific export demand -- FULL VERSION
+(user has decided: go full here, not the cheap static version)
+==========================================================
+
+Context: Exports are currently a single aggregate object EX_t, allocated
+across sectors via household consumption shares beta_i^H (Services-heavy:
+0.744) rather than each sector's actual export intensity (Resource-heavy
+in the data: export shares 0.602/0.180/0.036, computed as `export_share`
+in data_calibration/build_chile_calibration.py but currently unused in
+any .mod file). This means the model cannot currently represent "the
+export-heavy sector gets hit, how do others feel it via the network" --
+the shock always spreads via consumption shares, not export exposure. A
+static, non-simulated version of the export centrality was already added
+to the presentation (figs/network_properties.py, M_i^X =
+[(I-Omega^H)^-1 omega_X]_i) purely as descriptive context; this task
+makes it model-consistent.
+
+Steps:
+1. Replace the aggregate export equation
+   `EX = KAPEX_SCALE*DSTAR*PX*(PH/PFH)^(-THETA_S)` with three
+   sector-specific equations
+   EX_i,t = kappa_EX,i * D*_t * (P_i,t/P^FH_t)^(-theta*) for i=1,2,3
+   (shared theta*, separate scale kappa_EX,i per sector).
+2. Recalibrate the three kappa_EX,i constants (replacing the single
+   KAPEX_SCALE) so steady-state EX_i/Y_i matches export_share
+   (0.602/0.180/0.036), while keeping sum_i EX_i^ss close to the original
+   aggregate level (a reallocation, not a change in total trade
+   balance/NFA calibration).
+3. Rewrite the Y1/Y2/Y3 market-clearing equations to use each sector's
+   own EX_i,t directly (PH*EX1/P1 etc.) instead of BH_i*PH*EX/P_i.
+4. Re-derive the steady state in soe_ss_solve_dense.m for the new export
+   block -- HIGHEST-RISK STEP: changes the aggregate resource
+   constraint, steady-state exchange rate, and interacts with the NFA
+   target (BSTARBAR).
+5. Apply identically to float/peg/managed .mod variants for Chile.
+6. Re-run Dynare for all three regimes; confirm it solves (no
+   Blanchard-Kahn/indeterminacy errors).
+7. Recompute welfare (code/analysis.py::compute_welfare,
+   compute_welfare_by_shock, compute_welfare_by_shock_sector); compare
+   the export/ToT shock's (eps_pX) new welfare contribution and
+   sectoral distribution against the old numbers (currently
+   0.11/0.18/2.16 x10^-4 for Float/Managed/Peg).
+8. Recompute the export-side Domar weight
+   lambda_X^T = omega_X^T (I-Omega^H)^-1 from the now-real omega_X and
+   sanity-check against the existing static M_i^X chart.
+9. Scope to Chile only first; extend to Korea/Czechia only if results
+   warrant cross-calibration robustness.
+
+Deliverable: updated .mod files (3 regimes), updated steady-state
+solver, confirmation Dynare solves cleanly, new IRFs for the export/ToT
+shock by sector and regime, updated welfare decomposition, and a
+before/after comparison table (old beta^H-allocated vs. new
+omega_X-allocated).
