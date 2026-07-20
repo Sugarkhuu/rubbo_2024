@@ -539,6 +539,365 @@ $\psi(\cdot),RP_t$: debt wedge, risk-prem.\ & $\pi_t^{DC}$: DC index (target) & 
 \end{frame}
 
 
+
+\begin{frame}{Model Overview}
+
+\large
+Small open economy with sectoral production networks.
+
+\vspace{0.3cm}
+
+Foreign variables are exogenous:
+\[
+P_t^{F*},\qquad i^*,\qquad D_t^*
+\]
+
+\vspace{0.3cm}
+
+Model blocks
+
+\begin{enumerate}
+\item Households
+\item Firms
+\item Production network
+\item Foreign sector
+\item Price setting
+\item Monetary policy
+\item Equilibrium
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Households}
+
+\small
+
+Representative household chooses consumption, labor, and foreign assets.
+
+\vspace{0.2cm}
+
+\[
+E_0\sum_{t=0}^{\infty}\beta^t
+\left[
+\frac{C_t^{1-\gamma}}{1-\gamma}
+-
+\frac{L_t^{1+\varphi}}{1+\varphi}
+\right]
+\]
+
+\vspace{0.2cm}
+
+subject to
+
+\[
+P_t^CC_t+B_t+S_tB_t^*
+=
+W_tL_t+\Pi_t
++(1+i_{t-1})B_{t-1}
++(1+i^*)
+\left[
+1-\psi(\hat b_{t-1}^*-\bar b^*)
+\right]
+S_tB_{t-1}^*
+\]
+
+\vspace{0.25cm}
+
+Consumption basket
+
+\[
+C_t=
+\left[
+\omega^{1/\eta}(C_t^H)^{\frac{\eta-1}{\eta}}
++
+(1-\omega)^{1/\eta}(C_t^F)^{\frac{\eta-1}{\eta}}
+\right]^{\frac{\eta}{\eta-1}}
+\]
+
+\vspace{0.25cm}
+
+Key features
+
+\begin{itemize}
+\item Domestic and imported goods are CES substitutes.
+\item Domestic goods are Cobb--Douglas across sectors.
+\item Foreign bond holdings determine net foreign assets.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Firms}
+
+\small
+
+Each sector produces differentiated varieties using labor,
+domestic intermediates, and imported inputs.
+
+\vspace{0.2cm}
+
+\[
+Y_{ift}
+=
+A_{it}
+L_{ift}^{\alpha_i}
+\prod_j
+X_{ijft}^{\Omega^H_{ij}}
+M_{ift}^{\Omega_i^F}
+\]
+
+\vspace{0.25cm}
+
+Marginal cost
+
+\[
+MC_{it}
+=
+\frac{
+W_t^{\alpha_i}
+\prod_jP_{jt}^{\Omega^H_{ij}}
+(S_tP_t^{F*})^{\Omega_i^F}
+}
+{A_{it}}
+\]
+
+\vspace{0.3cm}
+
+Implications
+
+\begin{itemize}
+\item Higher wages increase costs.
+\item Imported inputs create exchange-rate pass-through.
+\item TFP and exchange rates generate two cost-push channels.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Production Network}
+
+\small
+
+Input-output linkages amplify shocks across sectors.
+
+\vspace{0.3cm}
+
+Leontief inverse
+
+\[
+(I-\Omega^H)^{-1}
+=
+I+\Omega^H+(\Omega^H)^2+\cdots
+\]
+
+\vspace{0.3cm}
+
+Domar weights
+
+\[
+\lambda'
+=
+\beta'(I-\Omega^H)^{-1}
+\]
+
+Total foreign exposure
+
+\[
+\mathcal M
+=
+(I-\Omega^H)^{-1}\omega_F
+\]
+
+\vspace{0.3cm}
+
+Interpretation
+
+\begin{itemize}
+\item Domar weights measure total production importance.
+\item Indirect input linkages amplify shocks.
+\item Import exposure propagates through the same network.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Foreign Sector}
+
+\small
+
+Foreign prices, interest rates, and demand are exogenous.
+
+\vspace{0.25cm}
+
+Law of One Price
+
+\[
+P_t^{FH}=S_tP_t^{F*}
+\]
+
+\vspace{0.2cm}
+
+UIP
+
+\[
+i_t
+=
+i^*
++
+E_t\Delta e_{t+1}
++
+\psi(\hat b_t^*)
++
+RP_t
+\]
+
+\vspace{0.2cm}
+
+Net foreign assets
+
+\[
+\hat b_t^*
+=
+\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*
++
+\frac{P_t^HEX_t-P_t^{FH}IM_t}{P_t^C}
+\]
+
+\vspace{0.25cm}
+
+Transmission
+
+\begin{itemize}
+\item Exchange rate changes import costs.
+\item Exchange rate changes export demand.
+\item Both channels affect inflation and output.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Price Setting}
+
+\small
+
+Calvo pricing delivers a network Phillips curve.
+
+\vspace{0.2cm}
+
+\[
+\bm\pi_t
+=
+\rho(I-\mathcal V)E_t\bm\pi_{t+1}
++
+\mathcal B(\gamma+\varphi)\tilde y_t
+-
+\mathcal V\bm\chi_t
++
+\Gamma\Delta e_t
+\]
+
+\vspace{0.25cm}
+
+Network coefficients
+
+\[
+\mathcal B
+=
+\frac{\tilde A\alpha}{\kappa},
+\qquad
+\Gamma
+=
+\frac{\tilde A\omega_F}{\kappa}
+\]
+
+\vspace{0.3cm}
+
+Key insight
+
+\begin{itemize}
+\item Labor and import costs propagate through the same network.
+\item Exchange-rate shocks become an additional cost-push channel.
+\item Only relative TFP shocks affect inflation.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Monetary Policy}
+
+\small
+
+The central bank targets the Divine Coincidence (DC) index.
+
+\vspace{0.3cm}
+
+Free float
+
+\[
+\hat i_t
+=
+\phi_\pi\pi_t^{DC}
++
+\phi_y\tilde y_t
+\]
+
+\vspace{0.25cm}
+
+Hard peg
+
+\[
+\hat s_t=0
+\]
+
+\vspace{0.25cm}
+
+Managed float
+
+\[
+\hat i_t
+=
+\phi_\pi\pi_t^{DC}
++
+\phi_y\tilde y_t
++
+\phi_s\hat s_t
+\]
+
+\vspace{0.25cm}
+
+The policy rule is the only equation that changes across regimes.
+
+\end{frame}
+
+
+\begin{frame}{Equilibrium}
+
+\small
+
+The model is solved as a nonlinear DSGE in Dynare.
+
+\vspace{0.2cm}
+
+Four equilibrium blocks
+
+\[
+\textbf{Phillips Curve}
+\]
+
+\[
+\textbf{IS Curve}
+\]
+
+\[
+\textbf{UIP + NFA}
+\]
+
+\[
+\textbf{Policy Rule}
+\]
+
+\vspace{0.3cm}
+
+Changing the monetary policy block generates the three exchange-rate regimes while all remaining equations stay unchanged.
+
+\end{frame}
+
 %% my slides
 
 
