@@ -608,6 +608,31 @@ $\zeta=\theta_M=1$: baseline. $\zeta$: uniform rescaling. $\theta_M$: mean-prese
 \end{frame}
 
 %==============================================================
+\begin{frame}{Export Openness \& Export Concentration}
+%==============================================================
+\vspace{-6pt}
+{\scriptsize Same construction as "Openness \& Import Concentration," applied to the FULL sector-export model's $\kappa_{EX,i}$ (real Chile calibration, not stylized):
+\[
+\kappa_{EX,i}(\zeta)=\zeta\,\kappa_{EX,i}^{\text{base}} \qquad\quad \kappa_{EX,i}(\theta_X)=\bar\kappa_{EX}+\theta_X\big(\kappa_{EX,i}^{\text{base}}-\bar\kappa_{EX}\big)
+\]
+$\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openness scaling. $\theta_X$: mean-preserving redistribution across sectors ($\theta_X{=}0$: uniform export exposure).}
+
+\vspace{2pt}
+\begin{center}
+\includegraphics[width=0.98\textwidth]{figs/export_openness_concentration.pdf}
+\end{center}
+
+\vspace{-4pt}
+{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout both sweeps.} Unlike import $\zeta$ (which moves Peg/Float in \emph{opposite} directions --- $\omega_{F,i}$ is a cost share, trading off against $\alpha_i$), export $\zeta$ moves \textbf{all three regimes together}:
+\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+\item $\zeta$ (openness): \textbf{all regimes improve} as trade opens further --- Peg most ($98.7\to84.8$, $-14\%$), Float/Managed least ($\approx-4\%$) --- since $\kappa_{EX,i}$ only enters export \emph{demand}, not the cost side, so it never trades off against the labor share the way $\omega_{F,i}$ does
+\item $\theta_X$ (concentration): \textbf{opposite directions, as with import concentration} --- Peg $\downarrow$ ($94.1\to89.6$), Float/Managed $\uparrow$ ($24.8\to25.8$, $10.6\to11.2$) as exports concentrate toward the true exporter (Resource, the flexible-price sector)
+\item \textbf{Mechanism:} routing exports toward Resource's low price-dispersion weight $\kappa_1$ helps Peg (its loss is dominated by the risk-premium/output-gap channel, and a more flexible-priced export sector absorbs shocks better); the same reallocation raises Float/Managed's dispersion cost slightly since more of \emph{their} adjustment now runs through Resource's inflation instead of being spread via consumption shares
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \begin{frame}{Isolating the Network Channel}
 %==============================================================
 
