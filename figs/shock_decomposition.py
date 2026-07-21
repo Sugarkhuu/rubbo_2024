@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 regimes = ["Float", "Managed", "Peg"]
-tfp           = [23.14, 8.02, 11.31]
-import_price  = [0.07, 1.05, 10.09]
-foreign_dem   = [0.05, 0.13, 1.67]
-export_price  = [0.11, 0.18, 2.16]
-risk_premium  = [2.11, 0.79, 76.83]
+tfp           = [22.44, 8.68, 14.76]
+import_price  = [0.09, 0.79, 4.84]
+foreign_dem   = [0.08, 0.10, 0.87]
+export_price  = [0.17, 0.14, 1.17]
+risk_premium  = [2.38, 1.25, 68.80]
 
 COLOR_TFP = "#6b7280"
 COLOR_IMPORT = "#2a78d6"
@@ -26,7 +26,7 @@ width = 0.55
 bottom = np.zeros(len(regimes))
 series = [
     ("TFP", tfp, COLOR_TFP),
-    ("Import price (FX)", import_price, COLOR_IMPORT),
+    ("Import price ($P^{F*}$)", import_price, COLOR_IMPORT),
     ("Foreign demand", foreign_dem, COLOR_FOREIGN),
     ("Export price (ToT)", export_price, COLOR_EXPORT),
     ("Risk premium (UIP)", risk_premium, COLOR_RISK),

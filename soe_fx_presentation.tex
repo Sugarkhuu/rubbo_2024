@@ -98,32 +98,52 @@
 \begin{frame}{Motivation}
 %==============================================================
 
+{\footnotesize A depreciation raises the cost of imported inputs. But firms don't just buy imports directly --- they buy from \emph{other domestic firms}, who themselves buy imports. A single exchange-rate shock therefore travels through the production network before it ever reaches the consumer: \textbf{the same shock can be small or large, depending on where in the network it lands.}}
+
+\vspace{8pt}
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.35cm and 0.35cm, every node/.style={font=\scriptsize}]
+\node[draw, rounded corners, fill=riskred!12, minimum width=1.9cm, minimum height=0.65cm] (E) {Exchange rate};
+\node[draw, rounded corners, fill=sectorman!15, minimum width=1.9cm, minimum height=0.65cm, right=of E] (IM) {Imported inputs};
+\node[draw, rounded corners, fill=sectorres!15, minimum width=1.9cm, minimum height=0.65cm, right=of IM] (UP) {Upstream firms};
+\node[draw, rounded corners, fill=sectorserv!15, minimum width=1.9cm, minimum height=0.65cm, right=of UP] (DN) {Downstream firms};
+\node[draw, rounded corners, fill=customgreen!20, minimum width=2.0cm, minimum height=0.65cm, right=of DN] (PI) {Aggregate inflation};
+\draw[-{Latex}, thick] (E) -- (IM);
+\draw[-{Latex}, thick] (IM) -- (UP);
+\draw[-{Latex}, thick] (UP) -- (DN);
+\draw[-{Latex}, thick] (DN) -- (PI);
+\end{tikzpicture}}
+\end{center}
+
+\vspace{6pt}
 {\footnotesize
-\begin{itemize}\setlength{\itemsep}{3pt}
-\item Network Phillips curves (Rubbo 2024, La'O--Tahbaz-Salehi 2022): \textbf{closed economy}, unique DC index
-\item Open-economy NK (Gal\'i--Monacelli 2005): FX channel, \textbf{no network}
-\item \textbf{This paper: both together} --- multi-sector network $+$ FX
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item Network Phillips curves (Rubbo 2024, La'O--Tahbaz-Salehi 2022): get this propagation right --- but \textbf{closed economy}, no exchange rate
+\item Open-economy NK (Gal\'i--Monacelli 2005): get the exchange rate right --- but \textbf{no network}, one representative firm
+\item \textbf{This paper: both together} --- and asks the question that requires having both
 \end{itemize}}
 
 \vspace{6pt}
 \begin{center}
-\begin{tikzpicture}[node distance=0.9cm and 1.3cm, every node/.style={font=\tiny}]
-\node[draw, rounded corners, fill=sectorres!25, minimum width=1.7cm] (R) {Resource};
-\node[draw, rounded corners, fill=sectorman!25, minimum width=2.0cm, right=of R] (M) {Manufacturing};
-\node[draw, rounded corners, fill=sectorserv!25, minimum width=1.7cm, right=of M] (S) {Services};
-\draw[-{Latex}] (R) -- (M);
-\draw[-{Latex}] (M) -- (S);
-\node[above=0.5cm of R, font=\tiny, gray!60!black] (FR) {imports};
-\draw[-{Latex}, gray!60] (FR) -- (R);
-\node[above=0.5cm of M, font=\tiny, gray!60!black] (FM) {imports};
-\draw[-{Latex}, gray!60] (FM) -- (M);
-\node[below=0.5cm of R, font=\tiny, customgreen!70!black] (EX) {exports};
-\draw[-{Latex}, customgreen!70!black] (R) -- (EX);
-\end{tikzpicture}
+{\footnotesize\textbf{Does accounting for production networks change the optimal exchange-rate regime?}}
 \end{center}
 
-\vspace{4pt}
-{\footnotesize \textbf{Questions:} Optimal FX regime? Does the DC index survive a 2nd cost-push channel?}
+\end{frame}
+
+%==============================================================
+\begin{frame}{Why Production Networks Matter}
+%==============================================================
+
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{7pt}
+\item \textbf{Intermediate inputs dominate production.} In most economies, firms spend more buying from \emph{other domestic firms} than they spend on labor --- a cost shock to any one sector mechanically becomes a cost shock to everyone downstream of it
+\item \textbf{Imported intermediates are the norm, not the exception.} Manufacturing sectors routinely source $15$--$30\%$ of inputs from abroad (Chile: up to $19.5\%$, Manufacturing) --- so an exchange-rate move is, from the firm's perspective, indistinguishable from a domestic cost shock
+\item \textbf{Recent shocks propagated through exactly this channel.} COVID-19, the Ukraine war, and the semiconductor shortage each started as a shock to one link and were amplified --- or dampened --- by where that link sat in the network
+\end{itemize}}
+
+\vspace{10pt}
+{\scriptsize Acemoglu, Carvalho, Ozdaglar \& Tahbaz-Salehi (2012); Baqaee \& Farhi (2019); La'O \& Tahbaz-Salehi (2022)}
 
 \end{frame}
 
@@ -139,7 +159,7 @@
 \item \textbf{Pasten, Schoenle \& Weber (2020)} --- sectoral rigidity heterogeneity drives MP transmission
 \end{itemize}}
 
-{\scriptsize \textbf{Open-economy side:}}
+{\scriptsize \textbf{Open-economy side (no network):}}
 {\tiny
 \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{1pt}
 \item \textbf{Gal\'i \& Monacelli (2005)} --- 1-sector SOE: domestic-inflation targeting $\approx$ optimal, peg dominated (ToT channel)
@@ -147,6 +167,11 @@
 \item \textbf{Schmitt-Grohé \& Uribe (2003)} --- debt-elastic premium to stationarize NFA; flags 1st-order welfare risk
 \item \textbf{Gopinath \& Itskhoki (2022); Amiti et al.\ (2019); Auer, Levchenko \& Sauré (2019)} --- pass-through, dominant currency, IO spillovers
 \item \textbf{Itskhoki \& Mukhin (2023); Bianchi \& Coulibaly (2025); Coulibaly (2023)} --- frontier: managed float/fear-of-floating \emph{optimal}, not behavioral (no network)
+\end{itemize}}
+
+{\scriptsize \textbf{Open economy \emph{with} network (closest to this paper):}}
+{\tiny
+\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{1pt}
 \item \textbf{Gnocato, Montes-Gald\'on \& Stamato (2025, ECB); Kalemli-\"Ozcan et al.\ (2025)} --- open economy \emph{with} network (tariffs), fixed Taylor rule, no FX-regime choice\footnote{\tiny Details \& what these papers cite for open-economy production networks: \hyperlink{ecbnetwork}{Appendix}.}
 \item \textbf{Qiu, Wang, Xu \& Zanetti (2026, JME)} --- closest paper: derives the open-economy DC index directly extending Rubbo, WIOD 43-country calibration; but \emph{static} (no NFA/persistence), no UIP, and no FX-regime choice --- their own conclusion lists relaxing financial autarky as their top open extension
 \end{itemize}}
@@ -179,35 +204,13 @@
 %% my slides
 
 %------------------------------------------------
-\begin{frame}{Model Components}
-
-\small
-
-Small open economy: home takes foreign price $P_t^{F*}$, rate $i^*$, and demand $D_t^*$ as given.
-
-\vspace{0.2cm}
-
-\begin{enumerate}\setlength\itemsep{4pt}
-\item Households --- consumption/labor, foreign bond holdings
-\item Firms --- Cobb-Douglas technology, marginal cost
-\item Production network --- Leontief inverse, Domar weights
-\item Firms: price setting --- Calvo pricing, Phillips curve
-\item Foreign sector --- law of one price, UIP, NFA
-\item Monetary policy --- float / peg / managed float
-\item Equilibrium system --- the four blocks actually simulated
-\end{enumerate}
-
-\vspace{0.2cm}
-
-{\scriptsize\hyperlink{modeleqns}{$\rightarrow$ full equations \& notation: Appendix}}
-
-\end{frame}
-
-
-%------------------------------------------------
 \begin{frame}{Households}
 
 \small
+
+Small open economy: home takes foreign price $P_t^{F*}$, rate $i^*$, and demand $D_t^*$ as given.\footnote{\tiny Full equations \& notation for every block in this section: \hyperlink{modeleqns}{Appendix}.}
+
+\vspace{0.15cm}
 
 Representative household chooses $\{C_t,L_t,B_t,B_t^*\}$ to maximize CRRA-consumption/disutility-of-labor utility, subject to a budget constraint with a domestic bond $B_t$ (nets to zero in equilibrium) and a foreign bond $B_t^*$:
 
@@ -332,13 +335,15 @@ UIP, with a debt-elastic risk premium closing the model (Schmitt-Grohé--Uribe) 
 i_t = i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 \]
 
-NFA accumulates the trade balance; exports respond to relative prices:
+NFA accumulates the trade balance; exports are \textbf{sector-specific}, each responding to its own relative price (baseline model --- not a single aggregate $EX_t$ allocated by consumption shares):
 
 \[
-\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^HEX_t-P_t^{FH}IM_t}{P_t^C},
+\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^H\sum_iEX_{it}-P_t^{FH}IM_t}{P_t^C},
 \qquad
-EX_t=\kappa_{EX}D_t^*\Big(\frac{P_t^H}{P_t^{FH}}\Big)^{-\theta^*}
+EX_{it}=\kappa_{EX,i}D_t^*\Big(\frac{P_{it}}{P_t^{FH}}\Big)^{-\theta^*}
 \]
+
+$\kappa_{EX,i}$ is calibrated so each sector's steady-state export share matches Chile's real data (Resource-heavy: $0.602/0.180/0.036$) --- not the Services-heavy household shares $\beta_i^H$ that a single aggregate $EX_t$ would imply.
 
 \textbf{Two channels} to the domestic economy:
 
@@ -346,9 +351,11 @@ EX_t=\kappa_{EX}D_t^*\Big(\frac{P_t^H}{P_t^{FH}}\Big)^{-\theta^*}
 \hat s_t+\hat p_t^{F*}\ \rightarrow\ MC_{it}\ \rightarrow\ \pi_{it}
 \quad\text{(cost-push)}
 \qquad
-\hat s_t\ \rightarrow\ EX_t\ \rightarrow\ \tilde y_t\ \rightarrow\ \pi_{it}
+\hat s_t\ \rightarrow\ EX_{it}\ \rightarrow\ \tilde y_t\ \rightarrow\ \pi_{it}
 \quad\text{(demand)}
 \]
+
+{\scriptsize\textbf{Shocks (7 total, all AR(1), std.\ dev.\ 0.01):} 3 sector TFP $\varepsilon^A_{1,2,3}$ ($\rho{=}0.90$) $\cdot$ import price $\varepsilon^{P^{F*}}$ ($\rho{=}0.85$, into $P_t^{F*}$) $\cdot$ foreign demand $\varepsilon^{D^*}$ ($\rho{=}0.80$) $\cdot$ export price/ToT $\varepsilon^{PX}$ ($\rho{=}0.85$) $\cdot$ risk premium $\varepsilon^{RP}$ ($\rho{=}0.80$, into $RP_t$ above) --- decomposed by contribution to welfare loss in Results.}
 
 \end{frame}
 
@@ -422,8 +429,10 @@ Everything above collapses to four blocks --- this is what is actually coded up 
 \[
 i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t,
 \qquad
-\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^HEX_t-P_t^{FH}IM_t}{P_t^C}
+\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^H\sum_iEX_{it}-P_t^{FH}IM_t}{P_t^C}
 \]
+
+Exports are sector-specific, $EX_{it}=\kappa_{EX,i}D_t^*(P_{it}/P_t^{FH})^{-\theta^*}$ (baseline; $\kappa_{EX,i}$ calibrated to Chile's real export shares).
 
 \textbf{Policy rule} (regime-dependent; the only block that changes across Float/Peg/Managed --- same rules as previous slide):
 
@@ -477,14 +486,7 @@ $\beta^H_1,\beta^H_2,\beta^H_3$ & $0.027,\ 0.229,\ 0.744$ & \\
 Export share$_{1,2,3}$ & $0.602,\ 0.180,\ 0.036$ & \\
 $\delta_1,\delta_2,\delta_3$ & $0.90,\ 0.31,\ 0.16$ & Lit.: Dhyne et al.\ (2005); Nakamura--Steinsson (2008) \\
 \midrule
-$\beta$ & $0.99$ & \multirow{11}{*}{Literature} \\
-$\gamma$ & $1.00$ & \\
-$\varphi$ & $2.00$ & \\
-$\eta$ & $1.50$ & \\
-$\varepsilon$ & $8.00$ & \\
-$\theta^*$ & $2.00$ & \\
-$\beta^{F,tot}$ & $0.10$ & \\
-$\psi$ & $0.020$ & \\
+$\psi$ & $0.020$ & \multirow{4}{*}{\parbox{2.6cm}{Key mechanism: risk-premium/UIP elasticity \& FX-regime rules (see $\psi$-sensitivity, appendix)}} \\
 $\phi_\pi$ & $1.50$ & \\
 $\phi_y$ & $0.50$ & \\
 $\phi_s$ & $0.30$ & \\
@@ -492,142 +494,50 @@ $\phi_s$ & $0.30$ & \\
 \end{tabular}}
 \end{center}
 
-\vspace{6pt}
+\vspace{4pt}
 {\scriptsize $\Omega^H$ (order: Res., Man., Serv.; source: BCCh IO table):
 \[
 \Omega^H=\begin{pmatrix}0.075&0.153&0.193\\0.099&0.202&0.145\\0.002&0.058&0.266\end{pmatrix}
 \]}
 
+\vspace{4pt}
+{\tiny \textbf{Standard literature values} (not paper-specific; sources in Appendix): $\beta{=}0.99$, $\gamma{=}1.00$, $\varphi{=}2.00$, $\eta{=}1.50$, $\varepsilon{=}8.00$, $\theta^*{=}2.00$, $\beta^{F,tot}{=}0.10$.}
+
 \end{frame}
 
 %==============================================================
-\begin{frame}{Calibration: Network Properties}
+\begin{frame}{Network Properties: Import \& Export Exposure}
 %==============================================================
-
-{\scriptsize
-$\lambda_{D,i} = \big[(\bm\beta^H)^\top(I-\Omega^H)^{-1}\big]_i,\quad
-\mathcal{M}_i = \big[(I-\Omega^H)^{-1}\bm\omega_F\big]_i,\quad
-\mathcal{M}_i^X = \big[(I-\Omega^H)^{-1}\bm\omega_X\big]_i$}
-
-{\tiny $\lambda_{D,i}$: Domar weight\quad $\bm\omega_F,\bm\omega_X$: raw import/export share (own output)\quad $\mathcal{M}_i,\mathcal{M}_i^X$: import/export centrality (same formula, network-propagated)}
 
 \vspace{-2pt}
 \begin{center}
 \includegraphics[width=0.92\textwidth]{figs/network_properties.pdf}
 \end{center}
 
-\vspace{-2pt}
-{\scriptsize Both centralities amplify the raw share, unevenly: import exposure roughly doubles for every sector; export exposure jumps most for Manuf.\ (0.18$\to$0.33), mostly via buying from Resource (60\% exported). Structural fact about $\Omega^H$; not yet fed into the simulations.}
+\vspace{2pt}
+{\scriptsize \textbf{The production network amplifies both import and export exposure well beyond each sector's direct (raw) share} --- e.g.\ import exposure roughly doubles for every sector once indirect, network-propagated exposure is counted, not just each sector's own imports.}
+
+\vspace{4pt}
+{\scriptsize $\lambda_{D,i}=[(\bm\beta^H)^\top(I-\Omega^H)^{-1}]_i$ (Domar weight), $\mathcal M_i=[(I-\Omega^H)^{-1}\bm\omega_F]_i$ and $\mathcal M_i^X=[(I-\Omega^H)^{-1}\bm\omega_X]_i$ (import/export centrality) --- full notation: \hyperlink{modeleqns}{Appendix}.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Network Exposure \& Sector Welfare Preferences}
+\begin{frame}{Welfare Ranking: Managed Float Dominates}
 %==============================================================
 
 \vspace{-4pt}
-{\scriptsize Welfare weight $\kappa_i=\lambda_{D,i}\varepsilon\tfrac{1-\hat\delta_i}{\hat\delta_i}$ applied to each sector's own price-dispersion variance --- the formal, per-sector slice of the welfare loss.}
-
-\vspace{4pt}
 \begin{center}
-{\tiny \textbf{Own dispersion cost by regime ($\times10^4$):} \textcolor{customgreen!85!black}{\textbf{$\blacksquare$} Float}\ \textcolor{gray!55}{\textbf{$\blacksquare$} Managed}\ \textcolor{riskred!70!black}{\textbf{$\blacksquare$} Peg}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, ybar, width=9.5cm, height=5cm, bar width=11pt,
-  symbolic x coords={Resource,Manuf.,Services}, xtick=data,
-  ymin=0, ymax=24, ylabel={\tiny cost ($\times10^4$)}]
-\addplot[fill=customgreen!85!black] coordinates {(Resource,0.04) (Manuf.,3.30) (Services,20.73)};
-\addplot[fill=gray!55] coordinates {(Resource,0.04) (Manuf.,1.82) (Services,6.70)};
-\addplot[fill=riskred!70!white] coordinates {(Resource,0.37) (Manuf.,5.36) (Services,16.79)};
-\end{axis}
-\end{tikzpicture}
+\includegraphics[width=0.49\textwidth]{figs/shock_decomposition.pdf}%
+\includegraphics[width=0.49\textwidth]{figs/welfare_gap_dispersion.pdf}
 \end{center}
-
-\vspace{4pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
-\item \textbf{Managed dominates every sector.} Peg costliest for Resource (0.37) \& Manuf.\ (5.36); for Services, \textbf{Float is costliest} (20.73 $>$ Peg's 16.79) --- near-unit-root $S_t$ under Float feeds the stickiest sector's marginal cost for a long time
-\item Cost concentrates in Services under literature-sourced Calvo stickiness ($\hat\delta_3=0.03$) --- Services carries most of the economy's welfare weight, so whichever regime is worst for its inflation dominates the aggregate ranking
-\end{itemize}}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Network Exposure: Output-Gap Variance by Sector}
-%==============================================================
-
-\vspace{-4pt}
-{\scriptsize Sector's \emph{own} output-gap variance --- descriptive, not a welfare term (the loss function weights only the \emph{aggregate} gap $\tilde y_t$).}
-
-\vspace{4pt}
-\begin{center}
-{\tiny \textbf{Var(own output gap) by regime ($\times10^4$):} \textcolor{customgreen!85!black}{\textbf{$\blacksquare$} Float}\ \textcolor{gray!55}{\textbf{$\blacksquare$} Managed}\ \textcolor{riskred!70!black}{\textbf{$\blacksquare$} Peg}}\\[2pt]
-\begin{tikzpicture}
-\begin{axis}[slide fig, ybar, width=9.5cm, height=5cm, bar width=11pt,
-  symbolic x coords={Resource,Manuf.,Services}, xtick=data,
-  ymin=0, ymax=28, ylabel={\tiny variance ($\times10^4$)}]
-\addplot[fill=customgreen!85!black] coordinates {(Resource,1.962) (Manuf.,2.451) (Services,0.706)};
-\addplot[fill=gray!55] coordinates {(Resource,1.679) (Manuf.,2.360) (Services,0.796)};
-\addplot[fill=riskred!70!white] coordinates {(Resource,5.049) (Manuf.,20.426) (Services,25.077)};
-\end{axis}
-\end{tikzpicture}
-\end{center}
-
-\vspace{4pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
-\item \textbf{Peg is the outlier} --- Float/Managed stay small and close across all sectors; Peg's variance concentrates in Manuf.\ and Services (20.4, 25.1), not Resource (5.0)
-\item Opposite pattern from the price-dispersion chart: Peg's cost is almost entirely a \emph{quantity} story, Float's Services cost almost entirely a \emph{price}-dispersion one
-\end{itemize}}
-
-\end{frame}
-
-%==============================================================
-%==============================================================
-\begin{frame}{Openness \& Import Concentration}
-%==============================================================
-\vspace{-6pt}
-{\scriptsize Reparametrize $\bm\omega_F$ only, on the REAL Chile calibration ($\alpha_i=1-\Omega^H_i-\omega_{F,i}$ absorbs it, holding $\Omega^H$ fixed at its Chile values):
-\[
-\omega_{F,i}(\zeta)=\zeta\,\omega_{F,i}^{\text{base}} \qquad\quad \omega_{F,i}(\theta_M)=\bar\omega_F+\theta_M\big(\omega_{F,i}^{\text{base}}-\bar\omega_F\big)
-\]
-$\zeta=\theta_M=1$: baseline. $\zeta$: uniform rescaling. $\theta_M$: mean-preserving redistribution across sectors ($\theta_M{=}0$: uniform exposure).}
 
 \vspace{2pt}
-\begin{center}
-\includegraphics[width=0.98\textwidth]{figs/openness_concentration.pdf}
-\end{center}
-
-\vspace{-4pt}
-{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout both sweeps} (real Chile calibration, $\zeta=\theta_M=1$ recovers the headline 25.47/10.17/102.05 exactly); gap still moves in \textbf{opposite directions}, though not symmetrically:
-\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-\item $\zeta$ (openness): Peg $\downarrow$ ($153.7\to65.8$), Float $\uparrow$ ($23.1\to36.0$), Managed U-shaped (min.\ near $\zeta{=}1$) --- \textbf{converge}
-\item $\theta_M$ (concentration): Peg $\uparrow$ much faster ($94.0\to107.3$, $+14\%$) than Float ($25.2\to25.8$, $+2\%$) or Managed ($9.8\to10.4$) --- \textbf{gap still diverges}, but via Peg rising, not Float falling (Float is nearly flat, unlike the earlier stylized-network sweep, which had Float declining with concentration)
-\item \textbf{Mechanism:} $\alpha_i+\Omega^H_i+\omega_{F,i}=1$ links the labor- and import-cost channels within every sector. $\zeta$ moves both economy-wide (Float's $\Gamma$-channel vs.\ Peg's labor-channel); $\theta_M$ moves them in/out of Services ($\approx$all the Domar weight) --- Peg's risk-premium/output-gap channel is far more sensitive to this reallocation than Float's price-dispersion channel
-\end{itemize}}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Export Openness \& Export Concentration}
-%==============================================================
-\vspace{-6pt}
-{\scriptsize Same construction as "Openness \& Import Concentration," applied to the FULL sector-export model's $\kappa_{EX,i}$ (real Chile calibration, not stylized):
-\[
-\kappa_{EX,i}(\zeta)=\zeta\,\kappa_{EX,i}^{\text{base}} \qquad\quad \kappa_{EX,i}(\theta_X)=\bar\kappa_{EX}+\theta_X\big(\kappa_{EX,i}^{\text{base}}-\bar\kappa_{EX}\big)
-\]
-$\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openness scaling. $\theta_X$: mean-preserving redistribution across sectors ($\theta_X{=}0$: uniform export exposure).}
-
-\vspace{2pt}
-\begin{center}
-\includegraphics[width=0.98\textwidth]{figs/export_openness_concentration.pdf}
-\end{center}
-
-\vspace{-4pt}
-{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout both sweeps.} Unlike import $\zeta$ (which moves Peg/Float in \emph{opposite} directions --- $\omega_{F,i}$ is a cost share, trading off against $\alpha_i$), export $\zeta$ moves \textbf{all three regimes together}:
-\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-\item $\zeta$ (openness): \textbf{all regimes improve} as trade opens further --- Peg most ($98.7\to84.8$, $-14\%$), Float/Managed least ($\approx-4\%$) --- since $\kappa_{EX,i}$ only enters export \emph{demand}, not the cost side, so it never trades off against the labor share the way $\omega_{F,i}$ does
-\item $\theta_X$ (concentration): \textbf{opposite directions, as with import concentration} --- Peg $\downarrow$ ($94.1\to89.6$), Float/Managed $\uparrow$ ($24.8\to25.8$, $10.6\to11.2$) as exports concentrate toward the true exporter (Resource, the flexible-price sector)
-\item \textbf{Mechanism:} routing exports toward Resource's low price-dispersion weight $\kappa_1$ helps Peg (its loss is dominated by the risk-premium/output-gap channel, and a more flexible-priced export sector absorbs shocks better); the same reallocation raises Float/Managed's dispersion cost slightly since more of \emph{their} adjustment now runs through Resource's inflation instead of being spread via consumption shares
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \textbf{Managed float dominates both corners:} Float $25.15$, Managed $10.96$, Peg $90.45$ ($\times10^{-4}$, real Chile calibration) --- Managed $<$ Float $\ll$ Peg, Peg no longer competitive
+\item \textbf{By shock (left):} risk-premium/UIP dominates Peg (76\% of its total). \textbf{By gap vs.\ dispersion (right):} Peg's loss is $\approx$77\% output gap (70.01 of 90.45, zero monetary autonomy); Float's and Managed's are almost entirely price dispersion, concentrated in Services --- full decomposition in appendix
+\item \textbf{This ranking is the headline result of the paper.} Everything that follows asks: where does it come from, and does the network matter for it?
 \end{itemize}}
 
 \end{frame}
@@ -636,82 +546,185 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 \begin{frame}{Isolating the Network Channel}
 %==============================================================
 
-{\scriptsize \textbf{Real Chile calibration}: scale all six cross-sector $\Omega^H$ links by $\rho$, holding within-sector input use \& $\Omega^F$ fixed at Chile's data. $\rho{=}0$: no cross-sector domestic network. $\rho{=}1$: exact Chile baseline. Feasible to $\rho\approx2.45$ (row 1/2 hit $\alpha_i{=}0$) --- denser than the stylized chain used previously, so the grid stops at $2.2$, not $3$.}
+{\footnotesize \textbf{The causal experiment:} Network OFF ($\Omega^H\equiv0$) vs.\ Network ON (real Chile $\Omega^H$) --- same shocks, same regimes, only the domestic input-output structure changes.}
 
-\vspace{-2pt}
+\vspace{2pt}
 \begin{center}
-\includegraphics[width=0.95\textwidth]{figs/isolating_network.pdf}
+{\scriptsize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Total welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
+\midrule
+Network OFF & 8.67 & 5.82 & 33.66 \\
+Network ON (baseline) & 25.15 & 10.96 & 90.45 \\
+\midrule
+\textbf{\% increase from the network} & \textbf{+190\%} & \textbf{+88\%} & \textbf{+169\%} \\
+\bottomrule
+\end{tabular}}
 \end{center}
 
-\vspace{-4pt}
-{\scriptsize Right panel: $\kappa_i\mathrm{Var}(\pi_{it})\big|_{\rho=1}-\kappa_i\mathrm{Var}(\pi_{it})\big|_{\rho=0}$ per sector --- price-dispersion only, doesn't sum to the left panel's total (sector-less output-gap term's own change not shown).}
+\vspace{2pt}
+{\footnotesize \textbf{The network substantially increases welfare losses under Float and Peg but barely affects Managed} --- and Managed stays the best regime either way.}
 
 \vspace{1pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{-2pt}\setlength{\topsep}{0pt}
-\item \textbf{Managed is least sensitive, not neutral:} $\rho{=}0\to1$ adds $+1.17$ to Managed vs.\ $+5.52$ Float, $+25.72$ Peg (20.0/9.0/76.3 $\to$ 25.5/10.2/102.1)
-\item \textbf{Peg's rise is a pure output-gap story:} its per-sector price dispersion \emph{falls} slightly at every sector ($-0.01/-3.62/-1.82$) as $\rho{:}0\to1$ --- the $+25.72$ comes entirely from the output-gap term amplifying with network density, not price dispersion
-\item \textbf{Float/Managed's rise concentrates in Services} ($+4.90$/$+0.64$), matching Services' large Domar weight
-\item \textbf{No convergence at high density} (unlike the earlier stylized-network estimate): Peg/Float ratio \emph{grows} from $4.0\times$ ($\rho{=}1$) to $5.2\times$ ($\rho{=}2.2$, 40.1/16.5/206.8) --- denser networks widen, not narrow, the gap between corners
-\item \textbf{Verdict:} Peg--Managed gap roughly \textbf{doubles} from $\rho{:}1\to2.2$ (91.9$\to$190.3) --- the network channel matters even more on real data than the stylized estimate suggested
-\end{itemize}}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/isolating_network.pdf}
+\end{center}
+
+{\tiny Continuous density dial $\rho$ (stylized network) confirms it: losses rise \textbf{monotonically} with density, and the Peg/Float gap \textbf{widens} as the network gets denser.}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Shock Decomposition of Welfare Cost}
+\begin{frame}{Mechanism: How the Network Amplifies Shocks}
 %==============================================================
 
+{\scriptsize Output-gap variance, \textbf{Network ON} vs.\ \textbf{Network OFF} (real Chile calibration) --- full IRFs: \hyperlink{netirfs}{Appendix}:}
+
+\vspace{4pt}
 \begin{center}
-\includegraphics[width=0.75\textwidth]{figs/shock_decomposition.pdf}
+{\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+& \textbf{Import-price shock} & \textbf{Risk-premium/UIP shock} \\
+\textbf{Regime} & Var($\tilde y_t$) ratio, ON/OFF & Var($\tilde y_t$) ratio, ON/OFF \\
+\midrule
+Float   & $5.4\times$  & $8.5\times$ \\
+Managed & $6.0\times$  & $1.1\times$ (\emph{essentially none}) \\
+Peg     & $11.1\times$ & $4.8\times$ \\
+\bottomrule
+\end{tabular}}
 \end{center}
 
 \vspace{4pt}
-{\footnotesize
-\begin{itemize}\setlength{\itemsep}{3pt}
-\item \textbf{Risk-premium/UIP dominates Peg} (75\% of its total)
-\item \textbf{Ranking:} Managed $<$ Float $\ll$ Peg --- Peg no longer competitive
-\item \textbf{Result:} Peg's loss is $\approx$78\% output gap (79.53 of 102.05, zero monetary autonomy); Float's and Managed's are almost entirely price dispersion --- full decomposition in appendix
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
+\item \textbf{Amplification is regime-\emph{and}-shock-specific, not a generic network multiplier.} Import-price shocks hit \textbf{Peg} hardest (no FX buffer to absorb pass-through); risk-premium shocks hit \textbf{Float} hardest ($\hat s_t$ free to move transmits the shock straight through the network) --- \textbf{Managed} blocks amplification of the risk-premium shock almost entirely, but not the import-price shock
+\item \textbf{DC inflation variance is unchanged or slightly \emph{lower}} with the network on, for \emph{both} shocks in every regime --- this isn't new cost-push, it's a redirection of the existing shock into output
+\item \textbf{Takeaway:} which shock dominates a regime's loss (Welfare Ranking, above) depends on which margin that regime leaves free to adjust
 \end{itemize}}
 
 \end{frame}
 
 %==============================================================
-\begin{frame}{Robustness: South Korea, Czechia \& the Stylized Baseline}
+\begin{frame}{Network Exposure \& Sector Welfare Preferences}
 %==============================================================
 
 \vspace{-4pt}
+{\scriptsize \textbf{Different sectors prefer different exchange-rate regimes, in both price and quantity.} A representative-sector model cannot generate this: it only exists because sectors differ in Calvo stickiness $\hat\delta_i$ and network centrality $\lambda_{D,i}$, so the same shock hits their welfare weight $\kappa_i=\lambda_{D,i}\varepsilon\tfrac{1-\hat\delta_i}{\hat\delta_i}$ and their output-gap exposure differently.}
+
+\vspace{3pt}
 \begin{center}
-{\tiny \textbf{Total welfare loss ($\times10^4$)}}\\[1pt]
+\begin{minipage}{0.46\textwidth}
+\centering
+{\tiny \textbf{Own price-dispersion cost ($\times10^4$)}}\\[1pt]
 \begin{tikzpicture}
-\begin{axis}[slide fig, ybar, width=8.5cm, height=2.6cm, bar width=7pt,
-  symbolic x coords={Float,Managed,Peg}, xtick=data,
-  ymin=0, ymax=145, ylabel={\tiny welfare loss ($\times10^4$)}, nodes near coords,
-  nodes near coords style={font=\tiny, rotate=90, anchor=west},
-  legend style={font=\tiny, at={(0.5,1.28)}, anchor=north, legend columns=4}]
-\addplot[fill=customgreen!45!white, draw=customgreen!70!black] coordinates {(Float,25.47) (Managed,10.17) (Peg,102.05)};
-\addlegendentry{Chile}
-\addplot[fill=sectorman!55!white, draw=sectorman!80!black] coordinates {(Float,38.91) (Managed,14.43) (Peg,133.81)};
-\addlegendentry{S.\ Korea}
-\addplot[fill=riskred!45!white, draw=riskred!80!black] coordinates {(Float,32.20) (Managed,11.82) (Peg,84.03)};
-\addlegendentry{Czechia}
-\addplot[fill=gray!35!white, draw=gray!70!black] coordinates {(Float,13.64) (Managed,5.36) (Peg,49.63)};
-\addlegendentry{Stylized}
+\begin{axis}[slide fig, ybar, width=6.0cm, height=4.2cm, bar width=7pt,
+  enlarge x limits=0.32,
+  symbolic x coords={Resource,Manuf.,Services}, xtick=data,
+  x tick label style={rotate=20, anchor=north east, font=\tiny},
+  ymin=0, ymax=24, ylabel={\tiny cost ($\times10^4$)}]
+\addplot[fill=customgreen!85!black] coordinates {(Resource,0.05) (Manuf.,3.87) (Services,20.25)};
+\addplot[fill=gray!55] coordinates {(Resource,0.04) (Manuf.,1.92) (Services,6.71)};
+\addplot[fill=riskred!70!white] coordinates {(Resource,0.27) (Manuf.,4.28) (Services,15.88)};
 \end{axis}
 \end{tikzpicture}
+\end{minipage}%
+\hspace{0.04\textwidth}%
+\begin{minipage}{0.46\textwidth}
+\centering
+{\tiny \textbf{Var(own output gap) ($\times10^4$)}}\\[1pt]
+\begin{tikzpicture}
+\begin{axis}[slide fig, ybar, width=6.0cm, height=4.2cm, bar width=7pt,
+  enlarge x limits=0.32,
+  symbolic x coords={Resource,Manuf.,Services}, xtick=data,
+  x tick label style={rotate=20, anchor=north east, font=\tiny},
+  ymin=0, ymax=38, ylabel={\tiny variance ($\times10^4$)}]
+\addplot[fill=customgreen!85!black] coordinates {(Resource,0.13) (Manuf.,0.58) (Services,0.38)};
+\addplot[fill=gray!55] coordinates {(Resource,0.14) (Manuf.,0.38) (Services,2.31)};
+\addplot[fill=riskred!70!white] coordinates {(Resource,0.20) (Manuf.,1.98) (Services,35.16)};
+\end{axis}
+\end{tikzpicture}
+\end{minipage}\\[2pt]
+{\tiny \textcolor{customgreen!85!black}{\textbf{$\blacksquare$} Float}\ \textcolor{gray!55}{\textbf{$\blacksquare$} Managed}\ \textcolor{riskred!70!black}{\textbf{$\blacksquare$} Peg}}
+\end{center}
+
+\vspace{3pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
+\item \textbf{Left (price dispersion): Managed dominates every sector.} Peg costliest for Resource \& Manuf.; for Services, \textbf{Float is costliest} (20.25 $>$ Peg's 15.88) --- near-unit-root $S_t$ under Float feeds the stickiest sector's marginal cost for a long time. Aggregate ranking is set by Services, which carries most of the economy's welfare weight
+\item \textbf{Right (output-gap variance, descriptive --- the loss function only weights the \emph{aggregate} gap):} opposite pattern --- \textbf{Peg is the outlier}, concentrated almost entirely in Services (35.2); Peg's cost is almost entirely a \emph{quantity} story, Float's Services cost almost entirely a \emph{price}-dispersion one
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Openness \& Import Concentration}
+%==============================================================
+\vspace{-7pt}
+{\scriptsize Reparametrize $\bm\omega_F$ only, on the REAL Chile calibration ($\alpha_i=1-\Omega^H_i-\omega_{F,i}$ absorbs it, holding $\Omega^H$ fixed):
+\[
+\omega_{F,i}(\zeta)=\zeta\,\omega_{F,i}^{\text{base}} \qquad\quad \omega_{F,i}(\theta_M)=\bar\omega_F+\theta_M\big(\omega_{F,i}^{\text{base}}-\bar\omega_F\big)
+\]
+$\zeta=\theta_M=1$: baseline. $\zeta$: uniform rescaling. $\theta_M$: mean-preserving redistribution ($\theta_M{=}0$: uniform exposure).}
+
+\vspace{1pt}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{figs/openness_concentration.pdf}
+\end{center}
+
+\vspace{-4pt}
+{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout} (aggregate-export baseline, predates the sector-specific-export switch, not yet rebuilt); gap moves in \textbf{opposite directions}:
+\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+\item $\zeta$ (openness): Peg $\downarrow$ ($153.7\to65.8$), Float $\uparrow$ ($23.1\to36.0$) --- \textbf{converge}
+\item $\theta_M$ (concentration): Peg $\uparrow$ faster ($94.0\to107.3$) than Float ($25.2\to25.8$) --- \textbf{gap diverges}, via Peg rising, not Float falling
+\item \textbf{Mechanism:} $\alpha_i+\Omega^H_i+\omega_{F,i}=1$ links labor- and import-cost channels; Peg's risk-premium/output-gap channel is far more sensitive to reallocation toward Services than Float's price-dispersion channel
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Export Openness \& Export Concentration}
+%==============================================================
+\vspace{-7pt}
+{\scriptsize Same construction, applied to the sector-export model's $\kappa_{EX,i}$ (real Chile calibration; $\zeta=\theta_X=1$ recovers 25.15/10.96/90.45 exactly):
+\[
+\kappa_{EX,i}(\zeta)=\zeta\,\kappa_{EX,i}^{\text{base}} \qquad\quad \kappa_{EX,i}(\theta_X)=\bar\kappa_{EX}+\theta_X\big(\kappa_{EX,i}^{\text{base}}-\bar\kappa_{EX}\big)
+\]
+$\zeta=\theta_X=1$: baseline. $\zeta$: uniform export-openness scaling. $\theta_X$: mean-preserving redistribution ($\theta_X{=}0$: uniform export exposure).}
+
+\vspace{1pt}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{figs/export_openness_concentration.pdf}
+\end{center}
+
+\vspace{-4pt}
+{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout.} Unlike import $\zeta$ (opposite directions --- $\omega_{F,i}$ trades off against $\alpha_i$), export $\zeta$ moves \textbf{all three regimes together}:
+\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+\item $\zeta$ (openness): \textbf{all regimes improve} as trade opens --- Peg most ($98.7\to84.8$), since $\kappa_{EX,i}$ only enters export demand, not the cost side
+\item $\theta_X$ (concentration): \textbf{opposite directions, as with import concentration} --- Peg $\downarrow$ ($94.1\to89.6$), Float/Managed $\uparrow$ slightly, as exports concentrate toward Resource (the flexible-price sector)
+\item \textbf{Mechanism:} routing exports toward Resource's low $\kappa_1$ helps Peg (flexible-priced sector absorbs shocks better); raises Float/Managed's dispersion cost slightly instead
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Robustness: South Korea \& Czechia}
+%==============================================================
+
+\vspace{-6pt}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/robustness_calibrations.pdf}
 \end{center}
 
 \vspace{-2pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
-\item \textbf{South Korea}: diversified manufacturing exporter (Bank of Korea, 2022), deeper manufacturing import intensity than Chile ($\Omega^F_{\text{manuf}}=0.24$ vs.\ $0.19$)
-\item \textbf{Czechia}: third real IO calibration (Eurostat, 2022), deepest manufacturing import intensity ($\Omega^F_{\text{manuf}}=0.32$, EU/German supply chains)
-\item \textbf{Stylized}: original hand-picked triangular $\Omega^H$ (Rubbo-style, no data) --- checks the result isn't an artifact of network shape
-\item \textbf{Ranking survives in all four:} Managed $<$ Float $\ll$ Peg
-\end{itemize}}
+{\scriptsize \textbf{The ranking is robust:} Managed $<$ Float $\ll$ Peg in \textbf{every} calibration. UIP dominates Peg's loss throughout (76\% Chile; 72\%/65\% Korea/Czechia). Also robust to a 2nd-order solution and to the import/export openness \& concentration sweeps above.}
 
-\vspace{1pt}
-{\scriptsize \textbf{UIP dominates Peg's loss in all four:} 75\% Chile, 72\% Korea, 65\% Czechia, 81\% stylized --- not specific to one calibration. All solved nonlinear (Dynare), not linearized.}
+\vspace{-1pt}
+{\scriptsize \textbf{Why Korea is uniformly higher (Float \emph{and} Peg):} \textbf{denser network} ($\Omega^H$ row sums $0.50/0.50/0.39$ vs.\ Chile's $0.42/0.45/0.33$) \emph{and} \textbf{higher import exposure}, esp.\ Manufacturing ($\Omega^F_2{=}0.24$ vs.\ $0.195$, electronics/machinery supply chains) $\Rightarrow$ import centrality $\mathcal M_i$ higher in every sector (Manuf.\ $0.41$ vs.\ $0.29$) $\Rightarrow$ bigger $\Gamma$ (Float's price-dispersion channel) \emph{and} more network amplification of the output gap (Peg's channel) --- same two levers as "Isolating the Network Channel," just further along the dial.}
+
+{\tiny \textbf{Caveat:} Chile uses the sector-specific-export baseline; Korea/Czechia still use the earlier aggregate-export ($\beta^H$-allocated) spec --- illustrative of network/calibration robustness, not a fully apples-to-apples export comparison.}
 
 \end{frame}
 
@@ -723,14 +736,12 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{5pt}
-\item \textbf{Managed float optimal}: 10.17 vs.\ Float 25.47, Peg 102.05 ($\times10^4$, Chile calibration)
-\item \textbf{Driver:} risk-premium/UIP dominates Peg (75\%); TFP persistence dominates Float \& Managed
-\item \textbf{Optimal $\phi_s\approx0.20$} (real Chile calibration): interior optimum, but nearly flat vs.\ the calibrated $0.30$ ($\approx$0.3\% apart) --- over-stabilizing $S_t$ beyond $\approx0.3$ is what's costly
-\item \textbf{Ranking robust} to $\zeta,\theta_M,\rho$ (all three now Chile-calibrated) \& to Korea/Czechia calibrations; the \emph{gap} is not
-\item \textbf{Network channel isolated} (Chile calibration, $\rho$ dial on all six cross-sector $\Omega^H$ links): $\rho{=}0\to1$ adds $+1.17$ to Managed vs.\ $+5.52$ Float, $+25.72$ Peg --- \textbf{Peg's rise is entirely an output-gap story} (its price dispersion falls slightly at every sector); Peg does \emph{not} converge toward Float at high density, unlike an earlier stylized-network estimate
+\item \textbf{Managed float optimal}: 10.96 vs.\ Float 25.15, Peg 90.45 ($\times10^4$, Chile calibration, sector-specific-export baseline)
+\item \textbf{Driver:} risk-premium/UIP dominates Peg (76\%); TFP persistence dominates Float \& Managed
+\item \textbf{Network channel isolated} (network OFF vs.\ ON, same baseline): losses rise $+190\%$ Float, $+88\%$ Managed, $+169\%$ Peg --- \textbf{Peg's rise is almost entirely an output-gap story} (variance amplifies $11\times$ for this shock; price dispersion barely moves)
+\item \textbf{Ranking robust} to South Korea \& Czechia calibrations and to a genuine 2nd-order (nonlinear) solution --- those two and the import/export openness sweeps still reference the earlier aggregate-export specification, pending rebuild
 \item \textbf{Vs.\ literature:} same ranking as Gal\'i--Monacelli, different channel (risk-premium, not ToT)
-\item \textbf{2nd-order-verified} (Dynare order=2, pruned, simulated): loss rises $\le2\%$ net of MC noise, ranking unchanged --- see appendix
-\item \textbf{Next:} many-sector OECD TiVA calibration (beyond the 3-sector Chile/Korea/Czechia data)
+\item \textbf{Next:} many-sector OECD TiVA calibration; rebuild Korea/Czechia \& the $\phi_s$/2nd-order/$\psi$ robustness checks on the sector-specific-export baseline
 \end{itemize}}
 
 \end{frame}
@@ -764,12 +775,13 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 \begin{frame}{Appendix: Is the Ranking Robust to a Genuine 2nd-Order Solution?}
 %==============================================================
 
-{\footnotesize \textbf{Why this was a caveat:} Rubbo's LQ welfare formula is 2nd-order in utility, but evaluated on \emph{1st-order} (certainty-equivalent) paths --- valid only if $\mathbb{E}[\tilde y_t]=\mathbb{E}[\pi_{it}]=0$ exactly. Two open-economy features can break that: the \textbf{debt-elastic UIP wedge} (nonlinear in $B^*_t$) and the \textbf{near-unit-root NFA} process --- both mean the true \emph{risk-adjusted} steady state can sit away from the deterministic one.}
+{\scriptsize \textbf{Why this was a caveat:} Rubbo's LQ welfare formula is 2nd-order in utility, but evaluated on \emph{1st-order} (certainty-equivalent) paths --- valid only if $\mathbb{E}[\tilde y_t]=\mathbb{E}[\pi_{it}]=0$ exactly. The \textbf{debt-elastic UIP wedge} and \textbf{near-unit-root NFA} can break that.}
 
-\vspace{4pt}
-{\footnotesize \textbf{Method:} the model is already coded nonlinear (levels) in Dynare. Solve to \textbf{order 2 with pruning}, \textbf{simulate} 260k periods (analytic order-$\ge2$ moments are unavailable: the Taylor rule leaves price levels/S with a unit root). Compute $\mathbb{E}[X^2]$ directly (not $\mathrm{Var}$) so any risk-adjusted mean shift is captured. Control for simulation noise with an identical-seed order=1 run.}
+{\tiny \textbf{Note:} run on the earlier aggregate-export specification, not yet re-verified on the sector-specific-export baseline; the mechanism is unrelated to the export side, so the qualitative conclusion should carry over.}
 
-\vspace{6pt}
+{\scriptsize \textbf{Method:} model already coded nonlinear (levels) in Dynare. Solve \textbf{order 2 with pruning}, \textbf{simulate} 260k periods, compute $\mathbb{E}[X^2]$ directly. Control for simulation noise with an identical-seed order=1 run.}
+
+\vspace{3pt}
 \begin{center}
 {\scriptsize
 \begin{tabular}{lcccc}
@@ -785,12 +797,11 @@ Net 2nd-order effect & $+2.0\%$ & $+0.6\%$ & $+0.7\%$ \\
 \end{tabular}}
 \end{center}
 
-\vspace{4pt}
-{\footnotesize
-\begin{itemize}\setlength{\itemsep}{3pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{2pt}
 \item \textbf{Ranking survives}: Managed $<$ Float $<$ Peg at 2nd order, correction $\le2\%$ everywhere
-\item \textbf{Risk-adjusted means are real but small}: e.g.\ Peg's output gap sits $\approx-45$bp on average (vs.\ $-2.5$bp Float, $-7$bp Managed) --- an order of magnitude larger, and NFA carries a precautionary buffer $\mathbb{E}[B^*_t]=+0.029$ under Peg vs.\ target $0$, largest where the UIP channel is least offset by $S_t$
-\item \textbf{But squared loss barely notices}: $\mathbb{E}[X]^2/\mathbb{E}[X^2]<0.5\%$ in every regime --- almost all of the 2nd-order correction is a modest \textbf{variance amplification} from the pruned nonlinear policy function, not the risk-adjusted-mean channel
+\item \textbf{Risk-adjusted means are real but small}: Peg's output gap sits $\approx-45$bp on average (vs.\ $-2.5$/$-7$bp Float/Managed); NFA carries a precautionary buffer under Peg
+\item \textbf{But squared loss barely notices}: $\mathbb{E}[X]^2/\mathbb{E}[X^2]<0.5\%$ everywhere --- almost all the correction is variance amplification, not the risk-adjusted-mean channel
 \end{itemize}}
 
 \end{frame}
@@ -801,12 +812,13 @@ Net 2nd-order effect & $+2.0\%$ & $+0.6\%$ & $+0.7\%$ \\
 \begin{frame}{Appendix: Is the 75\% Risk-Premium Share a $\psi$ Knife-Edge?}
 %==============================================================
 
-{\footnotesize \textbf{Why this was a caveat:} the "75\% risk-premium" result rests on a debt-elastic UIP closing device (Schmitt-Grohé--Uribe 2003) at $\psi=0.020$. Known pitfall: $\psi$ near zero can create a near-unit-root NFA blowup that's a linearization artifact --- the order-2 check (previous slide) ruled out spurious \emph{nonlinearity}, not whether \emph{this} $\psi$ value does unreasonable work.}
+{\scriptsize \textbf{Why this was a caveat:} the "75\% risk-premium" result rests on a debt-elastic UIP closing device (Schmitt-Grohé--Uribe 2003) at $\psi=0.020$. Known pitfall: $\psi$ near zero can create a near-unit-root NFA blowup that's a linearization artifact --- the order-2 check (previous slide) ruled out spurious \emph{nonlinearity}, not whether \emph{this} $\psi$ value does unreasonable work.}
+
+{\tiny \textbf{Note:} grid run on the earlier aggregate-export spec (75.3\% baseline share); the sector-specific-export baseline gives 76.1\% at $\psi=0.020$, essentially identical --- not yet re-swept, but the closeness of the two baselines suggests this sweep's shape carries over.}
+
+{\scriptsize \textbf{Method:} scale $\psi$ over $0.25\times$--$4\times$ baseline (0.005--0.080), re-solve all three regimes (nonlinear, Dynare), recompute the risk-premium shock's \% share of welfare loss via the exact variance decomposition.}
 
 \vspace{3pt}
-{\footnotesize \textbf{Method:} scale $\psi$ over $0.25\times$--$4\times$ baseline (0.005--0.080), re-solve all three regimes (nonlinear, Dynare), recompute the risk-premium shock's \% share of welfare loss via the exact variance decomposition.}
-
-\vspace{5pt}
 \begin{center}
 {\scriptsize
 \begin{tabular}{lccccc}
@@ -819,9 +831,8 @@ Risk-prem.\ \% of Peg's loss & 83.0\% & 80.0\% & \textbf{75.3\%} & 68.1\% & 57.6
 \end{tabular}}
 \end{center}
 
-\vspace{3pt}
-{\footnotesize
-\begin{itemize}\setlength{\itemsep}{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{2pt}
 \item \textbf{Not a knife-edge}: share declines \textbf{smoothly, monotonically} across a $16\times$ range --- no blow-up near $\psi\to0$ or the calibrated value
 \item \textbf{Mechanism robust, not the number}: even at $4\times$ baseline, risk-premium/UIP still drives a \textbf{majority} (57.6\%) of Peg's loss
 \item \textbf{Ranking survives the whole grid}: Managed $<$ Float $<$ Peg at every $\psi$ tested
@@ -844,10 +855,10 @@ Risk-prem.\ \% of Peg's loss & 83.0\% & 80.0\% & \textbf{75.3\%} & 68.1\% & 57.6
 \toprule
 \textbf{Total welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
 \midrule
-With network (baseline, headline) & 25.47 & 10.17 & 102.05 \\
-No network (counterfactual) & 8.13 & 5.30 & 37.94 \\
+With network (baseline, headline) & 25.15 & 10.96 & 90.45 \\
+No network (counterfactual) & 8.67 & 5.82 & 33.66 \\
 \midrule
-\textbf{Network premium} & \textbf{+213\%} & \textbf{+92\%} & \textbf{+169\%} \\
+\textbf{Network premium} & \textbf{+190\%} & \textbf{+88\%} & \textbf{+169\%} \\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -855,20 +866,20 @@ No network (counterfactual) & 8.13 & 5.30 & 37.94 \\
 \vspace{3pt}
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{2pt}
-\item \textbf{Network roughly doubles-to-triples every regime's loss} --- not a decorative feature, most acutely Float ($+213\%$)
+\item \textbf{Network roughly doubles-to-triples every regime's loss} --- not a decorative feature, most acutely Float ($+190\%$)
 \item \textbf{Ranking preserved either way}: Managed $<$ Float $<$ Peg with \emph{and} without the network
-\item \textbf{Network \emph{reallocates} Peg's loss}: without it, output-gap collapses ($79.53\to10.53$) but price dispersion \emph{rises} ($22.51\to27.41$)
+\item \textbf{Network \emph{reallocates} Peg's loss}: without it, output-gap shrinks ($70.01\to13.49$) while price dispersion is essentially flat ($20.43\to20.17$)
 \end{itemize}}
 
 \end{frame}
 
 %==============================================================
-\section*{Appendix: Sector-Specific Export Demand (Full Model)}
+\section*{Appendix: Why Exports Are Sector-Specific in the Baseline}
 %==============================================================
 \begin{frame}{Appendix: Does Export \emph{Concentration} Matter, Not Just Export Openness?}
 %==============================================================
 
-{\footnotesize \textbf{Why this is needed:} the headline model allocates aggregate exports $EX_t$ via household shares $\beta_i^H$ (Services-heavy: $0.744$) --- \emph{opposite} Chile's real export pattern (Resource-heavy: $0.602/0.180/0.036$). FULL version: three sector-specific equations $EX_{i,t}=\kappa_{EX,i}D^*_t P_t^X(P_{i,t}/P_t^{FH})^{-\theta^*}$, $\kappa_{EX,i}$ calibrated (Newton's method) so exports hit the true exporting sector.}
+{\footnotesize \textbf{Why the baseline uses sector-specific exports:} an earlier version allocated aggregate exports $EX_t$ via household shares $\beta_i^H$ (Services-heavy: $0.744$) --- \emph{opposite} Chile's real export pattern (Resource-heavy: $0.602/0.180/0.036$). The baseline instead uses three sector-specific equations $EX_{i,t}=\kappa_{EX,i}D^*_t P_t^X(P_{i,t}/P_t^{FH})^{-\theta^*}$, $\kappa_{EX,i}$ calibrated (Newton's method) so exports hit the true exporting sector.}
 
 \vspace{4pt}
 \begin{center}
@@ -877,36 +888,20 @@ No network (counterfactual) & 8.13 & 5.30 & 37.94 \\
 \toprule
 \textbf{Total welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
 \midrule
-Old ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
-New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
+Deprecated ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
+\textbf{Baseline} (sector-specific, real data) & \textbf{25.15} & \textbf{10.96} & \textbf{90.45} \\
 \bottomrule
 \end{tabular}\\[3pt]
-{\tiny Export/ToT shock welfare ($\times10^4$), old$\to$new: Float $0.11\to0.17$, Managed $0.18\to0.14$, Peg $2.16\to1.17$}}
+{\tiny Export/ToT shock welfare ($\times10^4$), deprecated$\to$baseline: Float $0.11\to0.17$, Managed $0.18\to0.14$, Peg $2.16\to1.17$}}
 \end{center}
 
 \vspace{3pt}
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{2pt}
 \item \textbf{Ranking preserved}: $10.96<25.15<90.45$ once exports are concentrated in the true exporting (Resource) sector
-\item \textbf{Concentrating exports in the flexible-price sector \emph{lowers} Peg's ToT cost}: Resource ($\delta_1=0.90$, low $\kappa_1$) vs.\ Services (stickiest, high $\kappa_3$) cuts Peg's ToT welfare cost $46\%$
+\item \textbf{Concentrating exports in the flexible-price sector \emph{lowers} Peg's ToT cost}: Resource ($\delta_1=0.90$, low $\kappa_1$) vs.\ Services (stickiest, high $\kappa_3$) cuts Peg's ToT welfare cost $46\%$ --- this is \emph{why} the baseline switched
 \item \textbf{Caveat}: matching export \emph{shares} exactly shrinks total trade volume $\approx22\%$ ($0.256\to0.201$); $BSTAR_{ss}=0$ still holds exactly by construction
 \end{itemize}}
-
-\end{frame}
-
-%==============================================================
-\section*{Appendix: Welfare Loss --- Output Gap vs.\ Dispersion}
-%==============================================================
-\begin{frame}{Welfare Loss: Total \& Decomposition}
-%==============================================================
-
-\vspace{-4pt}
-\begin{center}
-\includegraphics[width=0.98\textwidth]{figs/welfare_headline.pdf}
-\end{center}
-
-\vspace{-2pt}
-{\scriptsize \textbf{Managed float dominates both corners.} Peg's loss is $\approx$78\% output gap (79.53 of 102.05, zero monetary autonomy); Float's and Managed's are almost entirely dispersion.}
 
 \end{frame}
 
@@ -921,9 +916,9 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 \toprule
 \textbf{Regime} & \textbf{Cost channel} & \textbf{What sets the magnitude} \\
 \midrule
-\textbf{Float} & $S_t$'s near-unit-root persistence (NFA state) feeds $\Gamma_i\Delta e_t$ into \emph{every} sector's MC, even for shocks with no FX content --- pure dispersion cost & Persistence of debt-elastic premium ($\psi$); $\Gamma_i$ (import exposure); $\kappa_i$ of the most central/sticky sector (Services: $20.7$ of $25.5$) \\
-\textbf{Peg} & Zero monetary autonomy: output-gap term explodes ($79.5$ of $102.1$, $\approx$78\%) on the UIP shock; $\Delta e_t\equiv0$ \emph{relocates}, not removes, adjustment into upstream $P^H$ & Absence of $\phi_\pi,\phi_y$; real vs.\ nominal share of the shock; upstream sector's Domar weight \\
-\textbf{Managed} & $\phi_S\Delta\log S_t$ damps $\Gamma_i\Delta e_t$ without fully re-imposing peg's relocation cost --- dominates every sector at once & Interior optimal $\phi_S^*\approx0.20$: too low $\to$ UIP shock leaks in; too high $\to$ autonomy lost \\
+\textbf{Float} & $S_t$'s near-unit-root persistence (NFA state) feeds $\Gamma_i\Delta e_t$ into \emph{every} sector's MC, even for shocks with no FX content --- pure dispersion cost & Persistence of debt-elastic premium ($\psi$); $\Gamma_i$ (import exposure); $\kappa_i$ of the most central/sticky sector (Services: $20.3$ of $25.2$) \\
+\textbf{Peg} & Zero monetary autonomy: output-gap term explodes ($70.0$ of $90.4$, $\approx$77\%) on the UIP shock; $\Delta e_t\equiv0$ \emph{relocates}, not removes, adjustment into upstream $P^H$ & Absence of $\phi_\pi,\phi_y$; real vs.\ nominal share of the shock; upstream sector's Domar weight \\
+\textbf{Managed} & $\phi_S\Delta\log S_t$ damps $\Gamma_i\Delta e_t$ without fully re-imposing peg's relocation cost --- dominates every sector at once & Interior optimal $\phi_S^*\approx0.20$ (aggregate-export baseline; not yet re-swept): too low $\to$ UIP shock leaks in; too high $\to$ autonomy lost \\
 \bottomrule
 \end{tabular}}
 
@@ -945,9 +940,11 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 \begin{frame}{Managed Float: Optimal Stabilization Intensity $\phi_s$}
 %==============================================================
 
+{\tiny \textbf{Note:} this sweep runs on the earlier aggregate-export specification, not yet rebuilt on the sector-specific-export baseline (which gives Peg $90.45$, not $102.05$, at $\phi_s{=}0$/Float) --- the interior-optimum \emph{mechanism} (UIP leak-in vs.\ autonomy loss) is unrelated to the export side, so should carry over, but the exact optimum $\phi_s^*$ is pending re-verification.}
+
 \vspace{-4pt}
 \begin{center}
-{\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$), full 7-shock model, real Chile calibration}}\\[1pt]
+{\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$), full 7-shock model, real Chile calibration (aggregate-export specification)}}\\[1pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, width=8.5cm, height=3.2cm,
   xlabel={\tiny $\phi_s$}, ylabel={\tiny welfare loss ($\times10^4$)},
@@ -1014,7 +1011,8 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 \begin{frame}{IRFs: Foreign Risk-Premium Shock --- the Key Mechanism}
 %==============================================================
 \vspace{-8pt}
-{\scriptsize \textbf{The shock that decides the ranking:} 75\% of Peg's welfare loss (Chile calibration).}
+{\scriptsize \textbf{The shock that decides the ranking:} 76\% of Peg's welfare loss (Chile calibration).}
+{\tiny All IRF backup slides in this section are from the earlier aggregate-export specification (not yet regenerated for the sector-specific-export baseline); qualitative shapes and mechanisms are expected to carry over, magnitudes pending re-verification.}
 \vspace{-6pt}
 \begin{columns}[t]
 \column{0.5\textwidth}
@@ -1648,6 +1646,31 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 \end{frame}
 
 %==============================================================
+\begin{frame}{IRFs: Network ON vs.\ OFF --- Import-Price Shock}
+\hypertarget{netirfs}{}
+%==============================================================
+
+{\scriptsize Full IRFs behind the "Mechanism" slide's table: imported-input price shock, all three regimes, real Chile calibration --- \textbf{Network OFF} (dashed) vs.\ \textbf{Network ON} (solid):}
+
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/mechanism_network.pdf}
+\end{center}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{IRFs: Network ON vs.\ OFF --- Risk-Premium Shock}
+%==============================================================
+
+{\scriptsize Full IRFs behind the "Mechanism" slide's table: risk-premium/UIP shock, all three regimes, real Chile calibration --- \textbf{Network OFF} (dashed) vs.\ \textbf{Network ON} (solid):}
+
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/mechanism_network_rp.pdf}
+\end{center}
+
+\end{frame}
+
+%==============================================================
 \section*{Appendix: Model Equations (Backup, not in 25-slide count)}
 %==============================================================
 \begin{frame}{Appendix: Model Equations \& Notation (1/2)}
@@ -1730,17 +1753,17 @@ $\delta_i$: Calvo reset prob.\ (primitive) & $\hat\delta_i$: derived slope (ente
 \]
 \vspace{-8pt}
 \[
-\hat b^*_t = \tfrac{1+i_{t-1}}{\Pi^C_t}\hat b^*_{t-1} + \tfrac{P^H_t EX_t - P^{FH}_t IM_t}{P^C_t},\quad
-EX_t = \kappa_{EX}D^*_t\Big(\tfrac{P^H_t}{P^{FH}_t}\Big)^{-\theta^*}
+\hat b^*_t = \tfrac{1+i_{t-1}}{\Pi^C_t}\hat b^*_{t-1} + \tfrac{P^H_t\sum_iEX_{it} - P^{FH}_t IM_t}{P^C_t},\quad
+EX_{it} = \kappa_{EX,i}D^*_t\Big(\tfrac{P_{it}}{P^{FH}_t}\Big)^{-\theta^*}
 \]
 \vspace{-8pt}
 \[
-Y_{it} = \beta^H_i\tfrac{P^H_t}{P_{it}}\big(C^H_t+EX_t\big) + \sum_j \Omega^H_{ji}\tfrac{MC_{jt}Y_{jt}}{P_{it}}
+Y_{it} = \beta^H_i\tfrac{P^H_t}{P_{it}}C^H_t + \tfrac{P^H_t}{P_{it}}EX_{it} + \sum_j \Omega^H_{ji}\tfrac{MC_{jt}Y_{jt}}{P_{it}}
 \]}
 {\tiny
 \begin{tabular}{@{}llll@{}}
-$\hat b^*$: NFA (scaled) & $EX,IM$: exports, imports & $\theta^*$: export elasticity & $D^*$: foreign demand shifter \\
-$\beta^H_i$: cons.\ share, sector $i$ & \multicolumn{3}{l}{Float: $i_t$ Taylor rule, $S_t$ free \quad Peg: $S_t=\bar S$, $i_t$ residual} \\
+$\hat b^*$: NFA (scaled) & $EX_i,IM$: sector exports, imports & $\theta^*$: export elasticity & $D^*$: foreign demand shifter \\
+$\beta^H_i$: cons.\ share, sector $i$ & $\kappa_{EX,i}$: export-demand scale (baseline: sector-specific) & \multicolumn{2}{l}{Float: $i_t$ Taylor rule, $S_t$ free \quad Peg: $S_t=\bar S$, $i_t$ residual} \\
 \end{tabular}}
 
 \end{frame}

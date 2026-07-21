@@ -9,9 +9,9 @@ rho_managed = [5.0105, 4.9444, 4.9564, 5.0824, 5.3573, 6.4928, 8.6482, 17.3960]
 rho_float   = [6.6630, 7.3884, 8.7522, 10.8103, 13.6393, 21.9834, 34.5886, 75.8864]
 
 regimes = ["Float", "Managed", "Peg"]
-premium_resource = [0.2003, 0.0953, 0.9964]
-premium_manuf    = [1.3252, 0.5314, 4.1825]
-premium_services = [5.1359, -0.7296, -7.5628]
+premium_resource = [0.0223, 0.0202, 0.0029]
+premium_manuf    = [1.6372, 0.9801, -1.0324]
+premium_services = [14.0398, 2.9771, 1.2909]
 
 COLOR_PEG = "#dc2626"
 COLOR_MANAGED = "#6b7280"

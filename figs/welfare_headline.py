@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 regimes = ["Float", "Managed", "Peg"]
-totals = [25.47, 10.17, 102.05]
+totals = [25.15, 10.96, 90.45]
 
-output_gap = [1.41, 1.61, 79.53]
-disp_resource = [0.04, 0.04, 0.37]
-disp_manuf = [3.30, 1.82, 5.36]
-disp_services = [20.73, 6.70, 16.79]
+output_gap = [0.98, 2.29, 70.01]
+disp_resource = [0.05, 0.04, 0.27]
+disp_manuf = [3.87, 1.92, 4.28]
+disp_services = [20.25, 6.71, 15.88]
 
 COLOR_TOTAL = "#2a78d6"
 COLOR_OUTPUT_GAP = "#334155"
