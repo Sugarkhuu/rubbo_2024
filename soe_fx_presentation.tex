@@ -770,6 +770,105 @@ Net 2nd-order effect & $+2.0\%$ & $+0.6\%$ & $+0.7\%$ \\
 \end{frame}
 
 %==============================================================
+\section*{Appendix: $\psi$-Sensitivity of the Risk-Premium Share}
+%==============================================================
+\begin{frame}{Appendix: Is the 75\% Risk-Premium Share a $\psi$ Knife-Edge?}
+%==============================================================
+
+{\footnotesize \textbf{Why this was a caveat:} the "75\% risk-premium" result rests on a debt-elastic UIP closing device (Schmitt-Grohé--Uribe 2003) at $\psi=0.020$. Known pitfall: $\psi$ near zero can create a near-unit-root NFA blowup that's a linearization artifact --- the order-2 check (previous slide) ruled out spurious \emph{nonlinearity}, not whether \emph{this} $\psi$ value does unreasonable work.}
+
+\vspace{3pt}
+{\footnotesize \textbf{Method:} scale $\psi$ over $0.25\times$--$4\times$ baseline (0.005--0.080), re-solve all three regimes (nonlinear, Dynare), recompute the risk-premium shock's \% share of welfare loss via the exact variance decomposition.}
+
+\vspace{5pt}
+\begin{center}
+{\scriptsize
+\begin{tabular}{lccccc}
+\toprule
+$\psi$ & 0.005 & 0.010 & \textbf{0.020 (base)} & 0.040 & 0.080 \\
+\midrule
+Peg total loss ($\times10^4$) & 138.17 & 120.74 & \textbf{102.05} & 83.69 & 67.46 \\
+Risk-prem.\ \% of Peg's loss & 83.0\% & 80.0\% & \textbf{75.3\%} & 68.1\% & 57.6\% \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\vspace{3pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item \textbf{Not a knife-edge}: share declines \textbf{smoothly, monotonically} across a $16\times$ range --- no blow-up near $\psi\to0$ or the calibrated value
+\item \textbf{Mechanism robust, not the number}: even at $4\times$ baseline, risk-premium/UIP still drives a \textbf{majority} (57.6\%) of Peg's loss
+\item \textbf{Ranking survives the whole grid}: Managed $<$ Float $<$ Peg at every $\psi$ tested
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\section*{Appendix: Network Premium --- Real Chile Calibration}
+%==============================================================
+\begin{frame}{Appendix: Network vs.\ No-Network, on the Real Chile Data}
+%==============================================================
+
+{\footnotesize \textbf{Why this is needed:} "Isolating the Network Channel" (main deck) uses a \textbf{stylized triangular} $\Omega^H$ scaled by density dial $\rho$, not Chile's actual \textbf{dense} $\Omega^H$. Here: zero every $\Omega^H_{ij}$ (incl.\ diagonal), let $\alpha_i$ absorb the freed share ($\alpha_i=1-\omega_{F,i}$); re-derive the steady state and re-solve all three regimes on the real data.}
+
+\vspace{4pt}
+\begin{center}
+{\scriptsize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Total welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
+\midrule
+With network (baseline, headline) & 25.47 & 10.17 & 102.05 \\
+No network (counterfactual) & 8.13 & 5.30 & 37.94 \\
+\midrule
+\textbf{Network premium} & \textbf{+213\%} & \textbf{+92\%} & \textbf{+169\%} \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\vspace{3pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item \textbf{Network roughly doubles-to-triples every regime's loss} --- not a decorative feature, most acutely Float ($+213\%$)
+\item \textbf{Ranking preserved either way}: Managed $<$ Float $<$ Peg with \emph{and} without the network
+\item \textbf{Network \emph{reallocates} Peg's loss}: without it, output-gap collapses ($79.53\to10.53$) but price dispersion \emph{rises} ($22.51\to27.41$)
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\section*{Appendix: Sector-Specific Export Demand (Full Model)}
+%==============================================================
+\begin{frame}{Appendix: Does Export \emph{Concentration} Matter, Not Just Export Openness?}
+%==============================================================
+
+{\footnotesize \textbf{Why this is needed:} the headline model allocates aggregate exports $EX_t$ via household shares $\beta_i^H$ (Services-heavy: $0.744$) --- \emph{opposite} Chile's real export pattern (Resource-heavy: $0.602/0.180/0.036$). FULL version: three sector-specific equations $EX_{i,t}=\kappa_{EX,i}D^*_t P_t^X(P_{i,t}/P_t^{FH})^{-\theta^*}$, $\kappa_{EX,i}$ calibrated (Newton's method) so exports hit the true exporting sector.}
+
+\vspace{4pt}
+\begin{center}
+{\scriptsize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Total welfare loss ($\times10^4$)} & \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
+\midrule
+Old ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
+New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
+\bottomrule
+\end{tabular}\\[3pt]
+{\tiny Export/ToT shock welfare ($\times10^4$), old$\to$new: Float $0.11\to0.17$, Managed $0.18\to0.14$, Peg $2.16\to1.17$}}
+\end{center}
+
+\vspace{3pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}
+\item \textbf{Ranking preserved}: $10.96<25.15<90.45$ once exports are concentrated in the true exporting (Resource) sector
+\item \textbf{Concentrating exports in the flexible-price sector \emph{lowers} Peg's ToT cost}: Resource ($\delta_1=0.90$, low $\kappa_1$) vs.\ Services (stickiest, high $\kappa_3$) cuts Peg's ToT welfare cost $46\%$
+\item \textbf{Caveat}: matching export \emph{shares} exactly shrinks total trade volume $\approx22\%$ ($0.256\to0.201$); $BSTAR_{ss}=0$ still holds exactly by construction
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \section*{Appendix: Welfare Loss --- Output Gap vs.\ Dispersion}
 %==============================================================
 \begin{frame}{Welfare Loss: Total \& Decomposition}
