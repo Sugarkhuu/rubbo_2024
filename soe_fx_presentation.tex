@@ -586,7 +586,7 @@ $\lambda_{D,i} = \big[(\bm\beta^H)^\top(I-\Omega^H)^{-1}\big]_i,\quad
 \begin{frame}{Openness \& Import Concentration}
 %==============================================================
 \vspace{-6pt}
-{\scriptsize Reparametrize $\bm\omega_F$ only ($\alpha_i=1-\Omega^H_i-\omega_{F,i}$ absorbs it, as in the $\rho$ sweep):
+{\scriptsize Reparametrize $\bm\omega_F$ only, on the REAL Chile calibration ($\alpha_i=1-\Omega^H_i-\omega_{F,i}$ absorbs it, holding $\Omega^H$ fixed at its Chile values):
 \[
 \omega_{F,i}(\zeta)=\zeta\,\omega_{F,i}^{\text{base}} \qquad\quad \omega_{F,i}(\theta_M)=\bar\omega_F+\theta_M\big(\omega_{F,i}^{\text{base}}-\bar\omega_F\big)
 \]
@@ -598,11 +598,11 @@ $\zeta=\theta_M=1$: baseline. $\zeta$: uniform rescaling. $\theta_M$: mean-prese
 \end{center}
 
 \vspace{-4pt}
-{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust}; gap moves in \textbf{opposite directions}:
+{\scriptsize \textbf{Managed $<$ Float $<$ Peg robust throughout both sweeps} (real Chile calibration, $\zeta=\theta_M=1$ recovers the headline 25.47/10.17/102.05 exactly); gap still moves in \textbf{opposite directions}, though not symmetrically:
 \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-\item $\zeta$: Peg $\downarrow$, Float $\uparrow$ --- \textbf{converge}
-\item $\theta_M$: Peg $\uparrow$, Float $\downarrow$ --- \textbf{diverge}
-\item \textbf{Mechanism:} $\alpha_i+\Omega^H_i+\omega_{F,i}=1$ links the labor- and import-cost channels within every sector. $\zeta$ moves both economy-wide (Float's $\Gamma$-channel vs.\ Peg's labor-channel); $\theta_M$ moves them in/out of Services ($\approx$all the Domar weight)
+\item $\zeta$ (openness): Peg $\downarrow$ ($153.7\to65.8$), Float $\uparrow$ ($23.1\to36.0$), Managed U-shaped (min.\ near $\zeta{=}1$) --- \textbf{converge}
+\item $\theta_M$ (concentration): Peg $\uparrow$ much faster ($94.0\to107.3$, $+14\%$) than Float ($25.2\to25.8$, $+2\%$) or Managed ($9.8\to10.4$) --- \textbf{gap still diverges}, but via Peg rising, not Float falling (Float is nearly flat, unlike the earlier stylized-network sweep, which had Float declining with concentration)
+\item \textbf{Mechanism:} $\alpha_i+\Omega^H_i+\omega_{F,i}=1$ links the labor- and import-cost channels within every sector. $\zeta$ moves both economy-wide (Float's $\Gamma$-channel vs.\ Peg's labor-channel); $\theta_M$ moves them in/out of Services ($\approx$all the Domar weight) --- Peg's risk-premium/output-gap channel is far more sensitive to this reallocation than Float's price-dispersion channel
 \end{itemize}}
 
 \end{frame}
@@ -636,7 +636,7 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 \begin{frame}{Isolating the Network Channel}
 %==============================================================
 
-{\scriptsize \textbf{New sweep, stylized triangular network} (not Chile's dense $\Omega^H$): scale domestic I-O links $OH_{21},OH_{32}$ by $\rho$. $\rho{=}0$: no domestic network. $\rho{=}1$: baseline.}
+{\scriptsize \textbf{Real Chile calibration}: scale all six cross-sector $\Omega^H$ links by $\rho$, holding within-sector input use \& $\Omega^F$ fixed at Chile's data. $\rho{=}0$: no cross-sector domestic network. $\rho{=}1$: exact Chile baseline. Feasible to $\rho\approx2.45$ (row 1/2 hit $\alpha_i{=}0$) --- denser than the stylized chain used previously, so the grid stops at $2.2$, not $3$.}
 
 \vspace{-2pt}
 \begin{center}
@@ -649,10 +649,11 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 \vspace{1pt}
 {\scriptsize
 \begin{itemize}\setlength{\itemsep}{-2pt}\setlength{\topsep}{0pt}
-\item \textbf{Managed is almost network-neutral:} $\rho{=}0\to1$ adds only $+0.35$ to Managed vs.\ $+6.98$ Float, $+10.30$ Peg
-\item \textbf{Denser network $\Rightarrow$ corners diverge from Managed:} by $\rho{=}3$, Float ($75.9$) catches Peg ($82.9$), both $\gg$ Managed ($17.4$)
-\item \textbf{Burden lands on different sectors:} Peg/Managed hit upstream Resource/Manuf., Services \emph{gains}; Float hits Services most
-\item \textbf{Verdict:} network \textbf{triples} the regime gap as density rises ($\rho{:}1\to3$) and \textbf{redirects} who bears the cost
+\item \textbf{Managed is least sensitive, not neutral:} $\rho{=}0\to1$ adds $+1.17$ to Managed vs.\ $+5.52$ Float, $+25.72$ Peg (20.0/9.0/76.3 $\to$ 25.5/10.2/102.1)
+\item \textbf{Peg's rise is a pure output-gap story:} its per-sector price dispersion \emph{falls} slightly at every sector ($-0.01/-3.62/-1.82$) as $\rho{:}0\to1$ --- the $+25.72$ comes entirely from the output-gap term amplifying with network density, not price dispersion
+\item \textbf{Float/Managed's rise concentrates in Services} ($+4.90$/$+0.64$), matching Services' large Domar weight
+\item \textbf{No convergence at high density} (unlike the earlier stylized-network estimate): Peg/Float ratio \emph{grows} from $4.0\times$ ($\rho{=}1$) to $5.2\times$ ($\rho{=}2.2$, 40.1/16.5/206.8) --- denser networks widen, not narrow, the gap between corners
+\item \textbf{Verdict:} Peg--Managed gap roughly \textbf{doubles} from $\rho{:}1\to2.2$ (91.9$\to$190.3) --- the network channel matters even more on real data than the stylized estimate suggested
 \end{itemize}}
 
 \end{frame}
@@ -724,9 +725,9 @@ $\zeta=\theta_X=1$: baseline (real export shares). $\zeta$: uniform export-openn
 \begin{itemize}\setlength{\itemsep}{5pt}
 \item \textbf{Managed float optimal}: 10.17 vs.\ Float 25.47, Peg 102.05 ($\times10^4$, Chile calibration)
 \item \textbf{Driver:} risk-premium/UIP dominates Peg (75\%); TFP persistence dominates Float \& Managed
-\item \textbf{Optimal $\phi_s\approx0.20$}: sharply peaked --- over-stabilizing $S_t$ is costly
-\item \textbf{Ranking robust} to $\kappa,\theta,\rho$ (network density) \& to Korea/Czechia calibrations; the \emph{gap} is not
-\item \textbf{Network channel isolated} (stylized network, $\rho$ dial): $\rho{=}0\to1$ adds only $+0.35$ to Managed vs.\ $+6.98$ Float, $+10.30$ Peg --- \textbf{denser networks favor Managed most}, and reallocate the network's sectoral burden (Services gains under Peg, loses under Float)
+\item \textbf{Optimal $\phi_s\approx0.20$} (real Chile calibration): interior optimum, but nearly flat vs.\ the calibrated $0.30$ ($\approx$0.3\% apart) --- over-stabilizing $S_t$ beyond $\approx0.3$ is what's costly
+\item \textbf{Ranking robust} to $\zeta,\theta_M,\rho$ (all three now Chile-calibrated) \& to Korea/Czechia calibrations; the \emph{gap} is not
+\item \textbf{Network channel isolated} (Chile calibration, $\rho$ dial on all six cross-sector $\Omega^H$ links): $\rho{=}0\to1$ adds $+1.17$ to Managed vs.\ $+5.52$ Float, $+25.72$ Peg --- \textbf{Peg's rise is entirely an output-gap story} (its price dispersion falls slightly at every sector); Peg does \emph{not} converge toward Float at high density, unlike an earlier stylized-network estimate
 \item \textbf{Vs.\ literature:} same ranking as Gal\'i--Monacelli, different channel (risk-premium, not ToT)
 \item \textbf{2nd-order-verified} (Dynare order=2, pruned, simulated): loss rises $\le2\%$ net of MC noise, ranking unchanged --- see appendix
 \item \textbf{Next:} many-sector OECD TiVA calibration (beyond the 3-sector Chile/Korea/Czechia data)
@@ -946,14 +947,14 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 
 \vspace{-4pt}
 \begin{center}
-{\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$), full 7-shock model, stylized network}}\\[1pt]
+{\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$), full 7-shock model, real Chile calibration}}\\[1pt]
 \begin{tikzpicture}
 \begin{axis}[slide fig, width=8.5cm, height=3.2cm,
   xlabel={\tiny $\phi_s$}, ylabel={\tiny welfare loss ($\times10^4$)},
-  xmin=-0.05, xmax=2.05, ymin=3.5, ymax=23.0]
-\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,13.639)(0.10,5.259)(0.20,4.744)(0.30,5.357)(0.50,7.520)(0.75,10.529)(1.00,13.353)(1.50,18.128)(2.00,21.878)};
-\node[font=\tiny] at (axis cs:0.20,4.0) {min $\approx0.20$};
-\draw[dashed, gray!50, thin] (axis cs:0.30,3.5) -- (axis cs:0.30,5.357);
+  xmin=-0.05, xmax=2.05, ymin=8.0, ymax=36.0]
+\addplot[thick, customgreen!85!black, mark=*, mark size=1.3pt] coordinates {(0.00,25.474)(0.10,11.830)(0.20,10.140)(0.30,10.171)(0.50,12.147)(0.75,15.963)(1.00,20.163)(1.50,28.257)(2.00,35.332)};
+\node[font=\tiny] at (axis cs:0.20,9.0) {min $\approx0.20$};
+\draw[dashed, gray!50, thin] (axis cs:0.30,8.0) -- (axis cs:0.30,10.171);
 \end{axis}
 \end{tikzpicture}
 \end{center}
@@ -961,9 +962,9 @@ New (sector-specific, real data) & 25.15 & 10.96 & 90.45 \\
 \vspace{-2pt}
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{1pt}
-\item \textbf{Why interior:} too low $\to$ UIP shock leaks in; too high $\to$ loses autonomy
-\item $\phi_s{=}0\to0.20$: loss $13.64\to4.74$. \textbf{Peaked, not flat:} $0.20$ beats calibrated $0.30$ by $\approx$13\%
-\item Beyond $\approx0.2$: rises fast, back above Float by $\phi_s{=}1$
+\item \textbf{Why interior:} too low $\to$ UIP shock leaks in ($\phi_s{=}0$ collapses to Float's $25.47$); too high $\to$ loses autonomy
+\item $\phi_s{=}0\to0.20$: loss $25.47\to10.14$. \textbf{Interior optimum, but nearly flat near it:} $0.20$ beats the calibrated $0.30$ by only $\approx$0.3\% (was $\approx$13\% under the old stylized-network sweep --- the Chile calibration's optimum is much less sharply peaked)
+\item Beyond $\approx0.3$: rises steadily, back above Float ($25.47$) between $\phi_s{=}1.0$ (20.16) and $1.5$ (28.26)
 \end{itemize}}
 
 \end{frame}

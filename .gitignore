@@ -34,6 +34,12 @@ oen_chile_nonet_*.mod
 oen_expsw_*/
 oen_expsw_*.mod
 +oen_expsw_*/
+oen_impsw_*/
+oen_impsw_*.mod
++oen_impsw_*/
+open_economy_network_chile_phis_*/
+open_economy_network_chile_phis_*.mod
++open_economy_network_chile_phis_*/
 
 # Dynare build output for the sector-specific export model (TASK #2,
 # todo_three_exercises.txt) -- .mod files themselves ARE hand-authored and
