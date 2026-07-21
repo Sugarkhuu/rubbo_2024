@@ -11,20 +11,14 @@ in the current deck order (23 slides total). Say it in your own words once
 you know it — this is a rehearsal script, not a thing to read verbatim on
 the day.
 
-**Data-provenance flag, for you, not the audience:** as of this rewrite,
-every Results slide uses the real **Chile calibration** (Float 25.15,
-Managed 10.96, Peg 90.45, $\times10^{-4}$) — including "Isolating the
-Network Channel," which was switched from a stylized triangular network to
-the real Chile density sweep. **Exception to check before the talk:**
-"Import Openness & Import Concentration" and "Export Openness & Export
-Concentration" currently caption themselves as "real Chile calibration," but
-their baseline numbers (Float 13.64, Managed 5.36, Peg 49.63) don't match
-the Chile headline — they match the *old* stylized-network baseline. This
-looks like a stale caption, not a stale number: reconfirm which is true
-before asserting "real Chile calibration" out loud on those two slides. If
-you don't have time to rerun them, the safe move is to just not repeat the
-word "Chile" on those two slides specifically and let the qualitative
-result (ranking survives, direction of each sweep) carry the point instead.
+**Data-provenance note, for you, not the audience:** every Results slide now
+uses the real **Chile calibration**, sector-specific-export version (Float
+25.15, Managed 10.96, Peg 90.45, $\times10^{-4}$ baseline) — confirmed
+consistent across Welfare Ranking, Isolating the Network Channel, both
+Openness/Concentration sweeps, and Robustness Summary as of 2026-07-21. (An
+earlier version of two sweep scripts pointed at a stale, pre-sector-specific-
+export master file, giving a Peg baseline of 102 instead of 90 — this has
+been fixed and rerun; no more asterisks needed on any Results number.)
 
 ---
 
@@ -135,14 +129,20 @@ sector creates no cost-push at all, because $\mathcal V\mathbf 1=\mathbf
 
 ## Foreign Sector (1:00)
 "The exchange rate is pinned down by two conditions: law of one price for
-the imported good, and uncovered interest parity with a debt-elastic risk
-premium — that's the $\psi$ term, it's what makes net foreign assets
-stationary, the standard Schmitt-Grohé–Uribe device. Net foreign assets
-accumulate the trade balance, and exports are sector-specific, calibrated
-to match Chile's actual export pattern, which is Resource-heavy. Two
-channels into the domestic economy: a cost-push channel — exchange rate
-into marginal cost into inflation — and a demand channel — exchange rate
-into exports into the output gap into inflation."
+the imported good, and uncovered interest parity. There are actually two
+separate objects in that UIP condition, worth keeping apart. The $\psi$
+term is a debt-elastic premium — a small, endogenous function of net
+foreign assets, the standard Schmitt-Grohé–Uribe device, and it's there
+purely for stationarity, so NFA doesn't wander on a unit root. Then,
+separately, there's an exogenous shock to the country risk premium
+itself — a genuine stochastic innovation, unrelated to the debt level.
+That second one is the one that turns out to matter enormously for Peg, in
+the shock decomposition later. Net foreign assets accumulate the trade
+balance, and exports are sector-specific, calibrated to match Chile's
+actual export pattern, which is Resource-heavy. Two channels into the
+domestic economy: a cost-push channel — exchange rate into marginal cost
+into inflation — and a demand channel — exchange rate into exports into
+the output gap into inflation."
 
 ---
 
@@ -165,7 +165,11 @@ here's the welfare loss function I'll report throughout: quadratic in
 output-gap variance, plus a weighted sum of sector-level inflation
 variances, weights $\kappa_i$ combining each sector's Domar weight and its
 stickiness. Second-order approximation to household utility, following
-Rubbo's approach, extended to the open economy."
+Rubbo's approach, extended to the open economy. Seven shocks drive
+everything from here on: TFP in each of the three sectors, import price,
+foreign demand, export price or terms-of-trade, and the risk premium —
+each a persistent AR(1), one-percent standard deviation. That's the full
+list you'll see broken down in the shock decomposition later."
 
 ---
 
@@ -212,13 +216,19 @@ I'll show you exactly how in a few slides."
 
 ## What Drives Each Regime's Loss? Shock Decomposition (1:15)
 "What's actually driving these numbers, shock by shock. [point] For Peg,
-one shock explains three-quarters of the loss: the risk-premium, or UIP,
-shock. That's the shock that decides everything for a hard peg. For Float
-and Managed it's completely different — TFP shocks dominate instead, and
-the risk-premium shock barely registers, because the exchange rate, or
-partial smoothing under Managed, absorbs it before it reaches output.
-Import price, foreign demand, export price — all second-order, in every
-regime. This is not a terms-of-trade story."
+one shock explains three-quarters of the loss: an exogenous shock to the
+country risk premium — the genuinely stochastic piece from the Foreign
+Sector slide, not the small debt-elastic $\psi$ stabilizer, which barely
+moves anything on its own. And to be clear, this isn't because I gave that
+shock a bigger kick — all seven shocks in the model share the same size,
+one percent. It's structural: a peg removes the exchange-rate buffer that
+would otherwise absorb a risk-premium shock, so the whole thing goes
+straight into the interest rate and the output gap instead. For Float and
+Managed it's completely different — TFP shocks dominate instead, and the
+risk-premium shock barely registers, because the exchange rate, or partial
+smoothing under Managed, absorbs it before it reaches output. Import
+price, foreign demand, export price — all second-order, in every regime.
+This is not a terms-of-trade story."
 
 ---
 
@@ -229,10 +239,11 @@ dial, $\rho$ — $\rho=1$ is the actual calibration, $\rho=0$ means each
 sector only uses its own output and imports, no domestic cross-buying.
 Losses rise monotonically with density in every regime, and critically, the
 Peg-Float gap *widens* as density increases. Managed stays best throughout.
-On the right — the network's price-dispersion premium, concentrated in
-Services for Float and Managed, but actually *negative* for Peg — a denser
-network shifts Peg's cost out of price dispersion and into the output gap
-instead."
+On the right — the network's price-dispersion premium, clearly positive and
+concentrated in Services for Float and Managed. For Peg it's small and
+mixed — slightly negative for Resource and Manufacturing, slightly positive
+for Services, netting close to zero. Peg's sensitivity to network density
+runs mainly through the output gap, not price dispersion."
 
 ---
 

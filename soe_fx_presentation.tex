@@ -318,7 +318,7 @@ NFA accumulates the trade balance; exports are \textbf{sector-specific} (Resourc
 \[
 \hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^H\sum_iEX_{it}-P_t^{FH}IM_t}{P_t^C},
 \qquad
-EX_{it}=\kappa_{EX,i}D_t^*\Big(\frac{P_{it}}{P_t^{FH}}\Big)^{-\theta^*}
+EX_{it}=\kappa_{EX,i}D_t^*\,PX_t\Big(\frac{P_{it}}{P_t^{FH}}\Big)^{-\theta^*}
 \]
 \vspace{10pt}
 
@@ -332,6 +332,19 @@ EX_{it}=\kappa_{EX,i}D_t^*\Big(\frac{P_{it}}{P_t^{FH}}\Big)^{-\theta^*}
 \hat s_t\ \rightarrow\ EX_{it}\ \rightarrow\ \tilde y_t\ \rightarrow\ \pi_{it}
 \quad\text{(demand)}
 \]
+
+\vspace{6pt}
+{\footnotesize where:}
+
+\vspace{4pt}
+\resizebox{\textwidth}{!}{%
+{\scriptsize
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}llll@{}}
+$P_t^{F*}$: foreign price of imports & $RP_t$: risk-premium shock & $D_t^*$: foreign demand shock & $PX_t$: export price/ToT shock \\
+$\psi(\cdot)$: debt-elastic NFA stabilizer & $\hat b_t^*$: NFA (\% GDP) & $\kappa_{EX,i}$: export scale, sector $i$ & $\theta^*$: export demand elasticity \\
+$\hat s_t\equiv\log(S_t/\bar S)$: log exch.\ rate & $\Delta e_{t+1}\equiv\mathbb E_t\hat s_{t+1}-\hat s_t$: exp.\ depreciation & \multicolumn{2}{l}{(hats: log-deviation from steady state, throughout)} \\
+\end{tabular}}}
 
 \end{frame}
 
@@ -406,9 +419,7 @@ The central bank partially stabilizes the exchange rate.
 \textbf{Foreign sector}:
 
 \[
-i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t,
-\qquad
-\hat b_t^*=\frac{1+i_{t-1}}{\Pi_t^C}\hat b_{t-1}^*+\frac{P_t^H\sum_iEX_{it}-P_t^{FH}IM_t}{P_t^C}
+i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 \]
 
 \textbf{Policy rule}:
@@ -422,9 +433,11 @@ i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t,
 \end{cases}
 \]
 
-{\scriptsize where: $r_t^{\mathrm{nat}}$ natural real rate, $\hat p_t^H$ log home price idx., $\pi_t^{DC}$ DC index (target); $\mathcal B,\Gamma,\mathcal V,\psi(\cdot),RP_t$ as before.}
+{\scriptsize where: $r_t^{\mathrm{nat}}$ natural real rate, $\hat p_t^H$ log home price idx., $\pi_t^{DC}$ DC index (target); $\mathcal B,\Gamma,\mathcal V,\psi(\cdot),RP_t,\hat p_t^{F*}(PF_t)$ as before.}
 
 \textbf{Welfare loss}: $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\kappa_i\mathrm{Var}(\pi_{it})\big]$, $\kappa_i=\lambda_{D,i}\varepsilon\frac{1-\hat\delta_i}{\hat\delta_i}$
+
+{\scriptsize \textbf{Seven AR(1) shocks} (1\% s.d.\ each): sector TFP $A_1,A_2,A_3$ ($\rho{=}0.90$), import price $PF$ ($\rho{=}0.85$), foreign demand $D^*$ ($\rho{=}0.80$), export price/ToT $PX$ ($\rho{=}0.85$), risk premium $RP$ ($\rho{=}0.80$).}
 
 \end{frame}
 
@@ -539,7 +552,7 @@ $\phi_s$ & $0.30$ & \\
 \end{center}
 
 \vspace{4pt}
-{\footnotesize Density sweep on the \textbf{real Chile network} (scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed; $\rho{=}1$ baseline, max feasible $\rho\approx2.2$): losses rise monotonically with density in every regime, and the Peg/Float gap \textbf{widens} --- \textbf{Managed stays best throughout}. Right: price-dispersion premium ($\rho{=}1$ vs.\ $\rho{=}0$) concentrates in Services for Float/Managed, but is \emph{negative} for Peg (denser network shifts its dispersion into the output gap instead).}
+{\footnotesize Density sweep on the \textbf{real Chile network} (scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed; $\rho{=}1$ baseline, max feasible $\rho\approx2.2$): losses rise monotonically with density in every regime, and the Peg/Float gap \textbf{widens} --- \textbf{Managed stays best throughout}. Right: price-dispersion premium ($\rho{=}1$ vs.\ $\rho{=}0$) is clearly positive and concentrated in Services for Float/Managed, but small and \emph{mixed} across sectors for Peg (Resource/Manuf.\ slightly negative, Services slightly positive, netting close to zero) --- Peg's density sensitivity runs mainly through the output gap, not price dispersion.}
 
 \end{frame}
 
@@ -702,11 +715,11 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 \toprule
 \textbf{Dimension} & \textbf{Effect on the regimes} & \textbf{Ranking?} \\
 \midrule
-Import openness $\uparrow$ & Peg $\downarrow\downarrow$ (68$\to$33), Float $\uparrow$ (11$\to$23), Managed flat & gap \textbf{converges} \\
-Import concentration $\uparrow$ & Peg $\uparrow\uparrow$ (37$\to$60), Float $\downarrow$ slightly, Managed flat & gap \textbf{diverges} \\
+Import openness $\uparrow$ & Peg $\downarrow\downarrow$ (131$\to$68), Float $\uparrow$ (21$\to$44), Managed flat (11--13) & gap \textbf{converges} \\
+Import concentration $\uparrow$ & Peg $\uparrow\uparrow$ (86$\to$93), Float/Managed roughly flat & gap \textbf{diverges} \\
 Export openness $\uparrow$ & \textbf{all regimes improve}, Peg most (99$\to$85) & unchanged \\
 Export concentration (Resource) & helps Peg, mildly hurts Float/Managed & unchanged \\
-Network density $\rho\uparrow$ & \textbf{all} worsen, Peg fastest (76$\to$207 at $\rho{=}2.2$) & gap \textbf{diverges} \\
+Network density $\rho\uparrow$ & \textbf{all} worsen, Peg fastest (73$\to$214 at $\rho{=}2.2$) & gap \textbf{diverges} \\
 \bottomrule
 \end{tabular}}
 
