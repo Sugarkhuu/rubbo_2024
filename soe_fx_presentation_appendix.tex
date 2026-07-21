@@ -21,6 +21,60 @@
 \end{frame}
 
 %==============================================================
+\section*{Appendix: Calibration Parameters}
+%==============================================================
+\begin{frame}{Calibration Parameters: What Each One Measures (1/2)}
+%==============================================================
+
+{\tiny
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{1.3cm}p{3.7cm}p{1.6cm}p{3.0cm}@{}}
+\toprule
+\textbf{Param.} & \textbf{Measures} & \textbf{Chile value} & \textbf{Role in the model} \\
+\midrule
+$\alpha_i$ & Labor's share of sector $i$'s total cost (Cobb-Douglas exponent on $L_i$) & 0.50/0.36/0.60 & Direct wage pass-through; $=1-\sum_j\Omega^H_{ij}-\Omega^F_i$ (residual) \\
+$\Omega^H_{ij}$ & Share of sector $i$'s cost paid to domestic input $j$ & $3\times3$ matrix (Calibration slide) & \emph{The network itself} --- drives $\lambda_D$, $\tilde A$, TFP \& FX amplification \\
+$\Omega^F_i$ & Share of sector $i$'s cost paid for imported inputs & 0.08/0.19/0.07 & Direct (pre-network) FX exposure of marginal cost \\
+$\beta^H_i$ & HH's Cobb-Douglas budget share on domestic good $i$ & 0.03/0.23/0.74 & Demand-side sector weight; feeds Domar weight $\lambda_D^\top=(\beta^H)^\top(I-\Omega^H)^{-1}$ \\
+Export share$_i$ & Share of sector $i$'s \emph{own} output that is exported & 0.60/0.18/0.04 & Descriptive/calibration check on $\kappa_{EX,i}$; not yet used to allocate the aggregate ToT shock across sectors \\
+$\delta_i$ & Calvo probability of resetting price each quarter & 0.90/0.31/0.16 & Price stickiness; low $\delta_i$ = sticky (Services); enters $\hat\delta_i$ and welfare weight $\kappa_i$ \\
+\bottomrule
+\end{tabular}}
+
+\vspace{6pt}
+{\scriptsize \textbf{Reading the pattern:} Resource is flexible \& import-light but export-heavy; Services is sticky, import-light \emph{directly}, but --- via $\Omega^H$ --- ends up the most network-exposed sector of all (see Network Properties slide).}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Calibration Parameters: What Each One Measures (2/2)}
+%==============================================================
+
+{\tiny
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{1.3cm}p{3.7cm}p{1.6cm}p{3.0cm}@{}}
+\toprule
+\textbf{Param.} & \textbf{Measures} & \textbf{Value} & \textbf{Role in the model} \\
+\midrule
+$\psi$ & Elasticity of the debt-elastic risk premium to NFA deviations from $\bar b^*$ & 0.020 & \textbf{Key mechanism}: how hard external borrowing costs bite when NFA moves; drives Peg's dominant loss channel \\
+$\phi_\pi$ & Taylor-rule response to DC-index inflation $\pi_t^{DC}$ & 1.50 & Standard active rule (Taylor 1993) \\
+$\phi_y$ & Taylor-rule response to the output gap $\tilde y_t$ & 0.50 & Standard \\
+$\phi_s$ & Managed-float response to the exchange rate $\hat s_t$ & 0.30 & $\phi_s{=}0$: recovers Float. $\phi_s{\to}\infty$: recovers Peg. Chosen value: moderate FX smoothing \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Standard literature values (not paper-specific --- sources: Appendix, Sector Concordance slide)}} \\
+$\beta$ & HH discount factor & 0.99 & Standard quarterly ($\approx4\%$ annual real rate) \\
+$\gamma$ & Relative risk aversion (inverse EIS) & 1.00 & Log utility \\
+$\varphi$ & Inverse Frisch elasticity of labor supply & 2.00 & Standard \\
+$\eta$ & Elasticity of subst., home vs.\ foreign consumption & 1.50 & Armington aggregator \\
+$\varepsilon$ & Elasticity of subst.\ across varieties (within-sector CES) & 8.00 & Markup $=\varepsilon/(\varepsilon{-}1)\approx14\%$ \\
+$\theta^*$ & Foreign demand elasticity for home exports & 2.00 & Governs $EX_{it}$ response to relative export price \\
+$\beta^{F,tot}$ & Steady-state import share of CPI/consumption ($=1-\omega$) & 0.10 & Aggregate openness of the outer CES nest; $\omega{=}0.90$ home-bias weight \\
+\bottomrule
+\end{tabular}}
+
+\end{frame}
+
+%==============================================================
 \section*{Appendix: Second-Order Welfare Check (Backup)}
 %==============================================================
 \begin{frame}{Appendix: Is the Ranking Robust to a Genuine 2nd-Order Solution?}
@@ -182,14 +236,14 @@ Aggregate-export ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
 \end{frame}
 
 %==============================================================
-\section*{Appendix: Managed Float --- Optimal Stabilization Intensity}
+\section*{Appendix: Managed Float --- Welfare-Minimizing $\phi_s$}
 %==============================================================
-\begin{frame}{Managed Float: Optimal Stabilization Intensity $\phi_s$}
+\begin{frame}{Managed Float: Welfare-Minimizing Stabilization Intensity $\phi_s$}
 %==============================================================
 
-{\tiny \textbf{Note:} computed under the aggregate-export specification; the interior-optimum mechanism (UIP leak-in vs.\ autonomy loss) is unrelated to the export side.}
+{\tiny \textbf{Note:} aggregate-export specification (interior-optimum mechanism is unrelated to the export side). \textbf{Scope:} minimizes $\mathcal W$ \emph{within} the fixed rule $\hat i_t=\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t+\phi_s\hat s_t$ ($\phi_\pi,\phi_y$ fixed) --- an \emph{optimal simple rule}, not the unconstrained Ramsey optimum (no surviving DC index to target).}
 
-\vspace{-4pt}
+\vspace{-6pt}
 \begin{center}
 {\tiny \textbf{Welfare loss vs.\ $\phi_s$ ($\times10^4$), full 7-shock model, real Chile calibration (aggregate-export specification)}}\\[1pt]
 \begin{tikzpicture}
@@ -203,12 +257,13 @@ Aggregate-export ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
 \end{tikzpicture}
 \end{center}
 
-\vspace{-2pt}
-{\footnotesize
-\begin{itemize}\setlength{\itemsep}{1pt}
+\vspace{-4pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
 \item \textbf{Why interior:} too low $\to$ UIP shock leaks in ($\phi_s{=}0$ collapses to Float's $25.47$); too high $\to$ loses autonomy
-\item $\phi_s{=}0\to0.20$: loss $25.47\to10.14$. \textbf{Interior optimum, but nearly flat near it:} $0.20$ beats the calibrated $0.30$ by only $\approx$0.3\% (was $\approx$13\% under the old stylized-network sweep --- the Chile calibration's optimum is much less sharply peaked)
-\item Beyond $\approx0.3$: rises steadily, back above Float ($25.47$) between $\phi_s{=}1.0$ (20.16) and $1.5$ (28.26)
+\item $\phi_s{=}0\to0.20$: loss $25.47\to10.14$, \textbf{welfare-minimizing within this rule family}, but nearly flat near it: $0.20$ beats the calibrated $0.30$ by only $\approx$0.3\% (was $\approx$13\% under the old stylized-network sweep)
+\item Beyond $\approx0.3$: rises steadily, back above Float between $\phi_s{=}1.0$ (20.16) and $1.5$ (28.26)
+\item \textbf{Not a Ramsey optimum} --- best $\phi_s$ \emph{given} the Taylor-rule form; an unconstrained optimal policy could in principle do better, but has no closed-form target here
 \end{itemize}}
 
 \end{frame}

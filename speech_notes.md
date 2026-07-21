@@ -1,509 +1,359 @@
-# Speech Notes — "Exchange Rate Regimes in Production Networks"
+# Speech Notes — "Exchange Rate and Production Network"
 
-Session: 45 min. Target: **~25 min talk**, leaving ~20 min for Q&A.
-Timings below sum to ~20.5 min of talking; the extra slack is for pauses,
-transitions, and the audience jumping in mid-slide (which they will, on the
-Model slides especially).
+Session: **1 hour**. Target: **~30 min prepared talk**, leaving ~30 min for
+discussion/Q&A. Script below runs ~26 minutes read at a natural pace; the
+extra ~4 minutes is slack for pauses, pointing at figures, and the audience
+jumping in mid-slide (expect this most on the Model slides and on
+"Mechanism").
 
-Each block = what to actually say. It mirrors the slide's bullets — don't add
-new claims that aren't on the slide, just say them in full sentences.
+Each block = what to actually say, in full sentences, one block per slide,
+in the current deck order (23 slides total). Say it in your own words once
+you know it — this is a rehearsal script, not a thing to read verbatim on
+the day.
 
-Deck is 4:3, single-column throughout except the 7 IRF slides (2-panel pairs,
-by design — the only place two columns are used, because a single vertical
-stack made the charts illegible).
-
-**One number-hygiene note for the speaker, not the audience:** most results
-slides (Headline, Welfare, Shock Decomposition, Network Exposure, Mechanisms,
-Robustness) use the actual **Chile calibration** (Float 25.47, Managed 10.17,
-Peg 102.05, $\times10^{-4}$). Three slides — the two Generalization sweeps
-and Isolating the Network Channel — run on the **stylized triangular
-network** instead, because that's the one built to vary continuously (import
-scale $\kappa$, exposure concentration $\theta$, network density $\rho$,
-$\phi_s$). Its baseline numbers (Float 13.64, Managed 5.36, Peg 49.63) are
-smaller than Chile's and intentionally different — the slides now say so
-explicitly. Don't accidentally quote a stylized number as if it were Chile's,
-or vice versa.
+**Data-provenance flag, for you, not the audience:** as of this rewrite,
+every Results slide uses the real **Chile calibration** (Float 25.15,
+Managed 10.96, Peg 90.45, $\times10^{-4}$) — including "Isolating the
+Network Channel," which was switched from a stylized triangular network to
+the real Chile density sweep. **Exception to check before the talk:**
+"Import Openness & Import Concentration" and "Export Openness & Export
+Concentration" currently caption themselves as "real Chile calibration," but
+their baseline numbers (Float 13.64, Managed 5.36, Peg 49.63) don't match
+the Chile headline — they match the *old* stylized-network baseline. This
+looks like a stale caption, not a stale number: reconfirm which is true
+before asserting "real Chile calibration" out loud on those two slides. If
+you don't have time to rerun them, the safe move is to just not repeat the
+word "Chile" on those two slides specifically and let the qualitative
+result (ranking survives, direction of each sweep) carry the point instead.
 
 ---
 
 ## Title (0:20)
-"Thanks for having me. This is joint work extending Rubbo's 2024 paper on
-networks, Phillips curves and monetary policy to a small open economy. I'm
-Sugarkhuu Radnaa, Bonn Graduate School of Economics."
-
-## Outline (0:20)
-"Quick roadmap: motivation and headline result up front, then the model, then
-results, then conclusion. I'll flag when I'm skipping derivation detail —
-it's all in the appendix if you want to dig in."
+"Thanks for having me. This is my project extending Rubbo's 2024
+Econometrica paper, 'Networks, Phillips Curves, and Monetary Policy,' to a
+small open economy with an explicit exchange-rate policy choice. I'll take
+about thirty minutes, then I'd love to hear your questions."
 
 ---
 
-## Motivation (0:50)
-"Two literatures don't talk to each other. Rubbo, and La'O–Tahbaz-Salehi,
-give you network Phillips curves — but closed economy, one cost-push channel,
-and a clean divine-coincidence result. Galí–Monacelli give you the open-economy
-Phillips curve with an FX channel — but no network, one sector. This paper
-puts both together: a multi-sector network *with* an import sector and FX.
+## Motivation (1:45)
+"Let me start with the picture that motivates everything. [point at the
+diagram] Firms don't just hire labor — they buy inputs from other domestic
+firms. A cost shock to one sector mechanically hits everyone downstream of
+it, and then everyone downstream of *them*. That's the production-network
+idea, and it's the heart of Rubbo's paper.
 
-[point at diagram] Three sectors in a chain — Resource feeds Manufacturing
-feeds Services — plus imports hitting Resource and Manufacturing, and Resource
-exporting.
+Now add one more fact. Imported inputs are the norm, not the exception — in
+Chile's data, Manufacturing spends up to almost twenty percent of its costs
+on imports. So when the exchange rate moves, that is not some abstract
+macro aggregate. For the firm, it is a domestic cost shock, exactly like a
+productivity shock — and it propagates through the exact same network.
 
-Two questions drive the paper: which FX regime is welfare-optimal, and does
-the divine-coincidence index survive having a second cost-push channel now
-that FX is in the picture?"
-
-## Headline Result (1:10)
-"I'll give you the answer before the model, because it's not the answer you'd
-guess. [point at bar chart] Managed float dominates both corners — pegging and
-free floating are both worse. Peg is not just worse, it's dominated: with zero
-monetary autonomy, the risk-premium shock on the UIP condition passes straight
-through into the economy. And the reason Peg loses this badly isn't on-impact
-volatility — it's persistence, driven by a near-unit-root net foreign asset
-process. I'll come back to exactly why persistence and not volatility later —
-that's the mechanism slide.
-
-Units note: everything I show is a welfare loss number times 10 to the minus
-4, in consumption-equivalent terms — so 10.17 means a permanent loss of about
-0.10% of steady-state consumption. Same scale the whole talk. And this is the
-real number: calibrated to Chile's actual national input-output table, not a
-stylized economy — Float 25.47, Managed 10.17, Peg 102.05. Solved as the
-genuine nonlinear model, not hand-linearized."
-
-## Literature (0:45)
-"On the network side: Rubbo gives the unique DC index result in a closed
-Calvo network; La'O–Tahbaz-Salehi do optimal policy in networks; Pasten-Schoenle-Weber
-show sectoral rigidity heterogeneity drives how monetary policy transmits.
-
-On the open-economy side: Galí–Monacelli is the one-sector benchmark, peg
-dominated through a terms-of-trade channel; Fanelli–Straub treat FX
-intervention as a second instrument; Schmitt-Grohé–Uribe give the debt-elastic
-premium that stationarizes net foreign assets and flag first-order welfare
-risk from it — exactly right here. Closest to us: an ECB working paper by
-Gnocato, Montes-Galdón & Stamato, and Kalemli-Özcan et al., both put a network
-*inside* an open economy — but they fix the Taylor rule and never compare FX
-regimes. Closer still: Qiu, Wang, Xu & Zanetti, just out in the Journal of
-Monetary Economics, derive an open-economy divine coincidence index and
-independently find it breaks down too — but their model is static, has no
-UIP or net foreign assets, and never compares exchange rate regimes; their
-own conclusion actually names relaxing that financial-autarky assumption as
-their top item for future work, which is exactly where we start. Details are
-in the appendix if asked.
-
-The gap: nobody puts network, open economy, and FX regime choice together in
-one model. We get Galí–Monacelli's ranking — peg dominated — but through a
-different channel: the trilemma and risk premium, not terms of trade. A full
-paper-by-paper comparison table is in the appendix."
-
-## This Paper (0:45)
-"Concretely: we extend Rubbo to a small open economy — imported inputs with
-cost share Omega-F, UIP, a debt-elastic premium. We ask the two questions from
-before. The novelty is crossing three literatures that don't fully overlap —
-network only, open economy only, or network-plus-open-economy without regime
-choice — we're the first to put all three together. This is not just
-Galí–Monacelli with sectors bolted on: the ranking looks similar, but the
-mechanism — trilemma and risk premium — and the sector-level heterogeneity in
-preferences are genuinely new. We calibrate to Chile's real input-output
-table, cross-check against Korea and Czechia, and solve the nonlinear model
-directly, not via hand-linearization."
+Here's the gap. Network models get the propagation right but ignore the
+exchange rate. Open-economy models get the exchange rate right but ignore
+the network. This paper puts both together, and asks one question: does
+accounting for the production network change which exchange-rate regime is
+optimal?"
 
 ---
 
-## Model: Overview (1:00)
-"Three blocks, quickly. Households: standard CRRA-in-consumption,
-disutility of labor, Euler equation, labor supply as usual — the one thing to
-flag is that UIP isn't assumed, it's *derived* from the household's
-foreign-bond first-order condition, with a debt-elastic risk-premium wedge,
-the Schmitt-Grohé–Uribe device that stationarizes net foreign assets.
-
-Firms: Cobb-Douglas in labor, domestic network inputs, and imports. Marginal
-cost moves with both sectoral TFP and the exchange-rate-adjusted import cost —
-those are the two cost-push channels, that's the whole ballgame for the
-DC-index question later. Calvo pricing on top, standard reset-price
-recursion, sector-specific stickiness giving heterogeneous slopes.
-
-Open economy: law of one price links the import price to the exchange rate;
-UIP closes the FX block; net foreign assets accumulate via the current
-account, with exports responding to foreign demand and the terms of trade.
-
-Key takeaway: same network structure as Rubbo, plus an exchange-rate
-cost-push channel running through imported inputs. Full equations in the
-appendix."
-
-## Model: Policy Regimes and Shocks (0:45)
-"Three regimes: Float, standard Taylor rule on DC inflation and the output
-gap, exchange rate fully endogenous via UIP; Peg, exchange rate fixed, the
-interest rate is whatever residual clears UIP; Managed, Taylor rule plus a
-lean against exchange-rate deviations with weight phi-s — that's the dial
-we'll optimize over later.
-
-Seven shocks total in the full model, though I'll only walk through the
-headline one live — sector TFP shocks at 0.90 persistence, import price at
-0.85, foreign demand at 0.80 — plus export price and the risk-premium shock,
-which turns out to matter most."
-
-## Theory: Regime Comparison — Predictions (0:35)
-"Before showing results, here's the naive theoretical prediction. Float has
-full monetary independence and an endogenous exchange rate, so cost-push gets
-absorbed by S-t rather than showing up in inflation and output. Naive
-conclusion: float should be best. That prediction gets overturned — you'll
-see why in the Welfare section."
-
-## Does the DC Index Survive? (1:20)
-"This is the theory contribution, so let me slow down here. In Rubbo's closed
-economy, there's one cost-push channel — TFP — and that gives you a unique
-divine-coincidence index: a Domar-and-stickiness-weighted inflation aggregate
-a central bank can target to simultaneously close the output gap and
-stabilize welfare-relevant inflation.
-
-Now we have two channels — TFP and FX. For the same DC index to survive, the
-same weight vector phi would need to satisfy *two* orthogonality conditions at
-once — one for TFP, one for FX. Generically that's infeasible: two conditions,
-one set of weights, doesn't work unless the economy sits exactly on a knife
-edge.
-
-Answer: no, it doesn't survive generically. In this calibration, the two
-directions are close — cosine of about 0.96 — but not proportional. So it's a
-real breakdown, not a rounding error.
-
-The fix we use throughout the talk: make the import-pricing node fully
-flexible. That collapses the FX channel's own weight to zero and restores a
-well-defined DC index — the pi-DC targeted in every Taylor rule from here on.
-Full derivation and the knife-edge algebra are in the appendix."
+## Literature (1:00)
+"Quickly on where this sits. On one side, the closed-economy network
+literature — Rubbo, La'O and Tahbaz-Salehi, Pasten-Schoenle-Weber. On the
+other side, open-economy macro without a network — Galí-Monacelli,
+Schmitt-Grohé-Uribe, Gopinath-Itskhoki. A couple of papers combine network
+and open economy — Gnocato-Montes-Galdón-Stamato at the ECB, and especially
+Qiu-Wang-Xu-Zanetti, the closest paper: they independently derive an
+open-economy divine-coincidence index and also find it breaks down. But
+their model is static — no persistence, no UIP, no net foreign assets — and
+they don't compare exchange-rate regimes at all. So the gap is: network,
+plus open economy, plus an actual regime choice, together. That's what I
+do."
 
 ---
 
-## Calibration: Chile, Real IO Data (0:50)
-"Calibration is the actual Chilean national input-output table — Banco
-Central de Chile, 12 activities collapsed to our 3 sectors: Resource is
-mining and agriculture, Chile's export engine — 60% of its own output is
-exported, mostly copper; Manufacturing is mid-chain; Services is the largest
-value-added sector and the stickiest. Import and export shares, the full
-9-entry domestic input-output matrix, consumption shares — all data, no
-triangular assumption. Calvo stickiness comes from the literature — euro-area
-price-change frequencies, cross-checked against US PPI evidence. Everything
-else is standard SOE-literature values. Solved nonlinear, order 1."
-
-## Calibration: Network Properties (1:00)
-"Three objects to define once: Domar weight — aggregate importance in the
-network; import centrality — how exposed a sector is to imports, directly and
-through what it buys; and the DC weight, which combines Domar weight with
-stickiness.
-
-[point at bars] The story: FX exposure runs *opposite* to aggregate weight.
-Resource has a small Domar weight, 0.07, but it's the most FX-exposed sector
-and by far the biggest exporter — 60% of its own output. It's the FX conduit
-for the whole network. Services dominates output, Domar weight over 1, but is
-almost FX-closed directly — its exposure is entirely indirect, through what it
-buys upstream. And because the DC weight loads on Domar weight and
-stickiness, it's essentially a Services inflation index — 0.93 — even though
-FX shocks enter the economy mainly through Resource."
-
-## IRFs: Foreign Risk-Premium Shock — the Key Mechanism (1:20)
-"This is the shock that decides everything — it alone explains 75% of Peg's
-total welfare loss in the Chile calibration, you'll see that number again in
-a few slides.
-
-[top row] A risk-premium shock hits UIP directly. Under Peg, the exchange
-rate can't move, so the whole shock is absorbed through the interest rate and
-the output gap — look at that output-gap panel, Peg swings more than 5
-percentage points on impact. Under Float, the exchange rate depreciates
-immediately and does most of the absorbing.
-
-[bottom two rows, briefly] Sector by sector, same story: Peg's output gap and
-inflation swings are an order of magnitude larger than Float's, in every
-sector, on impact. Managed sits in between, closer to Float. Same
-line-style-for-regime, color-for-sector convention as the rest of the deck."
-
-## Network Exposure & Sector Welfare Preferences (1:05)
-"Same exposure numbers as before, now mapped into two economic objects:
-Gamma-i, how much of an FX shock actually passes through to that sector's
-marginal cost, and kappa-i, the welfare weight sectoral inflation gets in the
-loss function.
-
-[point at table] Resource has by far the highest pass-through, 1.09, but the
-lowest welfare weight, 0.07 — its inflation barely matters for welfare.
-Services is the reverse: pass-through under 0.0001, but a welfare weight of
-276 — its inflation is what welfare actually cares about.
-
-[bottom bars] Once you include the risk-premium shock, Managed dominates
-every sector. Peg is costliest for Resource and Manufacturing; for Services,
-Float is actually costliest — 20.73 versus Peg's 16.79 — because the
-near-unit-root exchange rate under Float feeds the stickiest sector's
-marginal cost for a long time."
-
-## Welfare: Headline & Persistence (1:10)
-"Same headline bar chart as before, now decomposed into output-gap loss
-versus sector-by-sector dispersion loss. Peg's loss is now dominated by the
-output-gap bar — that 5-plus-point swing you just saw, 79.5 out of Peg's
-102.05 total. Welfare itself is the standard Rubbo LQ functional: variance of
-the output gap, plus a Domar-and-stickiness-weighted sum of sectoral inflation
-variances.
-
-Why is this about persistence, not volatility? Under float, the exchange rate
-is pinned down by UIP plus a near-unit-root net-foreign-asset process — so it
-feeds *every* sector's marginal cost persistently, even for a pure domestic
-TFP shock that has nothing to do with FX. It's that slow decay under Float —
-not a bigger initial hit — that pushes Float's Services dispersion cost above
-Managed's."
-
-## Shock Decomposition of Welfare Cost (1:00)
-"Now decompose the welfare loss by shock source instead of by channel.
-[point at stacked bars] TFP dominates Float and Managed's losses — that's the
-persistence story from the last slide. But for Peg, the risk-premium/UIP bar
-is enormous — 76.83 of Peg's 102.05, about 75%. That single shock is what
-reverses the naive ranking: Peg is not remotely competitive with Float or
-Managed once it's included.
-
-One check I'll return to at the end: this started as first-order welfare. The
-risk-premium channel — a nonlinear debt-elastic premium interacting with a
-near-unit-root process — is exactly where a second-order solution could move
-this magnitude the most, and it turns out it does move most here, by 0.7% —
-small enough that the ranking is untouched."
-
-## Mechanisms: Why Each Regime Costs What It Costs (1:00)
-"Zooming out to *why*, in words, before more numbers. Two forces are always
-in tension. The Gamma-channel favors Peg: switching off exchange-rate
-movement switches off Gamma-i times delta-e in every sector's marginal cost.
-But the relocation channel favors Float: Peg's fixed exchange rate doesn't
-remove the adjustment, it just forces the same adjustment into upstream
-domestic prices instead — that's Peg's exploding output-gap term, 79.5 of its
-102.1 total.
-
-Float's cost is persistence — the near-unit-root exchange rate feeds every
-sector's marginal cost for a long time, dominated by Services since it's the
-most central and stickiest sector. Managed's phi-S term damps the FX
-cost-push without fully re-imposing Peg's relocation cost — that's why it
-dominates every sector at once, not just on average.
-
-One thing to flag if asked: the channels themselves — Gamma-i, kappa-i, the
-DC-survival conditions — are closed-form, straight from the model's
-primitives. The magnitudes and the ranking need the full linear
-rational-expectations solve; that part is simulated, but it's robust across
-all four calibrations on the next slide."
-
-## Robustness: South Korea, Czechia & the Stylized Baseline (0:50)
-"Three more input-output calibrations, real data each time: South Korea, a
-diversified manufacturing exporter with deeper manufacturing import intensity
-than Chile; Czechia, the deepest manufacturing import intensity of the four,
-reflecting EU and German supply-chain integration; plus the original
-hand-picked stylized triangular network, which checks the result isn't an
-artifact of network shape.
-
-Ranking survives in all four: Managed below Float below Peg. And the driver
-is the same everywhere — the UIP shock dominates Peg's loss in all four
-calibrations: 75% Chile, 72% Korea, 65% Czechia, 81% stylized. All solved
-nonlinear, none of them linearized."
+## This Paper (1:00)
+"Briefly, what I do. I extend Rubbo's closed-economy network model to a
+small open economy: imported inputs, uncovered interest parity, a
+debt-elastic risk premium. I ask two questions — what's the optimal
+exchange-rate regime, and does the divine-coincidence result survive once
+there are two cost-push channels instead of one? I calibrate to Chile's
+real input-output table — also Korea and Czechia for robustness — and I
+solve the model nonlinearly, not just log-linearized. Let's build the
+model."
 
 ---
 
-## Generalization: Optimal FX Stabilization phi-s (1:00)
-"So if Managed beats both corners, what's the optimal amount of leaning
-against the exchange rate? This sweep is on the stylized network, since it's
-the one built to vary continuously. [point at curve] There's a real tradeoff:
-too little phi-s and you're close to Float, so the risk-premium shock keeps
-leaking into every sector's marginal cost; too much and you're close to Peg,
-losing monetary autonomy, letting the same shock through the interest rate
-instead.
-
-Loss falls from 13.64 at phi-s equals zero to 4.74 at phi-s equals 0.20 — and
-that minimum is peaked, not flat: 0.20 beats our calibrated value of 0.30 by
-about 13%. Push past 0.2 and cost rises fast — by phi-s equals 1, you're back
-above Float."
-
-## Generalization: Robustness (0:50)
-"Two more structural sensitivity checks, also on the stylized network. Ranking
-— Managed below Float below Peg — holds everywhere in both panels. But the
-*gap* moves in opposite directions. Scale up import intensity kappa, and
-Peg's loss falls while Float's rises — they converge. Concentrate FX exposure
-more on Resource, raising theta, and it's the opposite — Peg rises, Float
-falls, they diverge."
-
-## Isolating the Network Channel (1:10)
-"Last question: does the production network actually matter, or is this just
-an open-economy result with extra bookkeeping? New sweep, same stylized
-network: scale the two domestic input-output links by rho. Rho equals zero
-means no domestic network at all; rho equals one is the baseline; rho equals
-three is a much denser one.
-
-[point at top chart] Managed is almost network-neutral — turning the network
-on adds only 0.35 to Managed's loss, versus 6.98 for Float and 10.30 for Peg.
-Phi-S is absorbing the network amplification itself, not just the direct FX
-cost-push. And as the network gets denser, the corners diverge from Managed —
-by rho equals three, Float has caught up to Peg, both far above Managed.
-
-[bottom chart] The burden also *moves* across sectors depending on the
-regime: under Peg and Managed, the network premium lands on upstream
-Resource and Manufacturing while Services actually gains; under Float, it's
-Services that's hit hardest. So the verdict: yes, the network matters, on two
-margins at once — it roughly triples the regime gap as density rises, and it
-redirects who bears the cost. A representative-sector open-economy model
-cannot produce that reallocation channel at all."
-
-## Conclusion (1:20)
-"To summarize. Managed float is optimal — 10.17 versus Float's 25.47 and
-Peg's 102.05, on the actual Chile calibration. The driver: risk-premium/UIP
-dominates Peg's loss at 75%, while TFP persistence dominates Float and
-Managed's; and Managed dominates every single sector, not just on average.
-
-Optimal phi-s is about 0.20, sharply peaked — over-stabilizing the exchange
-rate is genuinely costly, not free. The ranking is robust to import intensity,
-exposure concentration, network density, and to two more real-data
-calibrations — Korea and Czechia — but the *size* of the gap moves a lot
-across them.
-
-The network itself matters, not just the open economy: turning the domestic
-network off cuts almost all of Peg's and Float's network-driven loss but
-barely touches Managed, and it flips which sectors bear the cost across
-regimes.
-
-Versus the literature: we get Galí–Monacelli's ranking — peg dominated — but
-through a different channel, risk-premium rather than terms of trade.
-
-One thing I checked rather than just flagged: the headline numbers started as
-first-order dynamics with a second-order welfare functional — Rubbo's own
-approach — valid only if the steady state is efficient. The UIP wedge and the
-near-unit-root NFA process are distortions Rubbo's closed economy never had,
-exactly the combination Kim–Kim and Schmitt-Grohé–Uribe flag as risky for
-this kind of welfare accounting. So I solved the model to a genuine order-2,
-pruned, simulated at 260,000 periods, and recomputed welfare from the raw
-second moments rather than the linear variance. The loss rises by at most
-2% in any regime, Peg's risk-premium channel moves the most as expected, and
-the ranking — Managed below Float below Peg — is unchanged.
-
-Next step: a genuinely many-sector calibration from OECD TiVA data, beyond
-the 3-sector real IO tables we have now. Thanks — happy to take questions."
+## Households (0:45)
+"Standard small open economy household. Chooses consumption, labor, and
+holds a domestic bond and a foreign bond, subject to a budget constraint —
+note the debt-elastic term here, I'll come back to why it's there.
+Consumption is CES between home and foreign goods, Cobb-Douglas across the
+domestic sectors with weights beta-H. Nothing exotic — this is just the
+entry point into the network."
 
 ---
 
-# Anticipated Questions and Answers
+## Firms: Technology (0:45)
+"Firms in sector $i$ use labor, inputs from other domestic sectors, and
+imported inputs — Cobb-Douglas, monopolistic competition. The marginal-cost
+equation is the key object: it depends on the wage, on domestic input
+prices weighted by the network shares, and on the imported input price,
+which is the exchange rate times the foreign price. So two things can move
+marginal cost: productivity, and the exchange rate. Two cost-push channels.
+Hold onto that — it's the whole point of the paper."
 
-**Q1. Isn't the whole "Peg dominated" result just an artifact of the
-debt-elastic-premium device (psi) you use to close the model? If you turned
-that off, wouldn't Peg look fine?**
-A: The psi wedge is what stationarizes net foreign assets — you need *some*
-closing device in any SOE model with incomplete markets, and Schmitt-Grohé–
-Uribe's is the standard, least-distortionary choice. It's not optional
-machinery we added to bias the result — it's what makes the model
-well-defined at all. What *is* a modeling choice is how persistent the
-risk-premium shock is; that persistence, not the psi device itself, is what
-makes Peg's loss so large, and it's on the list for robustness checks.
+---
 
-**Q2. How sensitive is the ranking to that near-unit-root persistence
-assumption for the risk premium / NFA process?**
-A: We haven't swept the shock's own persistence directly — the robustness
-slides sweep import intensity, exposure concentration, and network density
-instead, all on the stylized network, plus three independent real-data
-calibrations (Chile, Korea, Czechia) that each embed their own persistence
-estimate. Given the mechanism slide shows persistence, not on-impact
-volatility, is the driver, I'd expect lower persistence to shrink Peg's loss
-and narrow the gap to Float, but Peg's structural disadvantage — zero
-autonomy, so the shock isn't absorbed at all — should survive at any
-reasonable persistence. That's a natural next robustness cut.
+## Firms: Production Network (0:45)
+"Stack those input shares across sectors and you get the input-output
+matrix $\Omega^H$, an import-exposure vector, and an export-exposure
+vector. The Leontief inverse sums direct and indirect linkages — apply it
+to consumption shares and you get each sector's Domar weight; apply it to
+import or export shares and you get import or export centrality. Standard
+network-macro machinery — I'm just setting notation here."
 
-**Q3. "Solve the nonlinear model directly" — you're still doing a first-order
-perturbation. What's actually different from Rubbo's approach?**
-A: Rubbo hand-linearizes the model on paper before ever coding it up — the
-Phillips curves and DC index are analytical objects to start. We instead
-write out the full nonlinear system — production, pricing, UIP, NFA
-accumulation — and let the solver (order-1 perturbation around a numerically
-solved nonlinear steady state) do the linearization. It matters for the
-open-economy extension specifically because the steady state itself isn't
-closed-form once you add imports, exports, and the debt-elastic premium — we
-solve that by scalar root-finding rather than assuming it away.
+---
 
-**Q4. You flag first-order welfare as a caveat — how worried should we
-actually be, given Kim–Kim's critique of first-order welfare comparisons?**
-A: I checked this directly rather than leaving it as a disclaimer. Kim–Kim's
-point bites hardest when there's a first-order-relevant distortion at steady
-state — here that's the UIP wedge and the near-unit-root NFA process, which
-Rubbo's closed economy never had to deal with. I re-solved the model to
-order 2 with Kim-Kim-Schaumburg pruning (simulated, 260k periods, since the
-Taylor rule leaves price levels with a unit root so analytic order-2 moments
-aren't available), and recomputed welfare from the raw second moment E[X^2]
-rather than the linear variance — so any risk-adjusted mean shift shows up.
-It does show up: Peg's risk-adjusted output gap sits about 45 basis points
-below zero on average, an order of magnitude bigger than Float or Managed,
-and NFA carries a bigger precautionary buffer under Peg too. But because
-welfare is quadratic, squaring a small mean shift keeps its contribution
-under 0.5% of the loss in every regime — almost all of the ~1-2% correction
-is a modest variance increase in the pruned second-order policy function,
-not the risk-adjusted-steady-state channel itself. Net effect: loss rises at
-most 2%, ranking unchanged.
+## Firms: Price Setting (1:30)
+"Now the key equation. Calvo pricing through this network gives you a
+vector Phillips curve. [point] Inflation today depends on expected
+inflation tomorrow, the output gap, a TFP cost-push term, and — this is the
+new piece — an exchange-rate term, $\Gamma$ times the change in the
+exchange rate.
 
-**Q5. How were phi-pi, phi-y, phi-s, theta-star, and psi chosen — estimated,
-or picked?**
-A: Calibrated, not estimated — phi-pi and phi-y at conventional Taylor-rule
-values, theta-star and psi at standard SOE-literature values (Schmitt-Grohé–
-Uribe-style). Phi-s is the one we don't take as given: it's the object we
-solve for on the Generalization slide, and 0.30 was our calibrated starting
-point before we swept it to find the ~0.20 optimum.
+Here's a result I like: $\mathcal B$ and $\Gamma$, the output-gap slope and
+the FX pass-through, are literally the *same* operator — this
+rigidity-adjusted Leontief inverse — just applied to the labor share on one
+hand and the import share on the other. Same amplifier, different shock.
 
-**Q6. Only three sectors — does the ranking survive with a realistic
-multi-sector network, e.g. from OECD input-output data?**
-A: We already have three independent real-data 3-sector calibrations — Chile,
-South Korea, and Czechia — and the ranking (Managed dominant, Peg dominated)
-and the mechanism (UIP shock, 65–81% of Peg's loss) survive in all three.
-Going to a genuinely many-sector network from OECD TiVA data is the natural
-next step and is on the roadmap; I'd expect the qualitative ranking to
-survive since it comes from the trilemma/risk-premium mechanism rather than
-sector count — but the sector-level heterogeneity result, and the network
-density result on the Isolating-the-Network-Channel slide, are exactly where
-more granularity could change the picture, since both are driven by how
-exposure and Domar weight are distributed across sectors.
+And only *relative* TFP shocks matter — a uniform TFP shock across every
+sector creates no cost-push at all, because $\mathcal V\mathbf 1=\mathbf
+0$. Only sector-specific gaps do."
 
-**Q7. The DC-index fix relies on import pricing being fully flexible
-(delta-hat-M = 1). What if imported inputs are Calvo-sticky too?**
-A: Then the FX channel gets its own non-zero DC weight, and you're back to
-needing two orthogonality conditions with one set of weights — generically
-infeasible, same as the general case on the DC slide. Flexible import pricing
-is the assumption that lets a well-defined pi-DC exist at all in this
-calibration; it's a modeling choice, not a free result, and I flag it
-explicitly for that reason.
+---
 
-**Q8. Isn't "Managed float" just a relabeling of the trilemma tradeoff — you
-still don't have independent monetary policy, capital mobility, and a fixed
-rate all at once?**
-A: Right, Managed doesn't escape the trilemma — it's a point on the
-continuum between the two corners, not a fourth option. The result isn't that
-you can beat the trilemma; it's that with two cost-push channels the
-interior point is welfare-preferred to either corner, which isn't obvious
-ex ante — the naive prediction on the Theory slide says corner solutions
-(full float) should win.
+## Foreign Sector (1:00)
+"The exchange rate is pinned down by two conditions: law of one price for
+the imported good, and uncovered interest parity with a debt-elastic risk
+premium — that's the $\psi$ term, it's what makes net foreign assets
+stationary, the standard Schmitt-Grohé–Uribe device. Net foreign assets
+accumulate the trade balance, and exports are sector-specific, calibrated
+to match Chile's actual export pattern, which is Resource-heavy. Two
+channels into the domestic economy: a cost-push channel — exchange rate
+into marginal cost into inflation — and a demand channel — exchange rate
+into exports into the output gap into inflation."
 
-**Q9. Since the DC weight loads almost entirely on Services, is the central
-bank effectively "ignoring" Resource inflation — and is there a welfare cost
-to that choice itself, separate from the regime question?**
-A: That's a sharp question and it's implicit rather than answered directly
-here. The DC weight is derived, not chosen — it falls out of Rubbo's
-insulation logic once you fix which sector is FX-flexible. Whether a
-central bank targeting pi-DC is leaving welfare on the table by
-under-weighting Resource is a distinct question from Float-vs-Peg-vs-Managed,
-and it's the kind of thing the appendix's DC-index derivation would let you
-probe by comparing pi-DC targeting against the full welfare-optimal
-targeting rule directly — we haven't run that comparison yet.
+---
 
-**Q10. Any comparison to actual inflation-targeting oil/commodity exporters
-that run managed floats in practice (Colombia, Chile, etc.)?**
-A: Not a formal empirical test yet, but the calibration itself is no longer
-stylized — it's Chile's actual national input-output table, and Chile is
-exactly this kind of economy: an inflation targeter with a floating-but-not-
-fully-free exchange rate and a commodity export sector (copper) playing the
-role of Resource here. The natural next validation step is checking whether
-the model's optimal phi-s (~0.20) is in the neighborhood of what Chile's
-central bank actually does in practice, and repeating that check for Korea
-and Czechia.
+## Monetary Policy Regimes (0:45)
+"Three regimes. Free float: standard Taylor rule on inflation and the
+output gap, exchange rate moves freely. Hard peg: the exchange rate is
+fixed, full stop — the interest rate becomes whatever's needed to keep it
+fixed; it isn't chosen for stabilization at all. Managed float: same Taylor
+rule, plus a term that leans against exchange-rate movements. Notice Float
+and Peg are really the same rule family at two extremes — $\phi_s$ equal to
+zero, or $\phi_s$ going to infinity. Managed sits in between."
 
-**Q11. Why do some slides use the Chile calibration and others (Generalization,
-Isolating the Network Channel) use a different, "stylized" network — isn't
-that inconsistent?**
-A: Not inconsistent, but worth being upfront about, and the slides now say so
-explicitly. Chile, Korea, and Czechia are three separate real data points —
-you can't continuously interpolate between them. The stylized triangular
-network is the one built to have a scalar dial ($\kappa$, $\theta$, $\rho$,
-or $\phi_s$) so we can trace out a full curve rather than a handful of points.
-The Robustness slide puts the stylized bar next to the three real
-calibrations explicitly so the difference in levels is visible; the
-qualitative conclusions from the stylized sweeps — interior optimal
-$\phi_s$, network amplifying the corners more than Managed — are what's
-being generalized, not the exact loss numbers.
+---
+
+## Equilibrium System (1:00)
+"Putting it together: the Phillips curve I just showed, an IS curve with an
+extra term for the real exchange rate, the UIP condition, and the policy
+rule, which takes one of those three forms depending on the regime. And
+here's the welfare loss function I'll report throughout: quadratic in
+output-gap variance, plus a weighted sum of sector-level inflation
+variances, weights $\kappa_i$ combining each sector's Domar weight and its
+stickiness. Second-order approximation to household utility, following
+Rubbo's approach, extended to the open economy."
+
+---
+
+## Calibration: Chile Data (1:00)
+"Calibration. Three sectors — Resource, Manufacturing, Services — collapsed
+from Chile's twelve-sector national input-output table, Banco Central de
+Chile. Labor shares, import shares, consumption shares, export shares:
+straight from the data. Stickiness from the literature, euro-area
+price-change frequencies. Then the key mechanism parameters: $\psi$, the
+risk-premium elasticity, and the three Taylor-rule coefficients — I'll come
+back to $\psi$, it turns out to matter a lot. Everything else — discount
+factor, risk aversion, elasticities — standard literature values, nothing
+paper-specific."
+
+---
+
+## Network Properties: Import & Export Exposure (1:00)
+"Before results, one picture on what the network actually does to
+exposure. [point] Raw import share versus import centrality, the
+network-propagated version. It roughly doubles for every sector — a
+sector's true exposure to the exchange rate isn't just what it imports
+directly, it's also what it buys from sectors that import. Same story on
+the export side. This is the mechanical fact that makes the network
+matter, and it's what drives everything that follows."
+
+---
+
+# Results
+
+## Welfare Ranking: Managed Float Dominates (1:45)
+"Here's the headline result. [point] Managed float dominates both corners —
+Managed 10.96, Float 25.15, Peg 90.45, times ten-to-the-minus-four. Peg
+isn't competitive: roughly four times worse than Float, eight times worse
+than Managed. For Float and Managed, almost the entire loss is price
+dispersion, concentrated in Services.
+
+Now look at the hatched bars — same calculation with the network switched
+off entirely, $\Omega^H\equiv0$. Losses fall to 5.82, 8.67, 33.66 — same
+ranking survives, but the network is roughly doubling to tripling every
+regime's loss. So the network isn't decoration, it's doing real work — and
+I'll show you exactly how in a few slides."
+
+---
+
+## What Drives Each Regime's Loss? Shock Decomposition (1:15)
+"What's actually driving these numbers, shock by shock. [point] For Peg,
+one shock explains three-quarters of the loss: the risk-premium, or UIP,
+shock. That's the shock that decides everything for a hard peg. For Float
+and Managed it's completely different — TFP shocks dominate instead, and
+the risk-premium shock barely registers, because the exchange rate, or
+partial smoothing under Managed, absorbs it before it reaches output.
+Import price, foreign demand, export price — all second-order, in every
+regime. This is not a terms-of-trade story."
+
+---
+
+## Isolating the Network Channel (1:15)
+"Does the network matter continuously, not just on-or-off? [point] This
+scales all six cross-sector links in the real Chile network by a density
+dial, $\rho$ — $\rho=1$ is the actual calibration, $\rho=0$ means each
+sector only uses its own output and imports, no domestic cross-buying.
+Losses rise monotonically with density in every regime, and critically, the
+Peg-Float gap *widens* as density increases. Managed stays best throughout.
+On the right — the network's price-dispersion premium, concentrated in
+Services for Float and Managed, but actually *negative* for Peg — a denser
+network shifts Peg's cost out of price dispersion and into the output gap
+instead."
+
+---
+
+## Import Openness & Import Concentration (1:00)
+"Two more dimensions of trade structure. [point] Sweep how open the economy
+is to imports overall, and how concentrated that exposure is across
+sectors. Ranking survives throughout. But look at the direction: more
+overall import openness actually *narrows* the Peg-Float gap — Peg's loss
+falls, Float's rises. More concentration — same total openness, just less
+evenly spread across sectors — *widens* the gap and specifically hurts Peg.
+So it isn't import volume that's dangerous for a peg, it's how concentrated
+that exposure is."
+
+---
+
+## Export Openness & Export Concentration (0:45)
+"Same exercise on the export side. Openness helps everyone — exports are a
+demand channel, not a cost-push channel, so more trade is close to
+unambiguously good, and Peg benefits most. Concentrating exports toward the
+flexible-price sector, Resource, helps Peg a little and mildly hurts Float
+and Managed. But overall, the export side matters much less than the
+import side — the whole story runs through cost-push, through imports, not
+through terms of trade."
+
+---
+
+## Mechanism: How the Network Amplifies Shocks (1:30)
+"Now let's open the black box — why does the network do this? [point at
+table] Peak impulse response, network on divided by network off, for two
+shocks and three regimes. Read it this way: less than one means the
+network *shrinks* that peak, greater than one means it *amplifies* it.
+
+One-line summary: the network dampens the inflation peak everywhere, but
+amplifies the output-gap peak, in every regime, for both shocks. So the
+network doesn't create new cost-push out of nothing — it *redirects* it.
+Instead of a sharp price spike, you get a more persistent output
+distortion, spread across sectors and over time.
+
+Look at the extremes: the import-price shock hits Peg hardest — three point
+one five times — no exchange-rate buffer. The risk-premium shock hits Float
+hardest — two point five seven times — and Managed blocks it almost
+completely, zero point nine eight, essentially no amplification at all."
+
+---
+
+## Network Exposure & Sector Welfare Preferences (1:15)
+"Different sectors actually prefer different regimes. [point at tables]
+Each cell is network-on versus network-off. Price dispersion: Managed is
+best for every sector, on or off. Float's Services cost is mostly
+network-driven — twenty point two five on, six point two two off. But
+Peg's Services cost is *not* — fifteen point nine versus fourteen point
+six, it barely moves.
+
+Now the output gap: Peg's Services number is the outlier of the whole
+table — thirty-five — and that one *is* overwhelmingly network-driven:
+without the network it falls to under nine, a two-hundred-ninety-percent
+difference. Takeaway: a sector's own trade exposure doesn't predict how
+much it suffers. Services has the *lowest* direct import share of the
+three sectors, and the *highest* welfare cost — because it sits at the top
+of the network, buying from everyone."
+
+---
+
+## Robustness: South Korea & Czechia (0:45)
+"Does this hold outside Chile? [point] Same exercise, two more real
+input-output calibrations, South Korea and Czechia. Same ranking every
+time — Managed below Float, well below Peg. UIP dominates Peg's loss
+throughout, sixty-five to seventy-six percent. Korea's numbers are higher
+across the board — denser network, higher import exposure — which is
+itself more evidence this is a network story, not a Chile-specific
+quirk."
+
+---
+
+## Robustness Summary: What Drives the Ranking? (1:15)
+"Let me pull the robustness together in one place. [point at table] Across
+import openness, import concentration, export openness, export
+concentration, and network density — Managed beats Float beats Peg, every
+single time, no exceptions. What changes is the *size* of the gap. Two
+things worth remembering. First: the import side drives everything, the
+export side barely matters — consistent with a cost-push story, not a
+terms-of-trade story. Second: import volume and import concentration point
+in *opposite* directions for Peg — more imports overall narrows the gap,
+but concentrating them in one sector widens it. It's exposure structure
+that's dangerous, not exposure size."
+
+---
+
+## Conclusion (1:30)
+"Let me close with five points.
+
+One: networks change how the exchange rate operates. FX pass-through and
+TFP cost-push travel through the exact same rigidity-adjusted network
+operator, and once the exchange rate is a second cost-push channel, the
+closed-economy divine-coincidence result generically fails.
+
+Two: the network matters for severity and for who bears the cost, not for
+the ranking. Switching it on roughly doubles or triples every regime's loss
+and reshuffles which sector suffers most — but Managed beats Float beats
+Peg either way.
+
+Three: Peg is dominated by a different mechanism than the textbook story.
+It's not terms-of-trade, it's the risk-premium, UIP channel — a hard peg
+has zero monetary autonomy, so that shock goes straight into the output
+gap.
+
+Four: Managed float wins because it's the only regime that dampens the FX
+pass-through channel without fully giving up monetary autonomy the way a
+peg does.
+
+Five: this is robust — three real-data calibrations, and a genuine
+second-order, not just log-linear, solution.
+
+Thank you — happy to take questions."
+
+---
+
+## Timing check
+Model section (Households through Network Properties): ~9 slides, ~8:45.
+Results section (Welfare Ranking through Robustness Summary): ~9 slides,
+~11:15. Intro (Title/Motivation/Literature/This Paper): ~4:35. Conclusion:
+~1:30. **Total: ~26:05** of script — leaves buffer to hit 30 minutes at a
+natural, unhurried pace, and a full 30 minutes for discussion within the
+one-hour session.
