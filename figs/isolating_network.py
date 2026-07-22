@@ -21,12 +21,21 @@ COLOR_MANUF = "#d97706"
 COLOR_SERVICES = "#0891b2"
 SURFACE = "#fcfcfb"
 
-fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), dpi=200)
-fig.patch.set_facecolor(SURFACE)
 
-# --- Left: welfare vs network density rho ---
-ax = axes[0]
-ax.set_facecolor(SURFACE)
+def style_axis(ax):
+    ax.set_facecolor(SURFACE)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#c3c2b7")
+    ax.spines["bottom"].set_color("#c3c2b7")
+    ax.tick_params(colors="#898781", labelsize=10)
+    ax.yaxis.grid(True, color="#e1e0d9", linewidth=0.8, zorder=0)
+    ax.set_axisbelow(True)
+
+
+# --- Main-deck figure: density sweep only (single panel, widened) ---
+fig, ax = plt.subplots(1, 1, figsize=(6.5, 4.2), dpi=200)
+fig.patch.set_facecolor(SURFACE)
 ax.plot(rho, rho_peg, color=COLOR_PEG, linestyle=":", marker="o", markersize=4,
         linewidth=2, label="Peg")
 ax.plot(rho, rho_managed, color=COLOR_MANAGED, linestyle="--", marker="o", markersize=4,
@@ -38,17 +47,14 @@ ax.text(1.05, 3, "baseline", fontsize=9, color="#52514e")
 ax.set_xlabel("density $\\rho$ (0 = no network)", fontsize=11, color="#0b0b0b")
 ax.set_ylabel("welfare loss ($\\times10^4$)", fontsize=11, color="#52514e")
 ax.legend(loc="upper left", frameon=False, fontsize=10)
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-ax.spines["left"].set_color("#c3c2b7")
-ax.spines["bottom"].set_color("#c3c2b7")
-ax.tick_params(colors="#898781", labelsize=10)
-ax.yaxis.grid(True, color="#e1e0d9", linewidth=0.8, zorder=0)
-ax.set_axisbelow(True)
+style_axis(ax)
+fig.tight_layout()
+fig.savefig("isolating_network.pdf", facecolor=fig.get_facecolor(), bbox_inches="tight")
+fig.savefig("isolating_network.png", facecolor=fig.get_facecolor(), bbox_inches="tight")
 
-# --- Right: network welfare premium by sector ---
-ax = axes[1]
-ax.set_facecolor(SURFACE)
+# --- Appendix figure: price-dispersion network premium by sector ---
+fig, ax = plt.subplots(1, 1, figsize=(6.5, 4.2), dpi=200)
+fig.patch.set_facecolor(SURFACE)
 x = np.arange(len(regimes))
 width = 0.25
 ax.bar(x - width, premium_resource, width, color=COLOR_RESOURCE, label="Resource")
@@ -57,17 +63,11 @@ ax.bar(x + width, premium_services, width, color=COLOR_SERVICES, label="Services
 ax.axhline(0, color="#898781", linewidth=0.8)
 ax.set_xticks(x)
 ax.set_xticklabels(regimes, fontsize=11, color="#0b0b0b")
-ax.set_ylabel("premium ($\\times10^4$)", fontsize=11, color="#52514e")
+ax.set_ylabel("price-dispersion premium ($\\times10^4$, $\\rho{=}1$ vs.\\ $\\rho{=}0$)", fontsize=10, color="#52514e")
 ax.legend(loc="upper right", frameon=False, fontsize=10)
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-ax.spines["left"].set_color("#c3c2b7")
-ax.spines["bottom"].set_color("#c3c2b7")
-ax.tick_params(colors="#898781", labelsize=10)
-ax.yaxis.grid(True, color="#e1e0d9", linewidth=0.8, zorder=0)
-ax.set_axisbelow(True)
-
+style_axis(ax)
 fig.tight_layout()
-fig.savefig("isolating_network.pdf", facecolor=fig.get_facecolor(), bbox_inches="tight")
-fig.savefig("isolating_network.png", facecolor=fig.get_facecolor(), bbox_inches="tight")
+fig.savefig("isolating_network_premium.pdf", facecolor=fig.get_facecolor(), bbox_inches="tight")
+fig.savefig("isolating_network_premium.png", facecolor=fig.get_facecolor(), bbox_inches="tight")
+
 print("saved")

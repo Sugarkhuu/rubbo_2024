@@ -973,6 +973,62 @@ Aggregate-export ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
 \end{frame}
 
 %==============================================================
+\begin{frame}{Isolating the Network Channel: Sector Price-Dispersion Premium}
+\hypertarget{netdenspremium}{}
+%==============================================================
+
+{\scriptsize Same density sweep as the main "Isolating the Network Channel" slide, but isolating only the \textbf{price-dispersion} piece of welfare ($\kappa_i\mathrm{Var}(\pi_{it})$), as a network premium $=$ value at $\rho{=}1$ minus value at $\rho{=}0$, by sector and regime:}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/isolating_network_premium.pdf}
+\end{center}
+
+\vspace{4pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{Float/Managed:} all positive, concentrated in Services (highest Domar weight, $\lambda_{D,\text{Services}}{=}1.11$) --- the network raises price-dispersion cost the most where network centrality is highest
+\item \textbf{Peg:} Resource $\approx0$, Services mildly positive, \textbf{Manufacturing negative} --- net premium across sectors is close to zero
+\item \textbf{Why Peg looks different:} the network doesn't eliminate cost-push, it \textbf{redirects} it (see Mechanism slide) --- with no interest-rate room under a peg, the extra propagation shows up in the \textbf{output gap} instead of price dispersion (Peg's Services output-gap variance: $8.97\to35.16$, network OFF vs.\ ON, Network Exposure slide) --- this panel being flat for Peg is exactly what tells you to look at the output-gap channel instead
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Robustness Summary: What Drives the Ranking?}
+\hypertarget{robustsummary}{}
+%==============================================================
+
+\vspace{-6pt}
+{\scriptsize \textbf{Managed $<$ Float $<$ Peg survives every sweep.} What changes is the \emph{size of the stakes} and \emph{who bears them}:}
+
+\vspace{3pt}
+{\tiny
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}p{2.2cm}p{4.9cm}p{2.4cm}@{}}
+\toprule
+\textbf{Dimension} & \textbf{Effect on the regimes} & \textbf{Ranking?} \\
+\midrule
+Import openness $\uparrow$ & Peg $\downarrow\downarrow$ (131$\to$68), Float $\uparrow$ (21$\to$44), Managed flat (11--13) & gap \textbf{converges} \\
+Import concentration $\uparrow$ & Peg $\uparrow\uparrow$ (86$\to$93), Float/Managed roughly flat & gap \textbf{diverges} \\
+Export openness $\uparrow$ & \textbf{all regimes improve}, Peg most (99$\to$85) & unchanged \\
+Export concentration (Resource) & helps Peg, mildly hurts Float/Managed & unchanged \\
+Network density $\rho\uparrow$ & \textbf{all} worsen, Peg fastest (73$\to$214 at $\rho{=}2.2$) & gap \textbf{diverges} \\
+\bottomrule
+\end{tabular}}
+
+\vspace{3pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1.5pt}\setlength{\topsep}{0pt}
+\item \textbf{Import side drives the ranking; export side barely does} --- consistent with the mechanism running through cost-push ($\Gamma\Delta e_t$), not terms-of-trade/expenditure-switching
+\item \textbf{Volume vs.\ concentration point in opposite directions for Peg} --- more imports overall narrows the gap, but concentrating them in one sector widens it: it's exposure \emph{structure}, not import \emph{intensity}, that's dangerous
+\item \textbf{Density is the one dimension where every regime worsens, but unevenly} --- Peg's loss grows fastest, so a more interconnected economy specifically strengthens the case against pegging
+\item \textbf{A sector's own trade share is not what predicts its pain:} Services has the \emph{lowest} direct import share (7.0\%) but the \emph{largest} welfare cost --- it sits atop the Domar-weight chain ($\lambda_{D,\text{Services}}{=}1.11$) and inherits shocks from every sector upstream; network-off cuts its Peg output-gap cost by $75\%$ (35.16$\to$8.97)
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \section*{Appendix: Model Equations (Backup, not in 25-slide count)}
 %==============================================================
 \begin{frame}{Appendix: Model Equations \& Notation (1/2)}

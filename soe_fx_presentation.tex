@@ -489,10 +489,10 @@ $\phi_s$ & $0.30$ & \\
 \end{center}
 
 \vspace{4pt}
-{\footnotesize \textbf{The production network amplifies both import and export exposure well beyond each sector's direct (raw) share} --- e.g.\ import exposure roughly doubles for every sector once indirect, network-propagated exposure is counted, not just each sector's own imports.}
+{\footnotesize The production network amplifies both import and export exposure well beyond each sector's raw share}
 
 \vspace{6pt}
-{\footnotesize $\lambda_{D,i}=[(\bm\beta^H)^\top(I-\Omega^H)^{-1}]_i$ (Domar weight), $\mathcal M_i=[(I-\Omega^H)^{-1}\bm\omega_F]_i$ and $\mathcal M_i^X=[(I-\Omega^H)^{-1}\bm\omega_X]_i$ (import/export centrality) --- full notation: \hyperlink{modeleqns}{Appendix}.}
+{\footnotesize $\lambda_{D,i}=[(\bm\beta^H)^\top(I-\Omega^H)^{-1}]_i$ (Domar weight), $\mathcal M_i=[(I-\Omega^H)^{-1}\bm\omega_F]_i$ and $\mathcal M_i^X=[(I-\Omega^H)^{-1}\bm\omega_X]_i$ (import/export centrality) }
 
 \end{frame}
 
@@ -516,7 +516,8 @@ $\phi_s$ & $0.30$ & \\
 \begin{itemize}\setlength{\itemsep}{4pt}
 \item \textbf{Managed $<$ Float $\ll$ Peg:} $10.96 / 25.15 / 90.45$ ($\times10^{-4}$)
 \item \textbf{Float \& Managed:} almost entirely price dispersion, concentrated in Services
-\item \textbf{Without the network} (hatched bars, $\Omega^H\equiv0$): losses fall to $5.82/8.67/33.66$ --- \textbf{same ranking}, but the network roughly \textbf{doubles-to-triples} every regime's loss (already visible here; full ON/OFF comparison next slide)
+\item \textbf{Peg:} almost entirely output gap
+\item \textbf{Without the network}: \textbf{same ranking}, but the network roughly \textbf{doubles-to-triples} every regime's loss 
 \end{itemize}}
 
 \end{frame}
@@ -534,8 +535,8 @@ $\phi_s$ & $0.30$ & \\
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{4pt}
 \item \textbf{Peg:} risk-premium/UIP $\to$ 76\% of loss, mostly output gap --- the shock that decides everything for a hard peg
-\item \textbf{Float \& Managed:} TFP shocks dominate instead ($22.44$ and $8.68$ of their totals) --- risk-premium barely registers ($2.38$/$1.25$) since the exchange rate (Float) or partial smoothing (Managed) absorbs it before it reaches output
-\item Import price, foreign demand, and export price/ToT are second-order for every regime --- the ranking is not a terms-of-trade story
+\item \textbf{Float \& Managed:} TFP shocks dominate instead --- risk-premium barely registers since the exchange rate (Float) or partial smoothing (Managed) absorbs it before it reaches output
+\item Import price, foreign demand, and export price/ToT are second-order for every regime 
 \end{itemize}}
 
 \end{frame}
@@ -544,15 +545,15 @@ $\phi_s$ & $0.30$ & \\
 \begin{frame}{Isolating the Network Channel}
 %==============================================================
 
-{\footnotesize \textbf{Beyond ON/OFF} (Welfare Ranking, previous slides): does the network's effect scale \emph{continuously} with how interconnected the economy is?}
+{\footnotesize \textbf{Beyond ON/OFF}: does the network's effect scale \emph{continuously} with how interconnected the economy is?}
 
 \vspace{4pt}
 \begin{center}
-\includegraphics[width=0.72\textwidth]{figs/isolating_network.pdf}
+\includegraphics[width=0.62\textwidth]{figs/isolating_network.pdf}
 \end{center}
 
 \vspace{4pt}
-{\footnotesize Density sweep on the \textbf{real Chile network} (scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed; $\rho{=}1$ baseline, max feasible $\rho\approx2.2$): losses rise monotonically with density in every regime, and the Peg/Float gap \textbf{widens} --- \textbf{Managed stays best throughout}. Right: price-dispersion premium ($\rho{=}1$ vs.\ $\rho{=}0$) is clearly positive and concentrated in Services for Float/Managed, but small and \emph{mixed} across sectors for Peg (Resource/Manuf.\ slightly negative, Services slightly positive, netting close to zero) --- Peg's density sensitivity runs mainly through the output gap, not price dispersion.}
+{\footnotesize Density sweep on the \textbf{Chile network} (scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed; $\rho{=}1$ baseline): losses rise monotonically with density in every regime, and the Peg/Float gap \textbf{widens} --- \textbf{Managed stays best throughout}.}
 
 \end{frame}
 
@@ -560,7 +561,6 @@ $\phi_s$ & $0.30$ & \\
 \begin{frame}{Import Openness \& Import Concentration}
 %==============================================================
 \vspace{-7pt}
-{\scriptsize Sweep import openness $\zeta$ and cross-sector concentration $\theta_M$ of $\bm\omega_F$, real Chile calibration.}
 
 \vspace{1pt}
 \begin{center}
@@ -581,7 +581,6 @@ $\phi_s$ & $0.30$ & \\
 \begin{frame}{Export Openness \& Export Concentration}
 %==============================================================
 \vspace{-7pt}
-{\scriptsize Same construction, applied to export openness $\zeta$ and concentration $\theta_X$ of $\kappa_{EX,i}$, real Chile calibration.}
 
 \vspace{1pt}
 \begin{center}
@@ -599,10 +598,10 @@ $\phi_s$ & $0.30$ & \\
 \end{frame}
 
 %==============================================================
-\begin{frame}{Mechanism: How the Network Amplifies Shocks}
+\begin{frame}{How the Network Amplifies Shocks}
 %==============================================================
 
-{\footnotesize \textbf{One-line takeaway:} the network \textcolor{fxgreen}{\textbf{dampens}} the inflation peak but \textcolor{riskred}{\textbf{amplifies}} the output-gap peak --- in \emph{every} regime, for \emph{both} shocks. Cost-push isn't eliminated, it's \textbf{redirected}: spread into a persistent quantity distortion instead of a sharp price spike.}
+{\footnotesize The network \textcolor{fxgreen}{\textbf{dampens}} the inflation peak but \textcolor{riskred}{\textbf{amplifies}} the output-gap peak --- in \emph{every} regime, for \emph{both} shocks. }
 
 \vspace{5pt}
 \begin{center}
@@ -625,13 +624,7 @@ $\phi_s$ & $0.30$ & \\
 \end{center}
 
 \vspace{3pt}
-{\scriptsize \textbf{Reading it:} $<1\times$ = network shrinks the peak; $>1\times$ = network amplifies it. (Peak IRF response over 20 quarters, real Chile calibration; exchange-rate peak itself barely moves with the network, $0.8$--$1.5\times$ --- omitted above; full IRFs: \hyperlink{netirfs}{Appendix}.)}
-
-\vspace{4pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{1.5pt}\setlength{\topsep}{0pt}
-\item Import-price shock hits \textbf{Peg} hardest (no FX buffer); risk-premium hits \textbf{Float} hardest --- \textbf{Managed} blocks the risk-premium shock's amplification almost entirely
-\end{itemize}}
+{\scriptsize \textbf{Note:} $<1\times$ = network shrinks the peak; $>1\times$ = network amplifies it. (Peak IRF response over 20 quarters, Chile calibration; exchange-rate peak itself barely moves with the network)}
 
 \end{frame}
 
@@ -640,7 +633,7 @@ $\phi_s$ & $0.30$ & \\
 %==============================================================
 
 \vspace{-6pt}
-{\scriptsize \textbf{Different sectors prefer different regimes} --- sectors differ in stickiness $\hat\delta_i$ \& network centrality $\lambda_{D,i}$, so $\kappa_i$ and output-gap exposure hit them differently. Each cell: \textbf{Network ON / Network OFF}.}
+{\scriptsize Sectors differ in stickiness $\hat\delta_i$ \& network centrality $\lambda_{D,i}$, so $\kappa_i$ and output-gap exposure hit them differently. Each cell: \textbf{Network ON / Network OFF}.}
 
 \vspace{5pt}
 \begin{center}
@@ -673,12 +666,8 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 \end{tabular}}
 \end{center}
 
-\vspace{4pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
-\item \textbf{Price dispersion:} Managed best everywhere, ON or OFF; Float's Services cost is mostly network-driven (20.25 ON vs.\ 6.22 OFF) --- but \textbf{Peg's is not} (15.88 vs.\ 14.59, barely moves)
-\item \textbf{Output gap:} Peg's Services outlier is overwhelmingly \textbf{network-driven} (35.16 ON vs.\ 8.97 OFF, $+292\%$) --- without the network Peg would still be worst, but nowhere near this severe
-\end{itemize}}
+\vspace{6pt}
+{\scriptsize \textbf{Every sector agrees: Managed $<$ Float $<$ Peg} --- Services' huge stake in avoiding Peg is mostly \textbf{network-driven} (output-gap cost $8.97\to35.16$ with the network on).}
 
 \end{frame}
 
@@ -695,42 +684,11 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{3pt}\setlength{\topsep}{0pt}
 \item \textbf{Managed $<$ Float $\ll$ Peg in every calibration}
-\item UIP dominates Peg's loss throughout (65--76\%)
 \item Korea higher throughout: denser network \& higher import exposure
 \end{itemize}}
 
-\end{frame}
+\vspace{2pt}
 
-%==============================================================
-\begin{frame}{Robustness Summary: What Drives the Ranking?}
-%==============================================================
-
-\vspace{-6pt}
-{\scriptsize \textbf{Managed $<$ Float $<$ Peg survives every sweep.} What changes is the \emph{size of the stakes} and \emph{who bears them}:}
-
-\vspace{3pt}
-{\tiny
-\renewcommand{\arraystretch}{1.25}
-\begin{tabular}{@{}p{2.2cm}p{4.9cm}p{2.4cm}@{}}
-\toprule
-\textbf{Dimension} & \textbf{Effect on the regimes} & \textbf{Ranking?} \\
-\midrule
-Import openness $\uparrow$ & Peg $\downarrow\downarrow$ (131$\to$68), Float $\uparrow$ (21$\to$44), Managed flat (11--13) & gap \textbf{converges} \\
-Import concentration $\uparrow$ & Peg $\uparrow\uparrow$ (86$\to$93), Float/Managed roughly flat & gap \textbf{diverges} \\
-Export openness $\uparrow$ & \textbf{all regimes improve}, Peg most (99$\to$85) & unchanged \\
-Export concentration (Resource) & helps Peg, mildly hurts Float/Managed & unchanged \\
-Network density $\rho\uparrow$ & \textbf{all} worsen, Peg fastest (73$\to$214 at $\rho{=}2.2$) & gap \textbf{diverges} \\
-\bottomrule
-\end{tabular}}
-
-\vspace{3pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{1.5pt}\setlength{\topsep}{0pt}
-\item \textbf{Import side drives the ranking; export side barely does} --- consistent with the mechanism running through cost-push ($\Gamma\Delta e_t$), not terms-of-trade/expenditure-switching
-\item \textbf{Volume vs.\ concentration point in opposite directions for Peg} --- more imports overall narrows the gap, but concentrating them in one sector widens it: it's exposure \emph{structure}, not import \emph{intensity}, that's dangerous
-\item \textbf{Density is the one dimension where every regime worsens, but unevenly} --- Peg's loss grows fastest, so a more interconnected economy specifically strengthens the case against pegging
-\item \textbf{A sector's own trade share is not what predicts its pain:} Services has the \emph{lowest} direct import share (7.0\%) but the \emph{largest} welfare cost --- it sits atop the Domar-weight chain ($\lambda_{D,\text{Services}}{=}1.11$) and inherits shocks from every sector upstream; network-off cuts its Peg output-gap cost by $75\%$ (35.16$\to$8.97)
-\end{itemize}}
 
 \end{frame}
 
@@ -742,8 +700,7 @@ Network density $\rho\uparrow$ & \textbf{all} worsen, Peg fastest (73$\to$214 at
 
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{6pt}
-\item \textbf{Networks change how the exchange rate operates:} FX pass-through and TFP cost-push travel through the \emph{same} rigidity-adjusted network operator --- once $S_t$ is a second cost-push channel, the closed-economy divine-coincidence index generically fails
-\item \textbf{Networks matter for severity and incidence, not the ranking:} switching the domestic network on substantially raises welfare losses in every regime and reallocates which sector bears them --- but \textbf{Managed $<$ Float $<$ Peg either way}
+\item \textbf{The network matters, for severity and incidence, not the ranking:} FX pass-through and TFP cost-push travel through the \emph{same} rigidity-adjusted network operator --- switching it on substantially raises welfare losses in every regime and reallocates which sector bears them, but \textbf{Managed $<$ Float $<$ Peg either way}
 \item \textbf{Peg is dominated by a different mechanism than the textbook story:} not terms-of-trade, but risk-premium/UIP --- zero monetary autonomy forces the shock straight into the output gap
 \item \textbf{Managed float wins} because it is the only regime that dampens the FX pass-through channel without fully reimposing peg's loss of autonomy
 \item \textbf{Robust} across three real-data calibrations (Chile, Korea, Czechia) and a genuine second-order solution
