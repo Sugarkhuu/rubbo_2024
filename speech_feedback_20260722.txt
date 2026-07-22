@@ -1,0 +1,36 @@
+Feedback from presentation: 
+
+
+Christian: 
+
+Service sector is very price rigid and low import, 
+but it buys input from other sectors like Manu. which has high import. 
+With and without network comparison - with how sectors rigidity and import intensiveness playing roles. 
+
+Regime choice. How optimal regime choice changes with or without network. If welfare
+is changing so much, then maybe the parameter itself is quite different for 
+network and nonnetwork. If so, then having network is important etc. For what network, what regime. 
+
+Benny: 
+
+- 
+- Going through mechanics, shocks and model intuituion, and then show welfare. 
+
+
+
+Adam: 
+
+Hey man. Good job. Here's the comments I wrote down:. Not all will make sense, but just from what I understood of what people were saying
+
+Clarify the demand vs cost-push shocks earlier in the intro
+What's the optimal weight on the exchange rate (ended up becoming the main point people wanted to see)
+Robustness on sectors that are upstream vs downstream
+Clearer on the units of the welfare results
+omegaX and omegaF: why right vs left multiplied
+Phillips curve and the law of one price/uip all in there simultaneously: is the model over-identified?
+More details on the shock processes before the results
+Between sector dispersion for welfare losses
+Effects of the volatility of the exchange rate processes
+How does weight optimality change with presence of the network structure?
+Decompositions a bit unclear
+What's being re-calibrated in all these comparisons?

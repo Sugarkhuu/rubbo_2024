@@ -288,6 +288,51 @@ zero point nine eight."
 
 ---
 
+## Why Services? Direct vs. Indirect Import Exposure (1:15)
+"Christian's question after the last presentation: Services is the
+stickiest sector and has the *lowest* direct import share — so why does it
+end up carrying most of the network's welfare cost? [point at left panel]
+This decomposes each sector's total import exposure — the object that
+governs FX pass-through — into a *direct* part, just its own import cost
+share, and an *indirect* part, imports it inherits by buying from other
+domestic sectors. At zero network density that indirect part is exactly
+zero by construction. As density rises, it grows — and for Services, it
+ends up being 41% of its *total* exposure, almost as large a share as
+Resource's 50%, even though Services' total exposure is the smallest in
+levels. [point at right panel] So Services looks insulated only if you
+look at its own import bill. Once you follow the network — it buys 5.8% of
+its cost from Manufacturing, the most import-intensive sector in the
+economy — a meaningful chunk of whatever FX shock hits Manufacturing
+shows up on Services' books too. And because Services can't reprice
+quickly — that's the stickiness — whatever cost-push it inherits this way
+doesn't clear in a quarter, it lingers: its inflation is the single most
+persistent series in the model, autocorrelation around 0.82. Rigidity
+doesn't create the exposure, the network does that; rigidity is what turns
+a transient inherited shock into a persistent one."
+
+---
+
+## Does the Optimal Managed-Float Response Depend on the Network? (1:15)
+"Christian's other question: if the network changes welfare *this* much,
+maybe it also changes what the *right policy parameter* is, not just how
+costly it is to get wrong. [point at figure] Same welfare-minimizing
+$\phi_s$ search as the appendix slide, but now repeated at three network
+densities instead of just the baseline. And the answer is yes — the
+optimal $\phi_s$ moves: 0.15 with no network, 0.20 at baseline, 0.30 once
+the network is twice as dense. That's monotonic and economically sensible
+— more network density means more of a shock reaches you indirectly, so
+leaning harder against the exchange rate pays off more. But look at the
+shape of each curve near its own minimum — it's flat, within two or three
+percent across a pretty wide range. So the finding is real: the network
+does shift the optimal parameter, not just the loss level. But practically,
+being close to right matters far more than being exactly right — you don't
+need to know your network density to three decimal places to run a good
+managed float."
+
+---
+
+---
+
 ## Network Exposure & Sector Welfare Preferences (1:15)
 "Do different sectors actually want different regimes? [point at tables]
 Short answer: no — every sector, on its own, ranks Managed below Float
@@ -378,3 +423,98 @@ If you're running long, the first cuts should be the second half of
 "Firms: Price Setting" and "Firms: Production Network" (the audience can
 absorb the punchline without the full derivation walk-through) — never cut
 into the Results section, that's the part they came for.
+
+---
+
+## Post-talk feedback (2026-07-22, Christian & Benny) — what changed and what to watch
+
+Two new Results slides added, both live in the main deck (not gated behind
+the currently-uncommented-out appendix `\input`):
+**"Why Services? Direct vs. Indirect Import Exposure"** and **"Does the
+Optimal Managed-Float Response Depend on the Network?"** — see their notes
+above, inserted right after "How the Network Amplifies Shocks" and "Isolating
+the Network Channel" respectively.
+
+**Christian's two points, and what actually answers them:**
+- *"Services is rigid + low import, but buys from Manufacturing which has
+  high import — with/without network comparison of how rigidity and import
+  intensity interact."* → the new import-exposure-decomposition slide:
+  Services' total import centrality $M_i$ splits 59% direct / 41% indirect;
+  indirect is mechanically zero at $\rho{=}0$ and grows with density. This
+  is a **pure accounting decomposition of the network object already used
+  everywhere else in the deck** ($M_i$ is the same import-centrality vector
+  on the "Import Openness" slide), not a new model.
+- *"How does the optimal regime parameter change with/without network — if
+  welfare changes so much, maybe the parameter is quite different too."* →
+  the new $\phi_s$-vs-$\rho$ slide: $\phi_s^*=0.15/0.20/0.30$ at
+  $\rho=0/1/2$. Confirms his hypothesis directly — this required 36 fresh
+  Dynare solves (`code/sweep_phi_s_netdens_chile.m`,
+  `code/drive_phi_s_netdens_chile_sweep.sh`), not just relabeling existing
+  output.
+
+**What to be careful about if asked (caveats behind these two new slides):**
+1. **$\rho=0$ is not "no trade with these sectors," it's "no domestic
+   cross-sector cost share."** Scaling $\Omega^H$'s off-diagonal by $\rho$
+   forces $\alpha_i$ (own value-added/labor share) to absorb the freed-up
+   cost share so shares still sum to one (`sweep_netdens_chile.m`,
+   `sweep_phi_s_netdens_chile.m`). So $\rho=0$ answers "what if this sector
+   used only labor and imports as inputs," not "what if these specific
+   trade relationships vanished and nothing replaced them." Both are
+   defensible counterfactuals, but they're not the same question — say
+   this explicitly if a referee-type question probes what $\rho=0$ "means."
+2. **Found and fixed a latent bug while building this**: the *existing*
+   `analysis_netdens_chile.py` (behind `figs/isolating_network.pdf`, "Isolating
+   the Network Channel" slide) computed welfare using $\lambda_{D,i}$ fixed
+   at its $\rho{=}1$ value for *every* $\rho$ in the sweep — but
+   $\lambda_D=\bm\beta^{H\top}(I-\Omega^H)^{-1}$ is itself a function of
+   $\rho$. Corrected version:
+   `code/network_exposure_decomposition.py` (closed-form $\lambda_D(\rho)$,
+   validated against Dynare's own `LAMBDA_D_i` output to <1% at $\rho=1$)
+   and `code/analysis_netdens_chile_v2.py`. Effect: **the network welfare
+   premium is understated in the current `isolating_network.pdf`**, not
+   overstated — e.g. Float's premium (loss at $\rho{=}1$ minus $\rho{=}0$)
+   is +\$3.6$ under the old fixed-$\lambda_D$ calc vs +\$6.1$ corrected
+   ($\times10^{-4}$), about 70% bigger. Ranking and monotonicity are
+   unaffected; exact levels on that specific slide are a slight
+   underestimate. Worth regenerating that figure before a paper draft;
+   didn't touch it for this revision since it doesn't change any
+   conclusion, just a magnitude.
+3. **Same "optimal simple rule, not Ramsey" caveat as the existing appendix
+   $\phi_s$ slide applies here too** — this is the best $\phi_s$ *within*
+   the fixed linear rule $\hat\imath_t=\phi_\pi\pi_t^{DC}+\phi_y\tilde
+   y_t+\phi_s\log S_t$, on a 12-point grid, not a continuous or
+   unconstrained optimum. "$\phi_s^*=0.30$ at $\rho=2$" means 0.30 beat its
+   grid neighbors (0.20, 0.40), not that 0.30 is exact to the third decimal.
+4. **This has not been crossed with the $\psi$ (risk-premium elasticity)
+   sweep** flagged in `CLAUDE.md`'s future-extensions list — the risk-premium/
+   UIP channel is untouched by $\rho$ in this exercise (it doesn't run
+   through $\Omega^H$ at all), so the $\phi_s^*(\rho)$ result should be read
+   as "robust to network density," not yet "robust to every calibration
+   knob." Don't overclaim this in Q&A as the final word on $\phi_s$
+   robustness.
+5. **New MATLAB/Python artifacts, for reproducibility**: 
+   `code/sweep_phi_s_netdens_chile.m`,
+   `code/drive_phi_s_netdens_chile_sweep.sh`,
+   `code/network_exposure_decomposition.py`,
+   `code/analysis_phi_s_netdens.py`,
+   `code/analysis_netdens_chile_v2.py` → `results/phi_s_netdens_chile_sweep.csv`,
+   `results/phi_s_netdens_chile_welfare.csv`,
+   `results/import_exposure_decomposition.csv`,
+   `results/netdens_chile_welfare_v2.csv` →
+   `figs/phi_s_netdens.pdf`, `figs/import_exposure_decomposition.pdf`.
+
+**Benny's point — not yet acted on, flag for next revision:** "go through
+mechanics, shocks, and model intuition, then show welfare." Right now
+Results *opens* with the welfare-ranking slide (numbers first), and the
+mechanism slides ("How the Network Amplifies Shocks," the new
+import-exposure-decomposition slide, "Network Exposure & Sector Welfare
+Preferences") come *after* it. Reordering the whole Results section to lead
+with mechanism and land on welfare as the payoff is a bigger, riskier edit
+(slide-count/appendix numbering, transitions, timing script) than the two
+additions above, and wasn't done here under the July 22 deadline. For the
+next pass: candidate reordering is Network Properties (already early, stays)
+→ How the Network Amplifies Shocks → the two new mechanism slides → THEN
+Welfare Ranking / Shock Decomposition / Isolating the Network Channel /
+$\phi_s$-vs-network as the payoff sequence. Worth 15 minutes with a fresh
+eye before the next external presentation, not urgent for this internal
+revision.

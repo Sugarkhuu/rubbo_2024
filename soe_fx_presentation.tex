@@ -574,6 +574,27 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \end{frame}
 
 %==============================================================
+\begin{frame}{Does the Optimal Managed-Float Response Depend on the Network?}
+%==============================================================
+
+{\footnotesize Christian's question: welfare loss changes a lot with network density --- does the \textbf{welfare-minimizing} FX-stabilization coefficient $\phi_s$ change too, or just its magnitude?}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.72\textwidth]{figs/phi_s_netdens.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item Re-solves the managed-float rule $\hat\imath_t=\phi_\pi\pi_t^{DC}+\phi_y\tilde y_t+\phi_s\log S_t$ over the $\phi_s$ grid at three network densities: \textbf{no network} ($\rho{=}0$), \textbf{baseline} ($\rho{=}1$), \textbf{denser} ($\rho{=}2$)
+\item \textbf{$\phi_s^*$ rises with density: $0.15\to0.20\to0.30$} --- denser network, more indirect cost-push (previous slide), so the welfare-minimizing rule leans harder against the exchange rate
+\item \textbf{But the curve is flat near its minimum} in every case (within $\approx$2--3\% of $\phi_s^*$ across $\phi_s\in[0.10,0.30]$) --- the shift is real and monotonic, not a knife-edge, but getting $\phi_s$ within $\pm0.1$ of "right" matters far more than getting it exactly right
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \begin{frame}{How the Network Amplifies Shocks}
 %==============================================================
 
@@ -601,6 +622,27 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 
 \vspace{3pt}
 {\scriptsize \textbf{Note:} $<1\times$ = network shrinks the peak; $>1\times$ = network amplifies it. (Peak IRF response over 20 quarters; exchange-rate peak itself barely moves with the network)}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Why Services? Direct vs.\ Indirect Import Exposure}
+%==============================================================
+
+{\footnotesize Services is the \textbf{stickiest} sector (Calvo reset prob.\ $\delta_3{=}0.16$) and has the \textbf{lowest direct} import share ($\Omega^F_3{=}0.070$) --- yet it buys $5.8\%$ of its cost from Manufacturing, the most import-intensive sector ($\Omega^F_2{=}0.195$).}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.86\textwidth]{figs/import_exposure_decomposition.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item Total import centrality $M_i=[(I-\Omega^H)^{-1}\Omega^F\mathbf 1]_i$ splits into a \textbf{direct} part (own $\Omega^F_i$) and an \textbf{indirect} part inherited from suppliers --- for Services, \textbf{41\% of total exposure is indirect} (Resource 50\%, Manuf.\ 32\%)
+\item Indirect exposure is \textbf{mechanically zero} at $\rho{=}0$ and grows with network density $\rho$ --- density doesn't change any sector's \emph{direct} import share, only how much of \emph{other} sectors' import content gets passed to it
+\item \textbf{Combined with stickiness}: Services can't reprice quickly, so whatever cost-push it inherits shows up as persistent inflation, not a one-quarter blip --- $\mathrm{Corr}(\pi_3,\pi_3^{t-1})\approx0.82$, the most persistent inflation series in the model
+\end{itemize}}
 
 \end{frame}
 
