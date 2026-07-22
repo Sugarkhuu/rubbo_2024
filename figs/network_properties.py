@@ -6,11 +6,11 @@ import numpy as np
 categories = ["Resource", "Manuf.", "Services"]
 
 series = [
-    (r"$\lambda_{D,i}$", [0.072, 0.382, 1.108], "#2a78d6"),
+    (r"Domar weight $\lambda_{D,i}$", [0.072, 0.382, 1.108], "#2a78d6"),
     ("Import share", [0.0767, 0.1945, 0.0704], "#1baf7a"),
-    (r"$\mathcal{M}_i$", [0.155, 0.285, 0.119], "#008300"),
+    (r"Import centrality $\mathcal{M}_i$", [0.155, 0.285, 0.119], "#008300"),
     ("Export share", [0.602, 0.180, 0.036], "#e87ba4"),
-    (r"$\mathcal{M}_i^X$", [0.721, 0.329, 0.077], "#eda100"),
+    (r"Export centrality $\mathcal{M}_i^X$", [0.721, 0.329, 0.077], "#eda100"),
 ]
 
 n_series = len(series)
@@ -46,8 +46,8 @@ ax.tick_params(axis="x", length=0)
 ax.yaxis.grid(True, color="#e1e0d9", linewidth=0.8, zorder=0)
 ax.set_axisbelow(True)
 
-ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.16), ncol=5,
-          frameon=False, fontsize=10, handlelength=1.2, columnspacing=1.1)
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.22), ncol=3,
+          frameon=False, fontsize=9.5, handlelength=1.2, columnspacing=1.1)
 
 fig.tight_layout()
 fig.savefig("network_properties.pdf", facecolor=fig.get_facecolor(), bbox_inches="tight")

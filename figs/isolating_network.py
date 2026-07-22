@@ -3,15 +3,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-rho = [0.00, 0.25, 0.50, 0.75, 1.00, 1.50, 2.00, 3.00]
-rho_peg     = [39.3342, 41.4210, 43.8192, 46.5537, 49.6315, 56.7317, 64.8207, 82.8659]
-rho_managed = [5.0105, 4.9444, 4.9564, 5.0824, 5.3573, 6.4928, 8.6482, 17.3960]
-rho_float   = [6.6630, 7.3884, 8.7522, 10.8103, 13.6393, 21.9834, 34.5886, 75.8864]
+rho = [0.00, 0.50, 1.00, 1.50, 2.00, 2.20]
+rho_peg     = [73.0057, 77.9777, 90.4588, 117.1111, 174.2869, 213.9355]
+rho_managed = [10.8387, 10.5883, 10.9593, 12.3985, 15.8451, 18.1947]
+rho_float   = [21.5920, 22.2671, 25.2057, 31.0558, 40.1045, 44.5913]
 
 regimes = ["Float", "Managed", "Peg"]
-premium_resource = [0.0223, 0.0202, 0.0029]
-premium_manuf    = [1.6372, 0.9801, -1.0324]
-premium_services = [14.0398, 2.9771, 1.2909]
+premium_resource = [-0.0202, 0.0021, -0.2947]
+premium_manuf    = [-0.2513, -0.0122, -1.6230]
+premium_services = [3.3856, 0.2504, 0.3709]
 
 COLOR_PEG = "#dc2626"
 COLOR_MANAGED = "#6b7280"
@@ -43,7 +43,7 @@ ax.plot(rho, rho_managed, color=COLOR_MANAGED, linestyle="--", marker="o", marke
 ax.plot(rho, rho_float, color=COLOR_FLOAT, linestyle="-", marker="o", markersize=4,
         linewidth=2, label="Float")
 ax.axvline(1.0, color="#c3c2b7", linestyle="--", linewidth=1)
-ax.text(1.05, 3, "baseline", fontsize=9, color="#52514e")
+ax.text(1.05, 15, "baseline", fontsize=9, color="#52514e")
 ax.set_xlabel("density $\\rho$ (0 = no network)", fontsize=11, color="#0b0b0b")
 ax.set_ylabel("welfare loss ($\\times10^4$)", fontsize=11, color="#52514e")
 ax.legend(loc="upper left", frameon=False, fontsize=10)

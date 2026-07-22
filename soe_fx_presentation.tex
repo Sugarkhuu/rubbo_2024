@@ -1,6 +1,6 @@
 \documentclass[aspectratio=43, 10pt]{beamer}
 \title{\textbf{Exchange rate and Production network}}
-\subtitle{Macro Internal Seminar} % Gomes, Haliossos, and Ramadorai (2021)
+\subtitle{Bonn Macro Internal Seminar} % Gomes, Haliossos, and Ramadorai (2021)
 \author{Sugarkhuu Radnaa}
 \institute[]{Bonn Graduate School of Economics}
 \date{July, 2026}
@@ -84,7 +84,7 @@
 \begin{document}
 
 %--------------------------------------------------------------
-\begin{frame}
+\begin{frame}[plain]
   \titlepage
   % \vspace{-6pt}
   % {\centering\color{customgreen}\rule{0.35\textwidth}{0.8pt}\par}
@@ -94,7 +94,7 @@
 \end{frame}
 
 %==============================================================
-\section{Intro}
+\section{Introduction}
 %==============================================================
 \begin{frame}{Motivation}
 %==============================================================
@@ -120,7 +120,6 @@
 \item Firms buy inputs mostly from \emph{other domestic firms}, not just labor --- a cost shock to one sector mechanically hits everyone downstream
 \item Imported inputs are the norm (Chile: up to $19.5\%$ in Manufacturing) --- so an FX move is, for the firm, a domestic cost shock
 \item Network models get this propagation right but ignore the exchange rate; open-economy models get the exchange rate right but ignore the network
-\item \textbf{This paper: both together}
 \end{itemize}}
 
 \vspace{8pt}
@@ -141,7 +140,7 @@
 
 \vspace{10pt}
 
-{\footnotesize \textbf{Open economy \emph{with} network (closest to this paper):}}
+{\footnotesize \textbf{Open economy \emph{with} network:}}
 {\scriptsize
 \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{1pt}
 \item \textbf{Gnocato, Montes-Gald\'on \& Stamato (2025, ECB); Kalemli-\"Ozcan et al.\ (2025)} --- open economy \emph{with} network (tariffs), fixed Taylor rule, no FX-regime choice\footnote{\tiny Details \& what these papers cite for open-economy production networks: \hyperlink{ecbnetwork}{Appendix}.}
@@ -159,11 +158,11 @@
 
 {\small
 \begin{itemize}\setlength{\itemsep}{6pt}
-\item Extend Rubbo $\to$ SOE: imported inputs $\Omega^F$, UIP, debt-elastic premium
-\item Ask: optimal FX regime? DC index survive with 2 cost-push channels?
+\item Extend Rubbo (2024) $\to$ SOE: imported inputs, UIP and debt-elastic premium
 \item \textbf{Three literatures, none overlapping fully} (network only; open economy only; network $+$ open economy but no regime choice) --- \textbf{first to put all three together}
-\item \textbf{Not just Gal\'i-Monacelli with sectors}: ranking survives, but the mechanism (risk-premium) and sector heterogeneity are new
-\item Calibrate: Chile's real I-O table (Banco Central), also Korea, Czechia \& a stylized baseline; solve \textbf{nonlinear} model directly
+\item \textbf{Calibrate}: Chile's real IO table, also Korea, Czechia
+\item Ask: rank FX regimes? How does the network amplify foreign shocks? How do sector heterogeneity and network structure matter?
+\item \textbf{Result}: \textbf{Managed $<$ Float $\ll$ Peg} (welfare loss $10.96/25.15/90.45\times10^{-4}$)
 \end{itemize}}
 
 \end{frame}
@@ -178,10 +177,6 @@
 
 \small
 
-Small open economy: home takes foreign price $P_t^{F*}$, rate $i^*$, and demand $D_t^*$ as given.
-
-\vspace{5pt}
-
 Representative household chooses $\{C_t,L_t,B_t,B_t^*\}$ to maximize lifetime utility, subject to a budget constraint with a domestic bond $B_t$ and a foreign bond $B_t^*$:
 
 \[
@@ -192,12 +187,16 @@ E_0\sum_{t=0}^{\infty}\beta^t
 \frac{L_t^{1+\varphi}}{1+\varphi}
 \right]
 \]
+
+subject to 
+\vspace{1pt}
+
 \[
 P_t^CC_t+B_t+S_tB_t^*=W_tL_t+\Pi_t+(1{+}i_{t-1})B_{t-1}+(1{+}i^*)\big[1-\psi(\hat b^*_{t-1}-\bar b^*)\big]S_tB_{t-1}^*
 \]
 
+\vspace{6pt}
 Consumption is CES across home/foreign goods, Cobb-Douglas across domestic sectors:
-
 \[
 C_t=
 \left[
@@ -217,46 +216,27 @@ C_t^H=\prod_i(C_{it}^H)^{\beta_i^H}
 
 \small
 
-Firms in sector $i$ share Cobb-Douglas technology (labor, domestic inputs, imports) and price under monopolistic competition; CRS makes marginal cost common across firms:
+Firms in sector $i$ share Cobb-Douglas technology (labor, domestic inputs, imports) and price under monopolistic competition:
 
 \[
 Y_{ift}=A_{it}\,L_{ift}^{\alpha_i}\prod_j X_{ijft}^{\Omega^H_{ij}}\,M_{ift}^{\Omega^F_i}
 \]
+
+\vspace{1pt}
+
 \[
 MC_{it}=\frac{W_t^{\alpha_i}\prod_j P_{jt}^{\Omega^H_{ij}}\,(S_tP_t^{F*})^{\Omega^F_i}}{A_{it}}
 \]
 
-\textbf{Two cost-push channels:} $MC_{it}$ moves with $A_{it}$ (TFP) \emph{and} $S_t$, the exchange rate (via the import cost $S_tP_t^{F*}$); with \textbf{Calvo pricing}, only a fraction $\delta_i$ resets each period.
+
+\vspace{6pt}
+\textbf{Two cost-push channels:} $MC_{it}$ moves with $A_{it}$ (TFP) \emph{and} $S_t$, the exchange rate (via the import cost $S_tP_t^{F*}$).
+
+\vspace{6pt}
+The theory holds for any number of sectors $N$; the quantitative results use $N=3$ (Resource, Manufacturing, Services), collapsed from Chile's 12-sector national IO table.
 
 \end{frame}
 
-
-%------------------------------------------------
-\begin{frame}{Firms: Production Network}
-
-\small
-
-Stacking each firm's input shares $\Omega^H_{ij}$, $\Omega^F_i$ across sectors gives the \textbf{input-output network} $\Omega^H\in\mathbb R^{N\times N}$, import-exposure vector $\bm\omega_F\in\mathbb R^N$ (import cost share of each sector's output), and export-exposure vector $\bm\omega_X\in\mathbb R^N$ (export share of each sector's own output).
-
-\vspace{5pt}
-
-The \textbf{Leontief inverse} sums direct and indirect linkages:
-
-\[
-(I-\Omega^H)^{-1}=I+\Omega^H+(\Omega^H)^2+\cdots
-\]
-
-applied to consumption shares $\bm\beta^H$ (Households) it gives each sector's \textbf{Domar weight}; applied to $\bm\omega_F$ or $\bm\omega_X$, its import or export centrality:
-
-\[
-\bm\lambda_D^\top=(\bm\beta^H)^\top(I-\Omega^H)^{-1},
-\qquad
-\mathcal M=(I-\Omega^H)^{-1}\bm\omega_F,
-\qquad
-\mathcal M^X=(I-\Omega^H)^{-1}\bm\omega_X
-\]
-
-\end{frame}
 
 %------------------------------------------------
 \begin{frame}{Firms: Price Setting}
@@ -279,9 +259,7 @@ Calvo pricing through the network delivers the (vector) Phillips curve:
 \qquad
 \Gamma=\frac{\tilde A\bm\omega_F}{\kappa}
 \]
-\vspace{6pt}
 
-\textbf{Only relative shocks matter:} $\mathcal V\mathbf 1=\mathbf 0$ --- uniform TFP shocks create no cost-push; only sector-specific gaps $\bm\chi_t=(I-\Omega^H)^{-1}\log\mathbf A_t-\bm p_{t-1}$ do.
 
 \vspace{10pt}
 {\footnotesize where:}
@@ -296,13 +274,47 @@ $\mathcal B,\Gamma$: PC slope, FX pass-thru\ & $\mathcal V$: TFP cost-push matri
 
 \end{frame}
 
+%------------------------------------------------
+\begin{frame}{Firms: Production Network}
+
+\small
+
+The \textbf{Leontief inverse} sums direct and indirect linkages:
+
+\[
+(I-\Omega^H)^{-1}=I+\Omega^H+(\Omega^H)^2+\cdots
+\]
+
+applied to consumption shares $\bm\beta^H$ (Households) it gives:
+
+\[
+\bm\lambda_D^\top=(\bm\beta^H)^\top(I-\Omega^H)^{-1},
+\qquad
+\mathcal M=(I-\Omega^H)^{-1}\bm\omega_F,
+\qquad
+\mathcal M^X=(I-\Omega^H)^{-1}\bm\omega_X
+\]
+
+\vspace{6pt}
+{\footnotesize where:}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\topsep}{0pt}
+\item $\lambda_{D,i}$: \textbf{Domar weight} --- sector $i$'s total weight in final demand, network-adjusted (can exceed 1 for downstream sectors)
+\item $\mathcal M_i$: \textbf{Import centrality} --- sector $i$'s total (direct $+$ indirect) exposure to import costs
+\item $\mathcal M_i^X$: \textbf{Export centrality} --- sector $i$'s total (direct $+$ indirect) exposure to export demand
+\end{itemize}}
+
+\end{frame}
+
 
 %------------------------------------------------
 \begin{frame}{Foreign Sector}
 
 \footnotesize
 
-Law of one price and UIP with a debt-elastic risk premium $RP_t$:
+Law of one price and UIP with a debt-elastic NFA stabilizer $\psi(\cdot)$ and an exogenous risk-premium shock $RP_t$:
 
 \vspace{10pt}
 \[
@@ -312,7 +324,7 @@ i_t = i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 \]
 \vspace{10pt}
 
-NFA accumulates the trade balance; exports are \textbf{sector-specific} (Resource-heavy, matching Chile's data):
+NFA accumulates the trade balance:
 
 \vspace{10pt}
 \[
@@ -355,7 +367,6 @@ $\hat s_t\equiv\log(S_t/\bar S)$: log exch.\ rate & $\Delta e_{t+1}\equiv\mathbb
 
 \small
 
-Three exchange-rate regimes are compared. 
 
 \vspace{10pt}
 
@@ -433,10 +444,11 @@ i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 \end{cases}
 \]
 
-{\scriptsize where: $r_t^{\mathrm{nat}}$ natural real rate, $\hat p_t^H$ log home price idx., $\pi_t^{DC}$ DC index (target); $\mathcal B,\Gamma,\mathcal V,\psi(\cdot),RP_t,\hat p_t^{F*}(PF_t)$ as before.}
+% {\scriptsize where: $r_t^{\mathrm{nat}}$ natural real rate, $\hat p_t^H$ log home price idx., $\pi_t^{DC}$ DC index (target); $\mathcal B,\Gamma,\mathcal V,\psi(\cdot),RP_t,\hat p_t^{F*}(PF_t)$ as before.}
 
-\textbf{Welfare loss}: $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\kappa_i\mathrm{Var}(\pi_{it})\big]$, $\kappa_i=\lambda_{D,i}\varepsilon\frac{1-\hat\delta_i}{\hat\delta_i}$
+% \textbf{Welfare loss}: $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\kappa_i\mathrm{Var}(\pi_{it})\big]$, $\kappa_i=\lambda_{D,i}\varepsilon\frac{1-\hat\delta_i}{\hat\delta_i}$
 
+\vspace{9pt}
 {\scriptsize \textbf{Seven AR(1) shocks} (1\% s.d.\ each): sector TFP $A_1,A_2,A_3$ ($\rho{=}0.90$), import price $PF$ ($\rho{=}0.85$), foreign demand $D^*$ ($\rho{=}0.80$), export price/ToT $PX$ ($\rho{=}0.85$), risk premium $RP$ ($\rho{=}0.80$).}
 
 \end{frame}
@@ -448,20 +460,20 @@ i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 \begin{center}
 {\tiny
 \renewcommand{\arraystretch}{0.92}
-\begin{tabular}{@{}lc>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{2.3cm}c>{\raggedright\arraybackslash}p{2.1cm}@{}}
 \toprule
-\textbf{Parameter} & \textbf{Value} & \textbf{Source} \\
+\textbf{Param.} & \textbf{Description} & \textbf{Value} & \textbf{Source} \\
 \midrule
-$\alpha_1,\alpha_2,\alpha_3$ & $0.503,\ 0.359,\ 0.604$ & \multirow{4}{*}{Data: BCCh IO table} \\
-$\Omega^F_1,\Omega^F_2,\Omega^F_3$ & $0.077,\ 0.195,\ 0.070$ & \\
-$\beta^H_1,\beta^H_2,\beta^H_3$ & $0.027,\ 0.229,\ 0.744$ & \\
-Export share$_{1,2,3}$ & $0.602,\ 0.180,\ 0.036$ & \\
-$\delta_1,\delta_2,\delta_3$ & $0.90,\ 0.31,\ 0.16$ & Lit.: Dhyne et al.\ (2005); Nakamura--Steinsson (2008) \\
+$\alpha_1,\alpha_2,\alpha_3$ & Labor share & $0.503,\ 0.359,\ 0.604$ & \multirow{4}{*}{Data: BCCh IO} \\
+$\Omega^F_1,\Omega^F_2,\Omega^F_3$ & Import cost share & $0.077,\ 0.195,\ 0.070$ & \\
+$\beta^H_1,\beta^H_2,\beta^H_3$ & HH consumption share & $0.027,\ 0.229,\ 0.744$ & \\
+Export share$_{1,2,3}$ & Export share of output & $0.602,\ 0.180,\ 0.036$ & \\
+$\delta_1,\delta_2,\delta_3$ & Calvo reset prob. & $0.90,\ 0.31,\ 0.16$ & Lit.: Dhyne et al.\ (2005); N-S (2008) \\
 \midrule
-$\psi$ & $0.020$ & \multirow{4}{*}{\parbox{2.6cm}{Key mechanism: risk-premium/UIP elasticity \& FX-regime rules (see $\psi$-sensitivity, appendix)}} \\
-$\phi_\pi$ & $1.50$ & \\
-$\phi_y$ & $0.50$ & \\
-$\phi_s$ & $0.30$ & \\
+$\psi$ & Risk-premium elasticity & $0.020$ & \multirow{4}{*}{\parbox{2.1cm}{Key mechanism param.\ (see appendix)}} \\
+$\phi_\pi$ & Taylor: inflation resp. & $1.50$ & \\
+$\phi_y$ & Taylor: output-gap resp. & $0.50$ & \\
+$\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -488,11 +500,11 @@ $\phi_s$ & $0.30$ & \\
 \includegraphics[width=0.92\textwidth]{figs/network_properties.pdf}
 \end{center}
 
-\vspace{4pt}
-{\footnotesize The production network amplifies both import and export exposure well beyond each sector's raw share}
+% \vspace{4pt}
+% {\footnotesize The production network amplifies both import and export exposure well beyond each sector's raw share}
 
-\vspace{6pt}
-{\footnotesize $\lambda_{D,i}=[(\bm\beta^H)^\top(I-\Omega^H)^{-1}]_i$ (Domar weight), $\mathcal M_i=[(I-\Omega^H)^{-1}\bm\omega_F]_i$ and $\mathcal M_i^X=[(I-\Omega^H)^{-1}\bm\omega_X]_i$ (import/export centrality) }
+% \vspace{6pt}
+% {\footnotesize $\lambda_{D,i}=[(\bm\beta^H)^\top(I-\Omega^H)^{-1}]_i$ (Domar weight), $\mathcal M_i=[(I-\Omega^H)^{-1}\bm\omega_F]_i$ and $\mathcal M_i^X=[(I-\Omega^H)^{-1}\bm\omega_X]_i$ (import/export centrality) }
 
 \end{frame}
 
@@ -534,9 +546,9 @@ $\phi_s$ & $0.30$ & \\
 \vspace{4pt}
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{4pt}
-\item \textbf{Peg:} risk-premium/UIP $\to$ 76\% of loss, mostly output gap --- the shock that decides everything for a hard peg
+\item \textbf{Peg:} risk-premium/UIP $\to$ 76\% of loss, mostly output gap
 \item \textbf{Float \& Managed:} TFP shocks dominate instead --- risk-premium barely registers since the exchange rate (Float) or partial smoothing (Managed) absorbs it before it reaches output
-\item Import price, foreign demand, and export price/ToT are second-order for every regime 
+\item Import price, foreign demand, and export price are second-order for every regime 
 \end{itemize}}
 
 \end{frame}
@@ -545,7 +557,7 @@ $\phi_s$ & $0.30$ & \\
 \begin{frame}{Isolating the Network Channel}
 %==============================================================
 
-{\footnotesize \textbf{Beyond ON/OFF}: does the network's effect scale \emph{continuously} with how interconnected the economy is?}
+{\footnotesize Does the network's effect scale \emph{continuously} with how interconnected the economy is?}
 
 \vspace{4pt}
 \begin{center}
@@ -553,46 +565,10 @@ $\phi_s$ & $0.30$ & \\
 \end{center}
 
 \vspace{4pt}
-{\footnotesize Density sweep on the \textbf{Chile network} (scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed; $\rho{=}1$ baseline): losses rise monotonically with density in every regime, and the Peg/Float gap \textbf{widens} --- \textbf{Managed stays best throughout}.}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Import Openness \& Import Concentration}
-%==============================================================
-\vspace{-7pt}
-
-\vspace{1pt}
-\begin{center}
-\includegraphics[width=0.85\textwidth]{figs/openness_concentration.pdf}
-\end{center}
-
-\vspace{-2pt}
 {\scriptsize
 \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
-\item \textbf{Managed $<$ Float $<$ Peg robust throughout}
-\item Openness $\uparrow$: Peg $\downarrow$, Float $\uparrow$ --- gap \textbf{converges}
-\item Concentration $\uparrow$: Peg $\uparrow$ faster --- gap \textbf{diverges}
-\end{itemize}}
-
-\end{frame}
-
-%==============================================================
-\begin{frame}{Export Openness \& Export Concentration}
-%==============================================================
-\vspace{-7pt}
-
-\vspace{1pt}
-\begin{center}
-\includegraphics[width=0.85\textwidth]{figs/export_openness_concentration.pdf}
-\end{center}
-
-\vspace{-2pt}
-{\scriptsize
-\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
-\item \textbf{Managed $<$ Float $<$ Peg robust throughout}
-\item Openness $\uparrow$: \textbf{all regimes improve}, Peg most
-\item Concentration toward Resource (flexible sector): helps Peg, slightly hurts Float/Managed
+% \item Scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed ($\rho{=}1$ baseline) --- \textbf{Managed stays best throughout}
+\item Denser network amplifies shock propagation for \emph{everyone}, but \textbf{Peg} has no policy lever ($\phi_\pi,\phi_y=0$) to lean against it, so the amplification passes straight into welfare loss; \textbf{Float}/\textbf{Managed} actively damp part of it with the interest rate --- \textbf{gap widens} as $\rho\uparrow$
 \end{itemize}}
 
 \end{frame}
@@ -614,17 +590,17 @@ $\phi_s$ & $0.30$ & \\
 \midrule
 \multirow{3}{*}{Import-price} & Float   & \textcolor{fxgreen}{$0.40\times$} & \textcolor{riskred}{$2.77\times$} \\
  & Managed & \textcolor{fxgreen}{$0.61\times$} & \textcolor{riskred}{$2.28\times$} \\
- & Peg     & \textcolor{fxgreen}{$0.86\times$} & \textcolor{riskred}{$\mathbf{3.15\times}$ (worst)} \\
+ & Peg     & \textcolor{fxgreen}{$0.86\times$} & \textcolor{riskred}{$\mathbf{3.15\times}$ } \\
 \midrule
-\multirow{3}{*}{Risk-premium} & Float   & \textcolor{fxgreen}{$0.41\times$} & \textcolor{riskred}{$\mathbf{2.57\times}$ (worst)} \\
- & Managed & \textcolor{fxgreen}{$0.57\times$} & $0.98\times$ (\emph{no amplification}) \\
+\multirow{3}{*}{Risk-premium} & Float   & \textcolor{fxgreen}{$0.41\times$} & \textcolor{riskred}{$\mathbf{2.57\times}$} \\
+ & Managed & \textcolor{fxgreen}{$0.57\times$} & $0.98\times$  \\
  & Peg     & \textcolor{fxgreen}{$0.67\times$} & \textcolor{riskred}{$2.16\times$} \\
 \bottomrule
 \end{tabular}}
 \end{center}
 
 \vspace{3pt}
-{\scriptsize \textbf{Note:} $<1\times$ = network shrinks the peak; $>1\times$ = network amplifies it. (Peak IRF response over 20 quarters, Chile calibration; exchange-rate peak itself barely moves with the network)}
+{\scriptsize \textbf{Note:} $<1\times$ = network shrinks the peak; $>1\times$ = network amplifies it. (Peak IRF response over 20 quarters; exchange-rate peak itself barely moves with the network)}
 
 \end{frame}
 
@@ -633,7 +609,7 @@ $\phi_s$ & $0.30$ & \\
 %==============================================================
 
 \vspace{-6pt}
-{\scriptsize Sectors differ in stickiness $\hat\delta_i$ \& network centrality $\lambda_{D,i}$, so $\kappa_i$ and output-gap exposure hit them differently. Each cell: \textbf{Network ON / Network OFF}.}
+{\scriptsize Each cell: \textbf{Network ON / Network OFF}.}
 
 \vspace{5pt}
 \begin{center}
@@ -672,6 +648,44 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 \end{frame}
 
 %==============================================================
+\begin{frame}{Import Openness}
+%==============================================================
+\vspace{-7pt}
+
+\vspace{1pt}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/openness_concentration.pdf}
+\end{center}
+
+\vspace{-2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{Managed $<$ Float $<$ Peg robust throughout}
+\item More import exposure means more $\Gamma\Delta e_t$ cost-push for \textbf{Float} (loss rises), but that channel is structurally zero under \textbf{Peg} ($\hat s_t\equiv0$), so its loss instead falls via the labor-share renormalization --- \textbf{gap converges}
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Export Openness}
+%==============================================================
+\vspace{-7pt}
+
+\vspace{1pt}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/export_openness_concentration.pdf}
+\end{center}
+
+\vspace{-2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{Managed $<$ Float $<$ Peg robust throughout}
+\item Exports work only through \textbf{demand} ($EX_{it}\to\tilde y_t$), never marginal cost --- a pure buffer, so \textbf{all regimes improve}, and \textbf{Peg gains most} since it has no FX buffer of its own
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \begin{frame}{Robustness: South Korea \& Czechia}
 %==============================================================
 
@@ -695,14 +709,14 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 %==============================================================
 \section{Conclusion}
 %==============================================================
-\begin{frame}{Conclusion}
+\begin{frame}[plain]{Conclusion}
 %==============================================================
 
 {\footnotesize
 \begin{itemize}\setlength{\itemsep}{6pt}
 \item \textbf{The network matters, for severity and incidence, not the ranking:} FX pass-through and TFP cost-push travel through the \emph{same} rigidity-adjusted network operator --- switching it on substantially raises welfare losses in every regime and reallocates which sector bears them, but \textbf{Managed $<$ Float $<$ Peg either way}
-\item \textbf{Peg is dominated by a different mechanism than the textbook story:} not terms-of-trade, but risk-premium/UIP --- zero monetary autonomy forces the shock straight into the output gap
-\item \textbf{Managed float wins} because it is the only regime that dampens the FX pass-through channel without fully reimposing peg's loss of autonomy
+% \item \textbf{Peg is dominated by a different mechanism than the textbook story:} not terms-of-trade, but risk-premium/UIP --- zero monetary autonomy forces the shock straight into the output gap
+\item \textbf{Managed float wins} because it dampens the FX pass-through channel without fully reimposing peg's loss of autonomy
 \item \textbf{Robust} across three real-data calibrations (Chile, Korea, Czechia) and a genuine second-order solution
 \end{itemize}}
 

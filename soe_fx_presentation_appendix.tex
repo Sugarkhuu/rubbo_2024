@@ -56,7 +56,7 @@ $\delta_i$ & Calvo probability of resetting price each quarter & 0.90/0.31/0.16 
 \toprule
 \textbf{Param.} & \textbf{Measures} & \textbf{Value} & \textbf{Role in the model} \\
 \midrule
-$\psi$ & Elasticity of the debt-elastic risk premium to NFA deviations from $\bar b^*$ & 0.020 & \textbf{Key mechanism}: how hard external borrowing costs bite when NFA moves; drives Peg's dominant loss channel \\
+$\psi$ & Elasticity of the debt-elastic NFA stabilizer $\psi(\hat b_t^*)$ to NFA deviations from $\bar b^*$ & 0.020 & Small by design (stationarity device only, Schmitt-Grohé--Uribe 2003); \textbf{not} the source of Peg's loss --- that's the exogenous $RP_t$ shock (persistence $\rho_{RP}{=}0.80$, Equilibrium System slide) \\
 $\phi_\pi$ & Taylor-rule response to DC-index inflation $\pi_t^{DC}$ & 1.50 & Standard active rule (Taylor 1993) \\
 $\phi_y$ & Taylor-rule response to the output gap $\tilde y_t$ & 0.50 & Standard \\
 $\phi_s$ & Managed-float response to the exchange rate $\hat s_t$ & 0.30 & $\phi_s{=}0$: recovers Float. $\phi_s{\to}\infty$: recovers Peg. Chosen value: moderate FX smoothing \\
@@ -221,7 +221,7 @@ Aggregate-export ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
 \toprule
 \textbf{Regime} & \textbf{Cost channel} & \textbf{What sets the magnitude} \\
 \midrule
-\textbf{Float} & $S_t$'s near-unit-root persistence (NFA state) feeds $\Gamma_i\Delta e_t$ into \emph{every} sector's MC, even for shocks with no FX content --- pure dispersion cost & Persistence of debt-elastic premium ($\psi$); $\Gamma_i$ (import exposure); $\kappa_i$ of the most central/sticky sector (Services: $20.3$ of $25.2$) \\
+\textbf{Float} & $S_t$'s near-unit-root persistence (NFA state) feeds $\Gamma_i\Delta e_t$ into \emph{every} sector's MC, even for shocks with no FX content --- pure dispersion cost & Persistence of the risk-premium shock ($\rho_{RP}$); $\Gamma_i$ (import exposure); $\kappa_i$ of the most central/sticky sector (Services: $20.3$ of $25.2$) \\
 \textbf{Peg} & Zero monetary autonomy: output-gap term explodes ($70.0$ of $90.4$, $\approx$77\%) on the UIP shock; $\Delta e_t\equiv0$ \emph{relocates}, not removes, adjustment into upstream $P^H$ & Absence of $\phi_\pi,\phi_y$; real vs.\ nominal share of the shock; upstream sector's Domar weight \\
 \textbf{Managed} & $\phi_S\Delta\log S_t$ damps $\Gamma_i\Delta e_t$ without fully re-imposing peg's relocation cost --- dominates every sector at once & Interior optimal $\phi_S^*\approx0.20$ (aggregate-export specification): too low $\to$ UIP shock leaks in; too high $\to$ autonomy lost \\
 \bottomrule
@@ -987,9 +987,9 @@ Aggregate-export ($\beta^H$-alloc., Services-heavy) & 25.47 & 10.17 & 102.05 \\
 \vspace{4pt}
 {\scriptsize
 \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
-\item \textbf{Float/Managed:} all positive, concentrated in Services (highest Domar weight, $\lambda_{D,\text{Services}}{=}1.11$) --- the network raises price-dispersion cost the most where network centrality is highest
-\item \textbf{Peg:} Resource $\approx0$, Services mildly positive, \textbf{Manufacturing negative} --- net premium across sectors is close to zero
-\item \textbf{Why Peg looks different:} the network doesn't eliminate cost-push, it \textbf{redirects} it (see Mechanism slide) --- with no interest-rate room under a peg, the extra propagation shows up in the \textbf{output gap} instead of price dispersion (Peg's Services output-gap variance: $8.97\to35.16$, network OFF vs.\ ON, Network Exposure slide) --- this panel being flat for Peg is exactly what tells you to look at the output-gap channel instead
+\item \textbf{Services is positive in every regime} (Float $3.39$, Managed $0.25$, Peg $0.37$) --- the network raises price-dispersion cost most where network centrality is highest ($\lambda_{D,\text{Services}}{=}1.11$)
+\item \textbf{Manufacturing is negative in every regime}, most sharply under \textbf{Peg} ($-1.62$ vs.\ $-0.25$ Float, $-0.01$ Managed) --- Resource is near zero throughout
+\item \textbf{Why Peg's price-dispersion premium doesn't dominate:} the network doesn't eliminate cost-push, it \textbf{redirects} it (see Mechanism slide) --- with no interest-rate room under a peg, most of the extra propagation shows up in the \textbf{output gap} instead (Peg's Services output-gap variance: $8.97\to35.16$, network OFF vs.\ ON, Network Exposure slide), not in this price-dispersion panel
 \end{itemize}}
 
 \end{frame}
