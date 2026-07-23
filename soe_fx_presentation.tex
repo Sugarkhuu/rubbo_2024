@@ -165,6 +165,9 @@
 \item \textbf{Result}: \textbf{Managed $<$ Float $\ll$ Peg} (welfare loss $10.96/25.15/90.45\times10^{-4}$)
 \end{itemize}}
 
+\vspace{4pt}
+{\scriptsize \textbf{Seven shocks, two kinds --- keep this distinction throughout}: \textbf{cost-push} (sector TFP $A_i$, import price $PF$) enters marginal cost directly and breaks divine coincidence; \textbf{demand} (foreign demand $D^*$, export price/ToT $PX$, risk-premium/UIP $RP$) moves $\tilde y_t$ without a first-order cost-push term of its own --- but under a \textbf{fixed} exchange rate, the interest-rate response needed to defend $\hat s_t{=}0$ turns even a pure demand shock into a large output-gap cost (see Peg, throughout)}
+
 \end{frame}
 
 %==============================================================
@@ -304,6 +307,7 @@ applied to consumption shares $\bm\beta^H$ (Households) it gives:
 \item $\lambda_{D,i}$: \textbf{Domar weight} --- sector $i$'s total weight in final demand, network-adjusted (can exceed 1 for downstream sectors)
 \item $\mathcal M_i$: \textbf{Import centrality} --- sector $i$'s total (direct $+$ indirect) exposure to import costs
 \item $\mathcal M_i^X$: \textbf{Export centrality} --- sector $i$'s total (direct $+$ indirect) exposure to export demand
+\item \textbf{Why left vs.\ right multiply:} $\bm\lambda_D$ asks "how much of \emph{final demand} ultimately flows through sector $i$?" --- a question about a row vector of weights pulled \emph{backward} from consumption, hence $(\bm\beta^H)^\top(\cdot)$ on the left. $\mathcal M,\mathcal M^X$ ask "how much of a \emph{cost/demand shock at the border} reaches sector $i$?" --- a question about a column vector pushed \emph{forward} through supply chains, hence $(\cdot)\bm\omega_F$ on the right. Same Leontief inverse, opposite direction of the question
 \end{itemize}}
 
 \end{frame}
@@ -448,8 +452,20 @@ i_t=i^*+\mathbb E_t\Delta e_{t+1}+\psi(\hat b_t^*)+RP_t
 
 % \textbf{Welfare loss}: $\mathcal{W}=\tfrac12\big[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\kappa_i\mathrm{Var}(\pi_{it})\big]$, $\kappa_i=\lambda_{D,i}\varepsilon\frac{1-\hat\delta_i}{\hat\delta_i}$
 
-\vspace{9pt}
-{\scriptsize \textbf{Seven AR(1) shocks} (1\% s.d.\ each): sector TFP $A_1,A_2,A_3$ ($\rho{=}0.90$), import price $PF$ ($\rho{=}0.85$), foreign demand $D^*$ ($\rho{=}0.80$), export price/ToT $PX$ ($\rho{=}0.85$), risk premium $RP$ ($\rho{=}0.80$).}
+\vspace{6pt}
+{\scriptsize \textbf{Not over-identified:} law of one price ($P_t^{FH}=S_tP_t^{F*}$, Foreign Sector slide) is a \emph{definition} substituted into $\bm\chi_t$/the IS curve's real-exchange-rate term, not an extra equilibrium condition --- the system is $N$ Phillips curves $+$ IS $+$ UIP $+$ policy rule solving for $N$ sectoral $\pi_{it}$, $\tilde y_t$, $i_t$, $\hat s_t$: equal counts, one equation per unknown.}
+
+\vspace{6pt}
+{\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Shock} & $A_1$ & $A_2$ & $A_3$ & $PF$ & $D^*$ & $PX$ & $RP$ \\
+\midrule
+s.d.\ (all) & \multicolumn{7}{c}{$1\%$} \\
+persistence $\rho$ & $0.90$ & $0.90$ & $0.90$ & $0.85$ & $0.80$ & $0.85$ & $0.80$ \\
+\bottomrule
+\end{tabular}}
 
 \end{frame}
 
@@ -513,6 +529,31 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \section{Results}
 %==============================================================
 
+%==============================================================
+\begin{frame}{Reading the Robustness Slides: What Varies, What's Fixed}
+%==============================================================
+
+{\footnotesize Every comparison slide that follows dials \textbf{one} object and holds the rest of the calibration fixed --- but "fixed" doesn't always mean "untouched": some dials force a mechanical rebalancing elsewhere so cost shares still sum to one. This is the map.}
+
+\vspace{4pt}
+{\scriptsize
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{2.6cm}p{3.3cm}p{4.4cm}@{}}
+\toprule
+\textbf{Slide / dial} & \textbf{Varies} & \textbf{Held fixed / mechanically adjusted} \\
+\midrule
+Isolating the Network Channel; $\phi_s$ vs.\ network; Why Services? & cross-sector density $\rho$ (off-diag.\ $\Omega^H$) & own-input $\Omega^H_{ii}$, imports $\Omega^F_i$ fixed; \textbf{$\alpha_i$ (labor share) absorbs the change} so shares sum to 1 \\
+Import / Export Openness & $\Omega^F_i$ (or export share) scale & everything else fixed at Chile baseline; \textbf{$\alpha_i$ absorbs} \\
+Risk-Premium Volatility & sd$(\varepsilon^{RP})$ only & persistence $\rho_{RP}{=}0.80$, every other shock, all cost shares --- nothing else moves \\
+Korea / Czechia & \textbf{entire calibration} (all $\Omega^H,\Omega^F,\bm\beta^H$) & only functional-form parameters ($\gamma,\varphi,\varepsilon,\beta$) shared with Chile \\
+\bottomrule
+\end{tabular}}
+
+\vspace{4pt}
+{\scriptsize \textbf{Not yet swept}: the debt-elastic risk-premium \emph{elasticity} $\psi$ itself (only its shock's \emph{volatility} is, above) --- flagged as the one remaining diagnostic on the "75\% risk-premium share" result.}
+
+\end{frame}
+
 
 %==============================================================
 \begin{frame}{Welfare Ranking: Managed Float Dominates}
@@ -529,8 +570,41 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \item \textbf{Managed $<$ Float $\ll$ Peg:} $10.96 / 25.15 / 90.45$ ($\times10^{-4}$)
 \item \textbf{Float \& Managed:} almost entirely price dispersion, concentrated in Services
 \item \textbf{Peg:} almost entirely output gap
-\item \textbf{Without the network}: \textbf{same ranking}, but the network roughly \textbf{doubles-to-triples} every regime's loss 
+\item \textbf{Without the network}: \textbf{same ranking}, but the network roughly \textbf{doubles-to-triples} every regime's loss
 \end{itemize}}
+
+\vspace{3pt}
+{\scriptsize \textbf{Units:} $\mathcal W=\tfrac12[(\gamma+\varphi)\mathrm{Var}(\tilde y_t)+\sum_i\kappa_i\mathrm{Var}(\pi_{it})]$ is a \textbf{per-period, consumption-equivalent fraction} (standard Rotemberg--Woodford quadratic-loss normalization) --- Managed's $10.96\times10^{-4}$ means an average per-period loss of $\approx0.11\%$ of steady-state consumption, every period, forever, from stabilization policy alone (on top of any level effects, which this second-order approximation does not price). \textbf{Cross-sector dispersion term} $\Phi_C+\sum_s\lambda_s\Phi_s$ (Rubbo Prop.\ 3, next slide): now computed, adds $3$--$8\%$, \textbf{ranking unaffected}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Counting the Cross-Sector Term (Rubbo Prop.\ 3)}
+%==============================================================
+
+{\footnotesize Christian: \emph{"I really need to count for that."} Rubbo's welfare formula has a \textbf{between-sector} piece, $\Phi_C+\sum_s\lambda_s\Phi_s$ (relative-price misallocation across sectors), that every number so far omits. Now built and computed, not just flagged.}
+
+\vspace{4pt}
+{\scriptsize \textbf{Closed form:} both cross-sector aggregators here are \textbf{Cobb-Douglas} (household consumption across domestic sectors $\bm\beta^H$; firm input bundles $\Omega^H,\Omega^F$) --- Cobb-Douglas has Allen-Uzawa elasticity of substitution \emph{exactly} 1 by construction, so $\Phi_C,\Phi_s$ collapse to a \textbf{weighted variance of the markup gap} $\mu_{it}=\log(P_{it}/MC_{it})-\log\frac{\varepsilon}{\varepsilon-1}$ across sectors (only the outer $C^H/C^F$ nest is genuine CES, $\eta{=}1.5$, used for the one domestic-vs-import pair). $\mu_{it}$ added as a pure reporting definition to the \texttt{.mod} files --- changes nothing else.}
+
+\vspace{5pt}
+\begin{center}
+{\scriptsize
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+& \textbf{Float} & \textbf{Managed} & \textbf{Peg} \\
+\midrule
+Within-sector $+$ output gap (headline) & $25.47$ & $10.17$ & $102.05$ \\
+Cross-sector $\Phi_C+\sum_s\lambda_s\Phi_s$ (new) & $0.83$ & $0.86$ & $4.57$ \\
+\textbf{New total} & $\mathbf{26.31}$ & $\mathbf{11.03}$ & $\mathbf{106.62}$ \\
+\% added & $3.3\%$ & $8.4\%$ & $4.5\%$ \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\vspace{4pt}
+{\scriptsize \textbf{Ranking unchanged}: Managed $<$ Float $\ll$ Peg, same as before --- the cross-sector term is real (not zero) but \textbf{second-order} relative to within-sector dispersion, because it's mechanically bounded by the \emph{spread} across only 3 sectors' price gaps, not any single sector's own variance. \textbf{Caveat}: domestic-vs-import cross-elasticity uses $\eta$ as a practical stand-in for the true nested-CES Allen-Uzawa elasticity, not an exact derivation}
 
 \end{frame}
 
@@ -548,7 +622,31 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \begin{itemize}\setlength{\itemsep}{4pt}
 \item \textbf{Peg:} risk-premium/UIP $\to$ 76\% of loss, mostly output gap
 \item \textbf{Float \& Managed:} TFP shocks dominate instead --- risk-premium barely registers since the exchange rate (Float) or partial smoothing (Managed) absorbs it before it reaches output
-\item Import price, foreign demand, and export price are second-order for every regime 
+\item Import price, foreign demand, and export price are second-order for every regime
+\end{itemize}}
+
+\vspace{2pt}
+{\scriptsize \textbf{How to read this:} allocates \emph{total welfare loss} (previous slide) across shocks using Dynare's own variance decomposition, exactly --- $\%$-of-variance-by-shock $\times$ that variable's total variance, summed with the same $\kappa_i$/$(\gamma{+}\varphi)$ weights as the welfare formula, so shock contributions add up exactly to the total (\texttt{code/analysis.py::compute\_welfare\_by\_shock}). Not a hand-attribution --- if a bar reads $76\%$, that's the model's own linear variance decomposition, unweighted-average-of-eyeballed-IRFs.}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{How Much Does Peg's Loss Depend on the Risk-Premium Shock?}
+%==============================================================
+
+{\footnotesize Adam: "effects of the volatility of the exchange-rate processes." Risk-premium/UIP drives 76\% of Peg's loss (previous slide) --- calibrated at the \textbf{same} $1\%$ s.d.\ as every other shock, no independent target. \textbf{Important, uncomfortable finding, stated plainly:}}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{figs/risk_premium_volatility.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{With the risk-premium shock switched off entirely}, Peg is \emph{not} worst --- Peg $0.95\times$ Float (essentially tied, Peg fractionally \emph{better}). \textbf{The entire "Peg is dominated" headline rests on this one shock existing}, not on terms-of-trade, import pass-through, or any network channel
+\item Turn it on at \textbf{half} the calibrated size and Peg is already $1.7\times$ Float; at the \textbf{calibrated} size, $3.6\times$; at $3\times$ calibrated, $14.5\times$ --- Managed stays cheapest throughout, and its gap over Float barely moves (it absorbs the shock by construction)
+\item \textbf{Why $1\%$ s.d.\ is a defensible baseline, not cherry-picked}: it's the \emph{same} size assigned to every other shock (TFP, import price, ...) --- a symmetric-treatment default, not tuned to produce this result --- and sovereign risk-premium volatility of this order is well documented empirically for pegged EM regimes (Broda 2004; Edwards \& Levy-Yeyati 2005; C\'espedes, Chang \& Velasco 2004, appendix lit.\ table). But the ranking's \emph{margin} is highly sensitive to this one number, and a paper draft needs an independently estimated $\sigma_{RP}$, not an assumed-equal-to-everything-else one
 \end{itemize}}
 
 \end{frame}
@@ -569,6 +667,27 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
 % \item Scales all six cross-sector $\Omega^H$ entries by $\rho$, own-input fixed ($\rho{=}1$ baseline) --- \textbf{Managed stays best throughout}
 \item Denser network amplifies shock propagation for \emph{everyone}, but \textbf{Peg} has no policy lever ($\phi_\pi,\phi_y=0$) to lean against it, so the amplification passes straight into welfare loss; \textbf{Float}/\textbf{Managed} actively damp part of it with the interest rate --- \textbf{gap widens} as $\rho\uparrow$
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Persistence, Not Just Size: Why UIP Losses Are So Large}
+%==============================================================
+
+{\footnotesize Christian: \emph{"persistence of inflation leading to higher cost."} The risk-premium/UIP shock's persistence $\rho_{RP}$ (baseline $0.80$) --- crossed with network density --- turns out to matter \textbf{far more convexly} than its size (previous risk-premium slide) or the network alone.}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.92\textwidth]{figs/rp_persistence_netdens.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item AR(1) variance scales as $\sigma^2/(1-\rho_{RP}^2)$ --- \textbf{mechanically convex}, not linear, in persistence. Moving $\rho_{RP}$ from $0{\to}0.40{\to}0.80$ raises Peg's loss only modestly ($18\to22\to70\times10^{-4}$ at $\rho{=}0$), but $0.80\to0.95$ \textbf{explodes it} to $343\times10^{-4}$ --- a 5x jump from a 0.15 change in persistence, not size
+\item \textbf{This is quantitatively the same story as Peg's Services-sector price persistence} (Corr$(\pi_3,\pi_{3,t-1}){\approx}0.82$, "Why Services?" slide) --- a rigid sector facing a persistent shock doesn't get one bad quarter, it gets a slow-moving elevated inflation/output-gap path that the welfare's $\mathrm{Var}(\cdot)$ metric prices in full
+\item \textbf{Caution on $\rho_{RP}{=}0.95$}: this is very close to $\rho_{RP}\to1$, and combined with the model's already-near-unit-root NFA dynamics ($\mathrm{Corr}(BSTAR_t,BSTAR_{t-1}){\approx}0.99$ throughout), the order-1 solution is entering genuinely fragile knife-edge territory --- at this one point only, Float's loss is \emph{lower} with the network on than off, opposite of every other result in this deck, plausibly a symptom of that fragility rather than new economics. Treat $\rho_{RP}\le0.80$ as the reliable range; $0.95$ is a stress test, not a calibration target
 \end{itemize}}
 
 \end{frame}
@@ -642,6 +761,27 @@ $\phi_s$ & Taylor: FX-smoothing resp. & $0.30$ & \\
 \item Total import centrality $M_i=[(I-\Omega^H)^{-1}\Omega^F\mathbf 1]_i$ splits into a \textbf{direct} part (own $\Omega^F_i$) and an \textbf{indirect} part inherited from suppliers --- for Services, \textbf{41\% of total exposure is indirect} (Resource 50\%, Manuf.\ 32\%)
 \item Indirect exposure is \textbf{mechanically zero} at $\rho{=}0$ and grows with network density $\rho$ --- density doesn't change any sector's \emph{direct} import share, only how much of \emph{other} sectors' import content gets passed to it
 \item \textbf{Combined with stickiness}: Services can't reprice quickly, so whatever cost-push it inherits shows up as persistent inflation, not a one-quarter blip --- $\mathrm{Corr}(\pi_3,\pi_3^{t-1})\approx0.82$, the most persistent inflation series in the model
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Which Channel Actually Drives Services' Exposure?}
+%==============================================================
+
+{\footnotesize Is it the import network, monetary mismatch, or just size? Dynare's own shock-by-shock variance decomposition of Services' \textbf{own} output gap says: mostly \textbf{neither} of the first two alone.}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.92\textwidth]{figs/services_mechanism_decomposition.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{Left:} the import-price/network channel (previous slide) is real but \textbf{secondary} for Services' output gap --- $2\%$ (Float) / $22\%$ (Managed) / $9\%$ (Peg) of its variance. \textbf{Risk-premium/UIP} --- a pure aggregate, non-import shock --- dominates instead: $63\%$ (Float), $78\%$ (Peg)
+\item \textbf{Right:} Services' Domar weight $\lambda_{D,3}$ (its welfare-relevant "size") is $92\%$ already present at $\rho{=}0$ --- from its own consumption share $\beta^H_3{=}0.74$ plus heavy \emph{within}-sector input reuse ($\Omega^H_{33}{=}0.27$) --- the cross-sector network adds only $\approx9\%$ more. Contrast Resource: network more than doubles its weight ($60\%$ of its total is network-added)
+\item \textbf{Synthesis --- all three of Christian's hypotheses compound, none is "the" answer:} \textbf{size} ($\lambda_{D,3}$) determines that a big aggregate shock lands mostly on Services regardless of source; \textbf{rigidity} ($\hat\delta_3{\approx}0$) converts that variance into outsized welfare cost; the \textbf{network} matters for both --- directly via imported cost-push (this slide's left panel) and, more, via amplifying an already-large sector's centrality (right panel)
 \end{itemize}}
 
 \end{frame}
@@ -745,6 +885,27 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 
 \vspace{2pt}
 
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Robustness: Is Indirect Exposure a General Pattern?}
+%==============================================================
+
+{\footnotesize Adam's question: is "low direct import, high indirect import" (Services, two slides back) a general downstream-sector pattern, or a one-off? Pools \textbf{Chile, Korea, Czechia} $\times$ 3 sectors --- 3 independent national IO tables, not the same data reused.}
+
+\vspace{4pt}
+\begin{center}
+\includegraphics[width=0.58\textwidth]{figs/upstream_downstream_robustness.pdf}
+\end{center}
+
+\vspace{2pt}
+{\scriptsize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item \textbf{Honest answer: only a moderate, noisy relationship} ($r{=}0.55$, $n{=}9$) between how much a sector sources domestically and how much of its import exposure is indirect --- \textbf{with just 3 sectors this is a weak test}, not a proven general law
+\item \textbf{What IS robust across all three calibrations}: Services sources the \emph{least} domestically of any sector in every single calibration (lowest buyer-dependence, Chile/Korea/Czechia), yet still derives 41--65\% of its import exposure indirectly --- because what little it buys is concentrated in Manufacturing, the most import-intensive supplier, not spread evenly
+\item \textbf{Takeaway}: it's not \emph{how much} you buy domestically that predicts inherited exposure, it's \emph{who you buy from} --- a composition effect, consistent with Christian's original framing ("Manuf.'s import translates into Services' import"). A genuinely disaggregated calibration (OECD TiVA, next step) is needed to test this with real statistical power
+\end{itemize}}
 
 \end{frame}
 

@@ -233,6 +233,32 @@ why in a few slides."
 
 ---
 
+## Counting the Cross-Sector Term (1:15)
+"Christian's last comment after the first round: 'I really need to count
+for that,' about a piece of Rubbo's welfare formula I'd been flagging as
+missing — the between-sector term, relative-price misallocation across
+sectors, as opposed to the within-sector dispersion I'd already built. So
+I actually built it. The key move: both of this model's cross-sector
+aggregators — how households combine consumption across sectors, how
+firms combine inputs across sectors — are Cobb-Douglas. Cobb-Douglas has
+an elasticity of substitution of exactly one, by the definition of the
+functional form, not an estimate. That collapses Rubbo's general formula,
+which needs a whole matrix of cross-sector substitution elasticities I'd
+have had to make up, into something I can actually compute: a weighted
+variance of the markup gap across the three sectors. I added that markup
+gap as a reporting variable to the model — doesn't change anything else,
+it's a pure definition — reran the three regimes, and did the sum.
+Answer: it adds three to eight percent on top of what I already had.
+Real, not zero, but small — and the ranking doesn't move at all. So the
+honest update is: I was missing a term, now I'm not, and it doesn't
+change the story, it just makes the accounting complete. I want to flag
+one caveat honestly — the domestic-versus-import piece of this uses the
+outer nest's elasticity as a stand-in for the exact cross-elasticity in a
+nested CES structure, which is a standard practical shortcut, not an
+exact derivation."
+
+---
+
 ## What Drives Each Regime's Loss? Shock Decomposition (1:30)
 "What's actually driving these numbers, shock by shock. [point] For Peg,
 one shock explains three-quarters of the loss: an exogenous shock to the
@@ -250,6 +276,33 @@ foreign demand, export price — all second-order, in every regime. This is
 not a terms-of-trade story — if someone asks about Galí-Monacelli here,
 the answer is: their model has complete markets and no risk-premium channel
 at all, so this mechanism couldn't exist in their setup to begin with."
+
+---
+
+## How Much Does Peg's Loss Depend on the Risk-Premium Shock? (1:15)
+"I want to show you something uncomfortable, because it should be said
+plainly rather than buried. The last slide showed risk-premium driving
+seventy-six percent of Peg's loss. That shock is calibrated at one
+percent standard deviation — same as every other shock in the model. So
+the natural question is: how much is that one number doing? [point] If I
+switch the risk-premium shock off entirely, Peg is not the worst regime
+— it's essentially tied with Float, fractionally better if anything. The
+entire 'Peg is dominated' result you've seen all talk rests on this one
+shock existing at roughly this size. Turn it on at half strength and Peg
+is already worse than Float; at the calibrated size, three-and-a-half
+times worse; at three times calibrated, fourteen times worse. Managed
+stays cheapest the whole way through and barely notices, which is
+itself informative — it's precisely the regime designed to absorb this
+channel. Now, why I don't think this is cherry-picked: one percent is
+the same size I gave every other shock in the model, not something I
+tuned to get this result, and there's real empirical literature —
+Broda, Edwards and Levy-Yeyati, Céspedes-Chang-Velasco — documenting
+risk-premium volatility of about this order for pegged emerging-market
+regimes. But I want to be honest: the *margin* of the result is very
+sensitive to this one calibration choice, and if this were going into a
+journal submission, that standard deviation needs to be independently
+estimated, not assumed equal to everything else. Right now it's a
+reasonable default, not a validated number."
 
 ---
 
@@ -309,6 +362,60 @@ doesn't clear in a quarter, it lingers: its inflation is the single most
 persistent series in the model, autocorrelation around 0.82. Rigidity
 doesn't create the exposure, the network does that; rigidity is what turns
 a transient inherited shock into a persistent one."
+
+---
+
+## Which Channel Actually Drives Services' Exposure? (1:30)
+"After the last talk, Christian wasn't even sure which story he meant —
+was it the import network, or something about the peg forcing a monetary
+stance that's just wrong for a big sticky sector, or was rigidity beside
+the point and it's really just about size? Turns out the honest answer is
+all three, and they compound rather than compete. [point left] This is
+Dynare's own variance decomposition of Services' output gap, by shock —
+not my construction. The import-price channel, the network story from the
+last slide, is real but it's *secondary* — two to twenty-two percent of
+the variance depending on regime. What actually dominates is the
+risk-premium shock — a purely aggregate, financial shock with no import
+content in it at all — sixty-three percent under Float, seventy-eight
+percent under Peg. [point right] So why does a non-import shock land so
+hard on Services specifically? Because of its Domar weight — how central
+it is as a supplier to final demand — and that weight is ninety-two
+percent already there before the network is even switched on, just from
+Services being a huge share of consumption and reusing a lot of its own
+output as an input. The cross-sector network adds another nine percent on
+top. Compare that to Resource, where the network more than doubles its
+weight from a tiny base. So: size explains who gets hit by a generic
+shock, rigidity explains why that turns into a lot of welfare cost once it
+lands, and the network's role is smaller and more indirect than the first
+slide might have suggested on its own — it amplifies an already-large
+sector rather than being the primary reason Services is exposed at all."
+
+---
+
+## Persistence, Not Just Size: Why UIP Losses Are So Large (1:30)
+"Christian had another comment I want to address directly: persistence of
+inflation leading to higher cost, and how that connects to why the UIP
+welfare loss is so large. He's right, and I can show you exactly how much
+it matters. [point] This is the risk-premium shock's persistence,
+crossed with network density. Variance of an AR(1) process scales as
+sigma-squared over one minus rho-squared — that's mechanically convex,
+not linear. Moving persistence from zero to 0.4 to the calibrated 0.8
+raises Peg's loss only gradually. But going from 0.8 to 0.95 — a change
+of 0.15 — explodes it five-fold. That's not a bigger shock, it's the
+*same* shock lasting longer. And this is exactly the same logic as
+Services' own inflation persistence from a few slides back — a rigid
+sector hit by a persistent shock doesn't get one bad quarter, it gets a
+slow-moving elevated path, and the welfare metric, which is a variance,
+prices in the whole path, not just the peak. I want to flag one honest
+caution here: at persistence 0.95 I'm right up against a near-unit-root
+region, and combined with this model's already-near-unit-root net
+foreign asset dynamics, the linear solution starts behaving oddly — at
+that one point, and only that one point, having the network on actually
+*lowers* Float's loss, which is the opposite of every other result in
+this deck. I think that's a numerical fragility symptom near the
+knife-edge, not real economics, and I'm flagging it rather than hiding
+it. Below 0.8, everything is well-behaved and the persistence story holds
+cleanly."
 
 ---
 
@@ -390,6 +497,28 @@ input-output calibrations, South Korea and Czechia. Same ranking every
 time — Managed below Float, well below Peg. Korea's numbers are higher
 across the board — denser network, higher import exposure — which is
 itself more evidence this is a network story, not a Chile-specific quirk."
+
+---
+
+## Robustness: Is Indirect Exposure a General Pattern? (1:00)
+"Adam asked whether the Services story — low direct import, high indirect
+import — is a general downstream-sector pattern or a one-off. Honestly:
+with only three sectors this is a weak test, and I want to say that
+plainly rather than oversell a correlation from nine data points. [point]
+Pooling all three calibrations, three sectors each, there's a moderate,
+noisy relationship between how much a sector sources domestically and how
+much of its import exposure is indirect. What I can say with more
+confidence, because it holds in Chile, Korea, and Czechia separately, not
+just pooled: Services sources the *least* domestically of any sector in
+every single one of these calibrations, and yet still picks up a large
+share of its exposure indirectly — because the little it does buy
+domestically is concentrated in Manufacturing, the most import-heavy
+supplier, not spread evenly across sectors. So it's not the *volume* of
+domestic sourcing that predicts inherited exposure, it's *who you buy
+from*. That's a real, consistent pattern across three independent
+datasets, even if I can't yet call it a general law — that needs a
+properly disaggregated calibration, which is on the list as a next step,
+not something I have today."
 
 ---
 

@@ -11,6 +11,25 @@ Regime choice. How optimal regime choice changes with or without network. If wel
 is changing so much, then maybe the parameter itself is quite different for 
 network and nonnetwork. If so, then having network is important etc. For what network, what regime. 
 
+
+- Maybe he meant, 
+if service is so rigid and depend so little on imports 
+having peg to useless exchange rate movements causes big real fluctuations? 
+
+or manu.'s import translates into service import ....
+
+- Also maybe he intended service is large but it 
+imports less etc. 
+
+- He also mentioned about how persistence of inflation 
+leading to higher cost. I think we have the same conclusion on 
+why UIP welfare loss is so high.
+
+
+- He noted about how i miss the between sector loss. I really need to count 
+for that
+
+
 Benny: 
 
 - 

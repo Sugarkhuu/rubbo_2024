@@ -48,6 +48,7 @@ var
   P1 P2 P3            // sectoral price levels (nominal, level)
   PI1 PI2 PI3         // sectoral gross inflation P_i/P_i(-1)
   MC1 MC2 MC3         // nominal marginal cost, sector i
+  MARKUPGAP1 MARKUPGAP2 MARKUPGAP3  // log markup gap, log(P_i/MC_i) - log(MU); 0 at steady state
   PSTAR1 PSTAR2 PSTAR3    // optimal reset price relative to P_i (P_i#/P_i)
   X1_1 X2_1 X1_2 X2_2 X1_3 X2_3   // Calvo recursive aggregators (num/denom)
   C CH CF             // aggregate, domestic-bundle, imported-bundle consumption
@@ -232,6 +233,14 @@ MC1 = (1/A1) * W^ALPHA1 * P1^OH11 * P2^OH12 * P3^OH13 * PFH^OF1;
 MC2 = (1/A2) * W^ALPHA2 * P1^OH21 * P2^OH22 * P3^OH23 * PFH^OF2;
 MC3 = (1/A3) * W^ALPHA3 * P1^OH31 * P2^OH32 * P3^OH33 * PFH^OF3;
 
+// Log markup gap (Rubbo welf.m's mu): actual price/marginal-cost ratio
+// vs. the desired Calvo markup MU=EPS/(EPS-1); 0 in steady state, used
+// ONLY for the Phi_C/Phi_s cross-sector welfare term -- pure reporting
+// definition, does not feed back into any other equation.
+MARKUPGAP1 = log(P1/MC1) - log(EPS/(EPS-1));
+MARKUPGAP2 = log(P2/MC2) - log(EPS/(EPS-1));
+MARKUPGAP3 = log(P3/MC3) - log(EPS/(EPS-1));
+
 //----------------------------------------------------------------
 // [2] Recursive Calvo pricing (exact nonlinear recursion), sector 1
 //----------------------------------------------------------------
@@ -398,6 +407,6 @@ end;
 // -------------------------------------------------------------------------
 // SOLUTION
 // -------------------------------------------------------------------------
-stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR;
+stoch_simul(order=1, irf=40, periods=0, graph_format=pdf) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR MARKUPGAP1 MARKUPGAP2 MARKUPGAP3;
 
 stoch_simul(order=1, irf=40, periods=0, nomoments, nocorr, nodecomposition, noprint) piDC PIC y_gap y_gap1 y_gap2 y_gap3 PI1 PI2 PI3 I BSTAR S GDP EX1 EX2 EX3 IM C P1 P2 P3 PX RP A1 A2 A3 PF DSTAR;
