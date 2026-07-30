@@ -30,6 +30,32 @@ why UIP welfare loss is so high.
 for that
 
 
+Christian's reply on clarification
+
+Dear Sugarkhuu,
+
+What I had in mind was quite simple. Think of the following extreme example. Two sectors Sector 1: the real economy, zero direct imports. Sector 2: Import-Export. Sector 1 has a high price stickiness, Sector 2 perfectly flexible prices.
+Without the IO table I would conclude that a shock to exchange rates has no effect on markup (dispersions). The flex price sector keeps the markup steady, Sector 1 does not buy any imported goods.
+
+Now consider the stylized IO Table
+     		S1 	S2 	EX 	Final 
+S1 		0    	30	0	55
+S2		55	0	35	0	
+IM		0	50	-	-
+L		30	10 	-	-
+
+S1 hires 30 labour, buys 55 from S2(imported goods) and sells 30 to S2 (goods for export) and 55 for final use etc.
+
+S2 passes the exchange rate shock to S1, say p up by 0.1. For S1, S2-goods are very important. MC is up by 0.1*55 /(30+55) = 0.0647. Result will be a markup dispersion.
+
+By buying from S2, S1 gets indirectly exposed to the exchange rate shock. 
+
+Best,
+
+Christian
+
+
+
 Benny: 
 
 - 

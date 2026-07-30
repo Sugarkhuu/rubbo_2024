@@ -632,6 +632,27 @@ the Network Channel" respectively.
    `results/netdens_chile_welfare_v2.csv` →
    `figs/phi_s_netdens.pdf`, `figs/import_exposure_decomposition.pdf`.
 
+**Christian's follow-up reply (undated, appended to
+`speech_feedback_20260722.txt`) — confirms the existing slide, no deck
+change needed:** He sent a concrete 2-sector numeric example to make sure
+his indirect-exposure point had landed: Sector 1 (no direct imports, sticky
+prices) buys 55 from Sector 2 (imports 50, flexible prices) out of a
+30-labor + 55-from-S2 cost base; a 10% FX shock hits S2's price, so S1's
+marginal cost rises by $0.10 \times 55/(30+55) \approx 6.47\%$ purely
+*through the network* — S1 has zero direct FX exposure by construction, so
+without the IO table you'd wrongly conclude the shock has no effect on its
+markup. **This is exactly the mechanism the "Why Services? Direct vs.
+Indirect Import Exposure" slide already shows with real Chile numbers**
+(Services: 41% of its total import centrality $M_i$ is indirect, inherited
+from buying 5.8% of its cost from Manufacturing) — his toy example is the
+2-sector, hand-computable version of the same $M_i(\rho) = [(I-\rho\,
+\Omega^H_{\text{off-diag}})^{-1}\Omega^F\mathbf{1}]_i$ object. **Useful as a
+ready-made Q&A answer** if anyone asks "can you show me a simple example of
+indirect exposure without the full model" — walk through his S1/S2 numbers
+first, then point to the real Chile decomposition as "the same calculation,
+9 sectors instead of 2, done automatically by the linear algebra." No slide
+edit needed; the mechanism is already correctly represented.
+
 **Benny's point — not yet acted on, flag for next revision:** "go through
 mechanics, shocks, and model intuition, then show welfare." Right now
 Results *opens* with the welfare-ranking slide (numbers first), and the

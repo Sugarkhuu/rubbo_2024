@@ -1,0 +1,10 @@
+topology,regime,total
+triangle,float,25.525629754508333
+triangle,peg,102.05483309243172
+triangle,managed,10.169465854523237
+hub_spoke,float,28.856935741850847
+hub_spoke,peg,113.49088696013725
+hub_spoke,managed,11.257089099035964
+chain,float,33.72510536146741
+chain,peg,115.5444294027878
+chain,managed,12.709284517744145

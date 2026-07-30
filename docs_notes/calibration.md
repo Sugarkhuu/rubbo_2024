@@ -68,6 +68,12 @@ completion tracking).
 | ψ sensitivity | `sweep_psi_point.m` | 0.25×–4× baseline | robustness of risk-premium dominance to the NFA-feedback elasticity — **done**, see `results_summary.md` |
 | Network vs. no-network, real Chile calib. | `run_nonetwork_chile.m` | — | Task #1 of `todo_three_exercises.txt` — **done**, see `results_summary.md` |
 | Sector-specific export reallocation | `calibrate_kapex_chile.m` + `_exp.mod` variants | θ_X, ζ | Task #2 (full version) — **done**, see `results_summary.md` |
+| ψ × network density | `sweep_psi_netdens_chile.m` | 5 ψ × ρ∈{0,1,2} | Tier 1A — **done**, ψ-sensitivity independent of density |
+| Rigidity × network density (uniform) | `sweep_rigidity_netdens_chile.m` | κ∈{0.5,0.75,1.0,1.15} × ρ∈{0,1,2} | Tier 1B — **done**, κ=1.15 is a stress test (near Calvo floor) |
+| Rigidity × network density (Services-only) | `sweep_services_rigidity_chile.m` | DELTA3∈{0.05..0.60} × ρ∈{0,1,2} | Tier 1B — **done**, Peg monotonic, Float/Managed hump-shaped |
+| ψ × σ_RP joint (Peg only) | `sweep_psi_sigmarp_joint_chile.m` | 3×3 scale grid | Tier 1C — **done**, genuine (if modest) interaction |
+| Network topology (hub-spoke, chain) | `sweep_topology_chile.m` + `network_topologies.py` | 3 topologies × regime/φ_s | Tier 2 — **done**, ranking survives, φ_s* shifts |
+| Regime-rule variants (strict IT, dual mandate) | `sweep_regime_variants_chile.m` | PHI_PI/PHI_Y grid | Tier 3 — **done**, see `results_summary.md` caveats |
 
 ## Second-order welfare check (2026-07-17, done)
 Re-solved the Chile calibration to a genuine order-2 pruned perturbation (Dynare, Kim-Kim-Schaumburg

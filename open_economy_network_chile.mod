@@ -31,6 +31,8 @@
 //   float    Taylor rule targets the DC index (benchmark)
 //   peg      exchange rate fixed, S_t = 1
 //   managed  Taylor rule + partial FX stabilisation
+//   cpi_it   strict CPI (PIC) inflation targeting, no FX term
+//   ppi_it   strict PPI/domestic-bundle (PH) inflation targeting, no FX term
 // =========================================================================
 
 @#ifndef REGIME
@@ -334,6 +336,16 @@ S = 1;
 
 @#elseif REGIME == "managed"
 log(I/ISTAR) = PHI_PI*piDC + PHI_Y*y_gap + PHI_S*log(S);
+
+@#elseif REGIME == "cpi_it"
+// Strict CPI inflation targeting: rule targets full consumption-basket
+// inflation (PIC, includes imports) instead of the DC index piDC.
+log(I/ISTAR) = PHI_PI*log(PIC) + PHI_Y*y_gap;
+
+@#elseif REGIME == "ppi_it"
+// Strict PPI (domestic-bundle) inflation targeting: rule targets the
+// domestic-bundle price PH only, ignoring import prices entirely.
+log(I/ISTAR) = PHI_PI*log(PH/PH(-1)) + PHI_Y*y_gap;
 
 @#endif
 

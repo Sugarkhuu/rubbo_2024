@@ -71,6 +71,21 @@ concurrently `fileread`-ing that same file caused 2 silent point failures (torn 
 settled. **Lesson: wait for background sweeps sourced from a `.mod` file to finish before editing
 it**, or work on a copy.
 
+## Background-task management: never launch a fixed re-run without confirming the broken one stopped
+While running the Tier 3 regime-variants sweep (2026-07-30), a bash driver failed on its first point
+(Dynare's own "mod file name too long" guard), the underlying `.m` file was fixed on disk, and the
+CSVs were `rm -f`'d before launching a corrected re-run — but the *original* backgrounded bash
+process was never explicitly stopped first. Since each sweep point launches a fresh MATLAB process
+that reads the current `.m` file from disk, the original loop's *later* iterations silently started
+succeeding once the fix landed, running concurrently with the new corrected launch and writing
+interleaved duplicate rows into the same output CSVs. Caught by checking task status
+(`TaskOutput(..., block=false)`) before trusting the data, not by inspection of the CSV alone (the
+duplicates weren't obviously wrong at a glance). **Lesson: after editing a script that a running
+background task is still iterating over, either stop that task explicitly before relying on the fix,
+or treat its already-launched loop as permanently compromised and let it finish, diff its output
+against a fresh run.** Don't `rm -f` and relaunch into a shared output file while the old process
+might still be alive.
+
 ## λ_D fixed-at-ρ=1 bug in the network-density sweep
 `analysis_netdens_chile.py`'s welfare calc used λ_D fixed at its ρ=1 value for every ρ in the
 sweep, but λ_D = β^{H⊤}(I−Ω^H)^{-1} is itself a function of ρ. Corrected in

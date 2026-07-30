@@ -153,6 +153,127 @@ numbers first, which this write-up constitutes. Next step if these are wanted in
 "Robustness: Real Chile Network & Export Reallocation" slide, likely paired with the existing
 network-isolation and risk-premium-volatility slides.
 
+## Tier 1 robustness campaign + regime variants (2026-07-27, written up 2026-07-30)
+Numerically run but never written up until now (found via file-comment dates, not tracked in any
+todo file). All use the real Chile calibration; ρ scales domestic network density the same way as
+`sweep_phi_s_netdens_chile.m` (ρ=0 no network, ρ=1 real Chile, ρ=2 double density).
+
+### Tier 1A — does ψ-sensitivity depend on network density?
+`code/sweep_psi_netdens_chile.m` (5 ψ × 3 ρ × 3 regimes) → `code/analysis_psi_netdens_chile.py` →
+`figs/psi_netdens_robustness.pdf`. **No — ψ-sensitivity is essentially independent of network
+density.** Peg/Float ratio moves from ~5.3–5.5× (ψ=0.005) down to ~2.7–2.8× (ψ=0.08) at *every* ρ
+∈{0,1,2} — the pattern found in the plain ψ sweep (real Chile, ρ=1 only) generalizes unchanged to
+the no-network and double-density cases. Cross-validated against `results/psi_sweep_welfare.csv`:
+the ρ=1 column reproduces those numbers to within 0.2%.
+
+### Tier 1B — uniform rigidity × network density
+`code/sweep_rigidity_netdens_chile.m` (κ scales all three sectors' stickiness by a common
+multiplier) + `code/drive_rigidity_netdens_sweep.sh` (built 2026-07-30, driver didn't exist before)
+→ `code/analysis_rigidity_netdens_chile.py` → `figs/rigidity_netdens_robustness.pdf`. **Grid had to
+be adjusted**: the original 0.5–2.0× plan is infeasible above κ≈1.18 given the current Calvo
+calibration — Services' baseline DELTA₃=0.16 means κ=1.5 already implies a *negative* reset
+probability (caught cleanly by the script's own feasibility guard, not a crash). Used κ∈{0.5,
+0.75, 1.0, 1.15} instead.
+- **Peg's welfare loss rises monotonically and steeply in rigidity at every ρ** (e.g. ρ=2: 60→104→
+  182→251 ×10⁻⁴ across the κ grid) — rigidity compounds with Peg's existing risk-premium/UIP
+  problem, a clean result.
+- **Float and Managed are NOT monotonic across the grid, and the κ=1.15 endpoint should be treated
+  as a stress test, not a reliable point** — same caution as the ρ_RP=0.95 persistence result.
+  Reason: dhat₃ (Services' Calvo persistence index) collapses from 0.031 at baseline (κ=1.0) to
+  0.0015 at κ=1.15, an order of magnitude closer to zero, right as DELTA₃ approaches the model's own
+  0.01 feasibility floor (DELTA₃=0.034 at κ=1.15). Since the welfare weight scales like
+  (1-dhat)/dhat, this point is numerically fragile by construction. **Read κ≤1.0 as reliable, κ=1.15
+  as a stress test.**
+
+### New regime variants — strict CPI/PPI inflation targeting
+`open_economy_network_chile_cpiit.mod` / `_ppiit.mod` (added 2026-07-27, alternative Taylor rules
+targeting PIC-only or PH-only instead of the DC index) — added to all three master `.mod` files but
+never run until now (`code/run_it_regimes_chile.m`, `code/analysis_it_regimes_chile.py`). **Both
+solve cleanly and land statistically indistinguishable from Float**: cpi_it 25.36, ppi_it 25.26 vs
+Float's 25.47 (×10⁻⁴) — within 1% of each other. **Takeaway: targeting the DC index specifically
+(vs. naively targeting CPI or PPI inflation) buys almost nothing on its own; Managed's ~2.5×
+improvement over all three comes entirely from the explicit FX-stabilization term (φ_s log S), not
+from smarter inflation targeting.** Useful context for the "why does the DC index matter" framing —
+the DC index's theoretical role (as the object a *divine-coincidence* rule would target) is distinct
+from its practical welfare payoff in this calibration, where φ_s does the real work.
+
+## Full robustness campaign, Tiers 1C/2/3 (2026-07-30)
+Continuation of the Tier 1A/1B campaign above. Plan doc:
+`C:\Users\sugarkhuu\.claude\plans\noble-strolling-feather.md`; handoff note (superseded by this
+section): `docs_notes/handoff_20260730.md`. All real Chile calibration.
+
+### Tier 1B (Services-only rigidity cut)
+`code/sweep_services_rigidity_chile.m` (DELTA3 ∈ {0.05,0.10,0.16(baseline),0.25,0.40,0.60}, DELTA1/2
+held fixed, × ρ∈{0,1,2} × 3 regimes, 54 solves, all clean — no near-degenerate points, unlike the
+uniform-κ cut). **Peg's loss falls monotonically as Services becomes more flexible** at every ρ
+(e.g. ρ=1: 122.9→113.7→102.1→85.0→60.7→37.0 ×10⁻⁴ as DELTA3 rises 0.05→0.60) — a clean, robust
+result: Services' own rigidity is a first-order driver of Peg's dominance. **Float and Managed are
+hump-shaped**, peaking around DELTA3≈0.25–0.40, not monotonic — the price-dispersion welfare weight
+(∝(1-dhat)/dhat) and the Phillips-curve slope move in offsetting directions as DELTA3 falls, so this
+isn't a numerical artifact, just a genuine non-monotonicity in the smaller-loss regimes.
+
+### Tier 1C (ψ × σ_RP interaction, Peg only)
+`code/sweep_psi_sigmarp_joint_chile.m` (ψ_scale × σ_RP_scale ∈ {0.5,1,2}², 9 solves). Log-log
+regression: elasticity of Peg's loss w.r.t. σ_RP ≈ **+1.44** (dominant, convex), w.r.t. ψ ≈ **−0.24**
+(real but secondary), interaction term ≈ **−0.16** (non-trivial: ψ's dampening effect is *stronger*
+when σ_RP is larger — W(ψ=2×)/W(ψ=0.5×) shrinks from 0.85 at σ_RP=0.5× to 0.62 at σ_RP=2×). The two
+calibration choices flagged in `calibration.md` reinforce rather than offset each other.
+
+### Tier 2 (alternative network topologies)
+`code/network_topologies.py` (analytical Ω^H construction, matched total off-diagonal mass 0.6501)
++ `code/sweep_topology_chile.m`, three shapes at matched mass: **triangle** (baseline, all 9
+entries), **hub-spoke** (Manufacturing as hub, Resource↔Services ≈0), **chain**
+(Resource→Manufacturing→Services one-directional). 45 solves (9 base regime comparison + 36 φ_s
+grid search), all clean.
+- **Ranking (Peg worst, Managed best) survives in every topology.** Welfare loss (×10⁻⁴, Float/
+  Managed/Peg): triangle 25.5/10.2/102.1, hub-spoke 28.9/11.3/113.5, chain 33.7/12.7/115.5 — the
+  chain topology (most concentrated pass-through) is uniformly worse than the triangle across all
+  three regimes, hub-spoke intermediate.
+- **Optimal φ_s shifts with topology, not just density**: triangle φ_s*=0.20, hub-spoke and chain
+  both φ_s*=0.30 — consistent with (and reinforcing) the earlier φ_s-vs-ρ finding.
+- **Services' indirect-exposure share is not triangle-specific — it's larger in the chain** (63% of
+  its total import centrality is indirect in the chain vs. 41% triangle, 46% hub-spoke,
+  `results/topology_exposure_decomposition.csv`) — the "Why Services?" mechanism generalizes to, and
+  strengthens under, more concentrated pass-through structures.
+
+### Tier 3 (regime-rule variants)
+`code/sweep_regime_variants_chile.m`. **Regression check passed first** (see below) — confirms the
+2026-07-27 `cpi_it`/`ppi_it` `.mod` edit didn't perturb the existing three regimes (reproduces
+25.47/10.17/102.05 exactly).
+- **3A/3B/3C — strict inflation targeting** (PHI_PI=5 proxy for →∞, PHI_Y=0) applied to DC-IT
+  (float), CPI-IT, and PPI-IT, × ρ∈{0,1,2}: at ρ=1, **PPI-IT (10.55) < DC-IT (12.57) < CPI-IT
+  (18.48)** ×10⁻⁴ — once the rule is aggressive, targeting the DC index is *not* the best choice;
+  strict domestic (PPI) targeting wins. This nuances the earlier cpi_it/ppi_it-vs-float finding
+  (which used baseline, non-aggressive Taylor coefficients and found all three indistinguishable):
+  **the DC index's advantage over naive alternatives, if any, is specific to moderate policy
+  aggressiveness — it doesn't hold under strict targeting.**
+- **3D — dual-mandate grid** (PHI_PI∈{1.5,3,5} × PHI_Y∈{0,0.5,1}, float/DC-IT branch, ρ=1): best in
+  grid is PHI_PI=5, PHI_Y=0.5 → loss=9.55 ×10⁻⁴, essentially matching (fractionally beating)
+  Managed's headline 10.17 **without any FX-stabilization term**. **Caveat, not yet a "Managed isn't
+  needed" result**: this is a coarse 3×3 grid on the float branch only; Managed's own PHI_PI/PHI_Y
+  were left at their original (1.5, 0.5) baseline rather than re-optimized at the same aggressive
+  level, so the comparison isn't apples-to-apples yet. What it does establish cleanly: the baseline
+  PHI_PI=1.5 materially undersells how well plain DC-index targeting can do — φ_π was never itself
+  swept before this.
+
+**Regression check** (`code/regression_check_it_edit.m`): re-ran float/peg/managed through the
+current (post-cpi_it/ppi_it-edit) master `.mod` files at ρ=1 baseline — reproduces 25.4735/10.1707/
+102.0458 ×10⁻⁴ exactly (cross-validated independently against `results/psi_sweep_welfare.csv`'s
+ψ=0.02 row too). The two new regime branches are additive and non-breaking as designed.
+
+**Process note**: a background-task management error caused two copies of the Tier 3 driver to run
+concurrently for a few minutes (a stale run continued after being fixed mid-flight, and a second
+corrected run was launched without confirming the first had stopped), producing interleaved
+duplicate rows in `regime_variants_sweep.csv`/`dual_mandate_grid_sweep.csv`. Caught immediately,
+deduplicated, and verified against the MATLAB process list before analysis — final CSVs contain
+exactly one row per grid point.
+
+**Not done from the full plan** (judgment call, not required by the plan doc): Tier 1B's
+`services_rigidity` cut used a coarser grid at the sticky end (0.05 floor, not more extreme) to stay
+clear of the numerical edge found in the uniform-κ cut; no additional network shapes beyond the two
+specified; Managed's own rule coefficients weren't re-swept under Tier 3D's aggressive PHI_PI range
+(flagged above as the reason the "Managed may not be needed" finding is preliminary).
+
 ## Bugs found and fixed
 See `decisions.md` for the sweep-crash and concurrent-fileread lessons, and the λ_D(ρ) bug in
 `analysis_netdens_chile.py` (network welfare premium understated by up to ~25% at sweep extremes,
