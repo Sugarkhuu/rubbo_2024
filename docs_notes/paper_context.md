@@ -65,23 +65,18 @@ is realistically 6-12+ months of further work away, starting with the multi-sect
 a full paper draft that engages Qiu et al.'s DC-index derivation directly.
 
 ## Future extensions (not urgent, do not build unless asked)
-- **Sector-specific export channel.** Currently `EX_t` (aggregate exports) is allocated across
-  sectors via β_i^H (household consumption shares, Services-heavy) rather than each sector's actual
-  export intensity (Resource-heavy in the data, `export_share` already computed in
-  `data_calibration/build_chile_calibration.py` but unused in the `.mod` files). Fix: replace β_i^H
-  with a real export-intensity vector ω_X in the Y1/Y2/Y3 equations of every `.mod` file, re-derive
-  the steady state in `soe_ss_solve_dense.m`. Not urgent — export-price/ToT shock is already a minor
-  welfare contributor (0.11/0.18/2.16 ×10⁻⁴ vs totals of 25.47/10.17/102.05); fixing it adds texture
-  to a quantitatively marginal channel, doesn't change the ranking.
+- ~~Sector-specific export channel~~ — **DONE (full version), 2026-07-21/23.** See
+  `results_summary.md`'s "Task #2" writeup.
 - ~~Cross-sector markup-dispersion welfare term~~ — **DONE 2026-07-23.** See `results_summary.md`.
-- **ψ-sensitivity sweep for the risk-premium/UIP dominance result — still not built.** The
-  debt-elastic risk-premium closing device (Schmitt-Grohé–Uribe 2003) is calibrated at ψ=0.020
-  (`PSI` in `open_economy_network_chile.mod:158`). That literature has a known pitfall: ψ too close
-  to zero can create a near-unit-root/knife-edge numerical blowup that's a linearization artifact,
-  not real economics. Now **more urgent** since the 2026-07-23 volatility sweep found Peg is NOT
-  dominated at all with the risk-premium shock off — this result rests on two under-scrutinized
-  calibration choices (ψ level, σ_RP level), not one. Build `code/sweep_psi.m` following the
-  one-fresh-MATLAB-process-per-grid-point pattern (see `calibration.md`).
+- ~~ψ-sensitivity sweep for the risk-premium/UIP dominance result~~ — **DONE 2026-07-21/23.** See
+  `results_summary.md`'s "Task #3" writeup — ranking robust, margin is not (Peg/Float ratio
+  5.4×→2.7× across the ψ grid).
+- ~~Network vs. no-network on the real Chile calibration~~ — **DONE 2026-07-21/23** (was previously
+  only tested on the stylized triangular-network proxy). See `results_summary.md`'s "Task #1"
+  writeup.
+- **Fold the three write-ups above into `soe_fx_presentation.tex`/`speech_notes.md`.** Numbers exist
+  and are sanity-checked (see `results_summary.md`); `todo_three_exercises.txt` explicitly deferred
+  slide edits until that point. Not done yet — next natural step if a deck update is wanted.
 
 ## Key files
 - `rubbo_2024.pdf` — main paper (Rubbo 2024)

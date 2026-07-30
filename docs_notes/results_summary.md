@@ -103,6 +103,56 @@ not-over-identified note + shock table on "Equilibrium System"; new slide "Readi
 Slides: What Varies, What's Fixed" (first slide of Results); methodology footnote on "What Drives
 Each Regime's Loss?".
 
+## Three follow-up exercises (2026-07-21/23, `todo_three_exercises.txt`)
+Numerically complete and committed (`a403e1e`, `8425b18`); this section is the write-up that was
+missing. Priority order was payoff-per-effort: #3 (psi) > #1 (network premium) > #2 (export
+reallocation, full version).
+
+### Task #3 — psi-sensitivity sweep (risk-premium/UIP robustness)
+`code/sweep_psi_point.m`, PSI scaled 0.25x–4x baseline (0.005/0.01/0.02/0.04/0.08) →
+`results/psi_sweep_welfare.csv`. Answers the ψ-sensitivity question flagged in `paper_context.md`.
+**Ranking is robust across the whole grid** (Peg worst at every ψ), but the *margin* is not
+constant: Peg/Float ratio shrinks from **5.4× at ψ=0.005 to 2.7× at ψ=0.08**, and the risk-premium
+shock's share of Peg's loss (the "75%" headline, at baseline ψ=0.02) ranges from **83% (ψ=0.005) to
+58% (ψ=0.08)**. Risk-premium/UIP remains the single dominant channel throughout — the qualitative
+story survives — but the exact 75% figure is itself a function of an under-scrutinized calibration
+choice, reinforcing Adam's original caution rather than resolving it. No steady-state re-derivation
+needed (ψ only enters the UIP dynamics).
+
+### Task #1 — network vs. no-network on the REAL Chile calibration
+`code/run_nonetwork_chile.m` zeroes all nine Ω^H entries (own Chile calibration, not the stylized
+triangular-network proxy), re-derives the steady state, re-simulates all three regimes →
+`results/task1_network_premium.csv`. **Network premium (×10⁻⁴, with-network vs. no-network):**
+Float 25.47 vs 8.13 (**+213%**), Peg 102.05 vs 37.94 (**+169%**), Managed 10.17 vs 5.30 (**+92%**).
+Confirms — with the paper's actual headline calibration, not the illustrative stylized network —
+that the production network itself, not just "open economy," drives most of the welfare loss, and
+that it amplifies Float most and Managed least in relative terms. Replaces the stylized
+network-isolation experiment's premium number with a real one; ranking (Float < Managed < Peg
+dominance of Peg) unaffected in either version.
+
+### Task #2 — sector-specific export demand, full version
+Replaced the single aggregate `EX_t` (allocated via consumption shares β^H, Services-heavy) with
+three sector-specific export equations calibrated so steady-state EX_i/Y_i matches the real export
+shares (Resource 0.602/Manuf. 0.180/Services 0.036) via `code/calibrate_kapex_chile.m` (damped
+fixed-point on KAPEX_i, no Optimization Toolbox available), re-derived steady state, re-ran all
+three regimes (`open_economy_network_chile_exp*.mod`). **Export/ToT shock's (eps_pX) welfare
+contribution, old (β^H-allocated) → new (real export-share-allocated), ×10⁻⁴:** Float 0.105→0.165
+(**+57%**), Managed 0.175→0.142 (**-19%**), Peg 2.155→1.171 (**-46%**). Peg's total welfare loss
+falls from 102.05 to **90.45** (-11.4%) once exports are allocated to the actual export-heavy
+(Resource) sector rather than the export-light, Services-heavy consumption-share proxy — the old
+allocation was *overstating* how much export-price risk Peg absorbs. Ranking unchanged. Network
+premium re-checked under this new export model (`results/exp_baseline_network_premium.csv`): Float
++190%, Peg +169%, Managed +88% — consistent with Task #1's numbers. Additional robustness sweeps
+over the export demand elasticity (θ_X, `results/export_thetaX_welfare.csv`) and reallocation
+intensity (ζ, `results/export_zeta_welfare.csv`) both show smooth, monotonic sensitivity with no
+ranking flips.
+
+**Not yet done:** none of these three numbers have been folded into `soe_fx_presentation.tex` or
+`speech_notes.md` yet — `todo_three_exercises.txt` explicitly gated that on sanity-checking the
+numbers first, which this write-up constitutes. Next step if these are wanted in the deck: a new
+"Robustness: Real Chile Network & Export Reallocation" slide, likely paired with the existing
+network-isolation and risk-premium-volatility slides.
+
 ## Bugs found and fixed
 See `decisions.md` for the sweep-crash and concurrent-fileread lessons, and the λ_D(ρ) bug in
 `analysis_netdens_chile.py` (network welfare premium understated by up to ~25% at sweep extremes,

@@ -65,7 +65,9 @@ completion tracking).
 | φ_s × network density | `sweep_phi_s_netdens_chile.m` | 12 φ_s × ρ∈{0,1,2} | does the optimal managed-float weight shift with the network? |
 | RP persistence × network density | `sweep_rp_persistence_netdens_chile.m` | ρ_RP∈{0,.40,.80,.95} × ρ∈{0,1} × 3 regimes | convexity of welfare loss in shock persistence |
 | Risk-premium volatility | `sweep_risk_premium_chile.m` | scales sd(ε^RP) | how much does Peg's dominance depend on σ_RP |
-| ψ sensitivity | not built yet | 0.25×–4× baseline | robustness of risk-premium dominance to the NFA-feedback elasticity |
+| ψ sensitivity | `sweep_psi_point.m` | 0.25×–4× baseline | robustness of risk-premium dominance to the NFA-feedback elasticity — **done**, see `results_summary.md` |
+| Network vs. no-network, real Chile calib. | `run_nonetwork_chile.m` | — | Task #1 of `todo_three_exercises.txt` — **done**, see `results_summary.md` |
+| Sector-specific export reallocation | `calibrate_kapex_chile.m` + `_exp.mod` variants | θ_X, ζ | Task #2 (full version) — **done**, see `results_summary.md` |
 
 ## Second-order welfare check (2026-07-17, done)
 Re-solved the Chile calibration to a genuine order-2 pruned perturbation (Dynare, Kim-Kim-Schaumburg

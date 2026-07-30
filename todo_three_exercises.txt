@@ -3,6 +3,13 @@ THREE FOLLOW-UP EXERCISES -- SOE FX PRESENTATION PROJECT
 Written 2026-07-21. Each task below is self-contained (no prior
 conversation context assumed) so it can be handed to a separate agent/session.
 
+STATUS (2026-07-30): ALL THREE DONE. Numerical results were committed
+(a403e1e, 8425b18) but never written up -- see docs_notes/results_summary.md
+("Three follow-up exercises") for the findings, and docs_notes/paper_context.md
+for the future-extensions cross-out. Remaining: fold into
+soe_fx_presentation.tex / speech_notes.md if a deck update is wanted (not
+done yet, per the note at the bottom of this file).
+
 Priority order (payoff per effort): #3 (psi sweep) > #1 (network vs
 no-network, real Chile calibration) > #2 (sector-specific exports, FULL
 version -- user has decided to do the full build, not the cheap static one).
