@@ -1,0 +1,473 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{enumitem}
+\onehalfspacing
+\geometry{margin=1.2in}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\newmdenv[backgroundcolor=blue!5, linecolor=blue!30, roundcorner=4pt]{insight}
+\newmdenv[backgroundcolor=orange!5, linecolor=orange!30, roundcorner=4pt]{codebox}
+\newmdenv[backgroundcolor=green!5, linecolor=green!30, roundcorner=4pt]{keyresult}
+
+\title{How Welfare Loss Is Computed \\ \large A Teaching Note: Derivation, a Worked Toy Example, and How It Scales to the Real Chile Model}
+\author{Working Notes}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%==============================================================
+\section{The Object We're Computing}
+%==============================================================
+
+Second-order welfare loss relative to the efficient (flex-price) allocation, from Rubbo's
+Proposition 3 as extended in this project (full proof in
+\texttt{rubbo\_proofs\_and\_extension.tex}, \S``Welfare Function''):
+\begin{equation}
+    \mathbb{W} = \frac{1}{2}\,\mathbb{E}\left[\underbrace{(\gamma+\varphi)\,y_t^2}_{\text{output gap}}
+    \;+\; \underbrace{\sum_i \kappa_i\, \pi_{it}^2}_{\text{within-sector}}
+    \;+\; \underbrace{\Phi_C(\bm\mu_t,\bm\mu_t) + \sum_s\lambda_s\Phi_s(\bm\mu_t,\bm\mu_t)}_{\text{cross-sector}}\right]
+    \label{eq:welfare}
+\end{equation}
+where $\kappa_i \equiv \lambda_{D,i}\,\varepsilon_i\,\frac{1-\hat\delta_i}{\hat\delta_i}$ is sector
+$i$'s \emph{welfare weight} — large when the sector is big in the network ($\lambda_{D,i}$) and
+sticky ($\hat\delta_i$ small, so any inflation it does have translates into a lot of costly
+within-sector price dispersion). $\bm\mu_t$ is the vector of log markup gaps.
+
+\begin{insight}
+\textbf{Why three terms, not one.} A representative-agent closed economy only has the output-gap
+term. Once you add (i) multiple sectors with sticky prices, each sector generates its own
+Calvo price-dispersion cost — Term 2; and (ii) non-unit elasticities of substitution across
+goods, relative-price misallocation across sectors is itself costly even holding each sector's own
+dispersion fixed — Term 3. Term 3 is usually the smallest (in the Chile calibration it adds only
+3--8\% on top of Terms 1+2 — see \S\ref{sec:real}) but it's not structurally negligible; it's small
+here because this model's production nests are Cobb-Douglas (elasticity exactly 1), which is a
+property of the functional form, not a generic result.
+\end{insight}
+
+Because $\mathbb{W}$ is a sum of expectations of \emph{squares} of variables that are themselves
+linear in exogenous shocks (in a linearized model), $\mathbb{W}$ reduces entirely to a weighted sum
+of \textbf{variances and covariances}. This is the fact that makes every decomposition below exact,
+not approximate:
+\begin{equation}
+    y_t = \sum_k L_{y,k}\,\epsilon_{k,t}, \qquad \pi_{it} = \sum_k L_{i,k}\,\epsilon_{k,t}
+    \label{eq:linear}
+\end{equation}
+for structural shocks $\epsilon_{k,t}$ with $\mathrm{Cov}(\epsilon_k,\epsilon_{k'})=0$ for
+$k\neq k'$ (the model's shocks are mutually independent by construction). Then
+$\mathrm{Var}(\pi_i) = \sum_k L_{i,k}^2\,\sigma_k^2$ — additive across shocks, with no
+cross-terms, \emph{precisely because independence kills the covariance terms}. This is the whole
+trick behind "shock $k$ contributes $X\%$ of the welfare loss."
+
+%==============================================================
+\section{Full Derivation: From Utility to Welfare Loss}
+\label{sec:derivation}
+%==============================================================
+
+Eq.~\eqref{eq:welfare} isn't an assumption — it's what a second-order Taylor expansion of household
+utility around the efficient allocation produces, once you account for Calvo price stickiness and
+CES/Cobb-Douglas aggregation. This section derives each of the three terms in turn, at a level of
+detail one notch below \texttt{rubbo\_proofs\_and\_extension.tex}'s ``Proposition 3'' proof outline
+(\S6 there) — the goal here is to make every algebraic step explicit rather than just stating the
+result.
+
+\subsection{Term 1: the output-gap term, from household utility directly}
+
+Household period utility is $U(C_t,L_t) = u(C_t) - v(L_t)$ with $u(C)=\frac{C^{1-\gamma}}{1-\gamma}$,
+$v(L)=\frac{L^{1+\varphi}}{1+\varphi}$. Let $(C_t^*, L_t^*)$ denote the efficient (flex-price,
+correctly-subsidized) allocation, and write $\tilde c_t = \log(C_t/C_t^*)$,
+$\tilde l_t = \log(L_t/L_t^*)$ for log-deviations from it.
+
+\textbf{Expand $u(C_t)$ to second order.} Writing $C_t = C_t^* e^{\tilde c_t}$ and Taylor-expanding
+the exponential to second order in $\tilde c_t$:
+\begin{equation}
+    u(C_t) - u(C_t^*) = \frac{(C_t^*)^{1-\gamma}}{1-\gamma}\Big[(1-\gamma)\tilde c_t + \tfrac{1}{2}(1-\gamma)^2\tilde c_t^2\Big] + O(\tilde c_t^3)
+    = U_C^*C_t^*\Big[\tilde c_t + \tfrac{1}{2}(1-\gamma)\tilde c_t^2\Big]
+\end{equation}
+using $U_C^* \equiv u'(C_t^*) = (C_t^*)^{-\gamma}$, so $U_C^*C_t^* = (C_t^*)^{1-\gamma}$. The
+symmetric calculation for $-v(L_t)$ (with $V_L^* \equiv v'(L_t^*) = (L_t^*)^\varphi$) gives
+\begin{equation}
+    -v(L_t) + v(L_t^*) = -V_L^*L_t^*\Big[\tilde l_t + \tfrac{1}{2}(1+\varphi)\tilde l_t^2\Big]
+\end{equation}
+
+\textbf{Adding them:}
+\begin{equation}
+    \Delta U_t \equiv U_t - U_t^* = U_C^*C_t^*\tilde c_t - V_L^*L_t^*\tilde l_t
+    \;+\; \tfrac{1}{2}U_C^*C_t^*(1-\gamma)\tilde c_t^2 - \tfrac{1}{2}V_L^*L_t^*(1+\varphi)\tilde l_t^2
+    \label{eq:deltaU}
+\end{equation}
+
+\textbf{Killing the linear terms.} Two facts collapse the first (linear) bracket to exactly zero:
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Goods-market clearing to first order:} $\tilde c_t = \tilde y_t$.
+    \item \textbf{Lemma 2 (output gap = employment gap, \texttt{rubbo\_proofs\_and\_extension.tex} \S4):} $\tilde y_t = \tilde l_t$, because sticky prices only distort the \emph{aggregate} labor margin — the allocation of a given aggregate $L_t$ across sectors stays efficient since relative wages are flexible.
+\end{enumerate}
+So $\tilde c_t = \tilde l_t = \tilde y_t$ \emph{exactly} at this order. Combined with the efficient
+labor-supply condition $U_C^*C_t^* = V_L^*L_t^*$ (the standard welfare-theorem normalization: at the
+efficient point, the household's MRS equals the marginal product, which after the usual optimal
+employment subsidy correcting the monopoly markup makes the two curvature-weighted levels equal),
+the linear term is
+\begin{equation}
+    U_C^*C_t^*\tilde c_t - V_L^*L_t^*\tilde l_t = U_C^*C_t^*(\tilde y_t - \tilde y_t) = 0
+\end{equation}
+\textbf{exactly} — not approximately, because $\tilde c_t$ and $\tilde l_t$ are the \emph{same}
+variable here, not merely correlated.
+
+\textbf{What's left} is purely the quadratic terms in Eq.~\eqref{eq:deltaU}, all in $\tilde y_t$ (via $\tilde c_t=\tilde l_t=\tilde y_t$) and all sharing the common factor $U_C^*C_t^*$:
+\begin{equation}
+    \Delta U_t = \tfrac{1}{2}U_C^*C_t^*\Big[(1-\gamma) - (1+\varphi)\Big]\tilde y_t^2
+    = -\tfrac{1}{2}(\gamma+\varphi)\,U_C^*C_t^*\,\tilde y_t^2
+\end{equation}
+Dividing through by $U_C^*C_t^*$ (the standard normalization to express welfare loss in
+consumption-equivalent units) and flipping sign to define $\mathbb{W}\equiv -\Delta U_t/U_C^*C_t^*
+\geq 0$ gives exactly Term 1 of Eq.~\eqref{eq:welfare}: $\tfrac12(\gamma+\varphi)\tilde y_t^2$.
+
+\begin{insight}
+The output-gap term needed \emph{no} information about the production network, Calvo parameters, or
+number of sectors — it comes purely from curvature of preferences ($\gamma,\varphi$) and the two
+identities $\tilde c_t=\tilde y_t=\tilde l_t$. All network/price-stickiness structure enters only
+through Terms 2 and 3, and indirectly, through how $\tilde y_t$ itself is determined in equilibrium
+(the Phillips curve system).
+\end{insight}
+
+\subsection{Term 2: within-sector price dispersion, from Calvo pricing}
+
+Within sector $i$, firms that reset at different past dates charge different prices $P_{if,t}$, even
+though they face identical current marginal cost. This dispersion is directly costly: producing a
+given amount of the sector-$i$ CES aggregate $Y_{it}=\big(\int_0^1 Y_{if,t}^{(\varepsilon_i-1)/\varepsilon_i}df\big)^{\varepsilon_i/(\varepsilon_i-1)}$
+from dispersed-price varieties wastes labor/inputs relative to charging one uniform price, because
+demand $Y_{if}=(P_{if}/P_i)^{-\varepsilon_i}Y_i$ shifts disproportionately toward the (arbitrarily)
+cheaper varieties without them being any more efficient to produce.
+
+\textbf{The dispersion wedge.} Define $\Delta_{it} \equiv \int_0^1 (P_{if,t}/P_{it})^{-\varepsilon_i}\,df \geq 1$
+(equality iff all firms charge the same price). A second-order expansion of $\Delta_{it}$ in the
+cross-sectional log-price distribution gives the standard result (Yun 1996; Woodford 2003, ch.~6):
+\begin{equation}
+    \log \Delta_{it} \approx \tfrac{1}{2}\varepsilon_i\,\mathrm{Var}_f[\log P_{if,t}]
+    \label{eq:dispersion_wedge}
+\end{equation}
+— a pure Jensen's-inequality cost of the CES aggregator, increasing in both the elasticity
+$\varepsilon_i$ (more substitutable varieties $\Rightarrow$ demand reallocates more aggressively
+toward mispriced ones) and the cross-sectional price variance.
+
+\textbf{Mapping dispersion to inflation.} Under Calvo, $\mathrm{Var}_f[\log P_{if,t}]$ is not a free
+parameter — it's pinned down by the sector's own inflation history, because dispersion only arises
+from \emph{staggering}: firms that reset at $t$ all charge the identical $P_{it}^*$, so all
+cross-sectional variance comes from the gap between resetters and the (persisting) distribution of
+past prices. Log-linearizing the recursion $\mathrm{Var}_f[\log P_{if,t}] = (1-\delta_i)\big(\mathrm{Var}_f[\log P_{if,t-1}] + (\text{new dispersion from this period's inflation})\big)$
+around the zero-inflation steady state and solving forward (Yun 1996; the algebra is a standard but
+lengthy application of the Calvo recursion, omitted here) yields
+\begin{equation}
+    \mathrm{Var}_f[\log P_{if,t}] \approx \frac{1-\hat\delta_i}{\hat\delta_i}\,\pi_{it}^2
+    \label{eq:calvo_var}
+\end{equation}
+with $\hat\delta_i$ the same effective Calvo parameter defined in
+\texttt{rubbo\_proofs\_and\_extension.tex} Eq.~(19) (``Calvo Optimal Reset Price''). Intuitively: a stickier sector ($\hat\delta_i$ small) needs a \emph{larger} cross-sectional
+variance to generate the same observed aggregate inflation $\pi_{it}$, because fewer firms are
+moving to produce that inflation number, so the ones that do move must move further apart from the
+frozen majority.
+
+\textbf{From dispersion to a TFP-equivalent utility loss.} $\log\Delta_{it}$ acts exactly like a
+negative TFP shock to sector $i$: producing sector output $Y_{it}$ requires
+$\Delta_{it}\times$(what would be needed absent dispersion) units of underlying labor/inputs. Its
+contribution to aggregate consumption-equivalent loss is this TFP loss weighted by the sector's
+\textbf{Domar weight} $\lambda_{D,i}$ (its total-sales share, counting indirect sales through the
+network) — the same weighting Lemma 1 uses to build \emph{natural} output from sectoral TFP:
+\begin{equation}
+    \text{Term 2} = \sum_i \lambda_{D,i}\,\varepsilon_i \cdot \tfrac{1}{2}\mathrm{Var}_f[\log P_{if,t}]
+    \overset{\eqref{eq:calvo_var}}{=} \tfrac12\sum_i \underbrace{\lambda_{D,i}\,\varepsilon_i\,\frac{1-\hat\delta_i}{\hat\delta_i}}_{\displaystyle \kappa_i}\,\pi_{it}^2
+\end{equation}
+exactly Term 2 of Eq.~\eqref{eq:welfare}.
+
+\subsection{Term 3: cross-sector misallocation, from non-unit substitution elasticities}
+
+Terms 1--2 together would be the \emph{entire} welfare loss if every aggregator in the model
+(household consumption bundle, each firm's input bundle) were Cobb-Douglas — because Cobb-Douglas
+has unit elasticity of substitution, and a firm/household with unit elasticity is, to second order,
+\emph{indifferent} to small relative-price distortions across its inputs (it substitutes away from
+the relatively-expensive input exactly enough to keep expenditure shares fixed, which is precisely
+what makes the resulting misallocation cost vanish at second order). Term 3 exists only because this
+model's \emph{outer} nest — $C_t=\mathrm{CES}(C_t^H,C_t^F;\eta)$, domestic vs.\ imported consumption
+— has $\eta=1.5\neq1$.
+
+\textbf{General second-order misallocation cost (Baqaee--Farhi).} For any CES-type aggregator
+$G(X_1,\ldots,X_n)$ with cost shares $w_k$ and pairwise Allen--Uzawa elasticities $\sigma_{kh}$, a
+vector of small \emph{wedges} $x_k$ (log deviations of $X_k$ from its cost-minimizing/efficient
+level) generates a second-order TFP-equivalent loss
+\begin{equation}
+    \Phi_G(\bm{x},\bm{x}) = \tfrac{1}{2}\sum_{k,h} w_k w_h\,\sigma_{kh}\,(x_k-x_h)^2
+    \label{eq:phi_general}
+\end{equation}
+— a Harberger-triangle-style formula: quadratic in the wedge \emph{differences} (only relative
+distortions matter, not the level), scaled by how substitutable the pair is. This is the general
+form; deriving it from a second-order expansion of $G$ itself is standard in the
+production-network literature (Baqaee \& Farhi 2019, 2020) and not reproduced here.
+
+\textbf{The wedges here are markup gaps.} In this model, the object playing the role of $x_k$ is the
+log markup gap $\mu_{it} = \log(P_{it}/MC_{it}) - \log\frac{\varepsilon}{\varepsilon-1}$ — the
+deviation of sector $i$'s markup from its flexible-price target — applied once at the household's
+consumption nest ($\Phi_C$, weights $\bm\beta^H$) and once per firm's production nest ($\Phi_s$,
+weights $(\alpha_s,\Omega^H_{s\cdot},\Omega^F_s)$), summed with Domar weights on the latter:
+\begin{equation}
+    \text{Term 3} = \Phi_C(\bm\mu_t,\bm\mu_t) + \sum_s \lambda_{D,s}\,\Phi_s(\bm\mu_t,\bm\mu_t)
+\end{equation}
+exactly Term 3 of Eq.~\eqref{eq:welfare}. The closed-form collapse to a \emph{weighted variance} of
+$\bm\mu_t$ used in \S\ref{sec:real} (and in \texttt{code/cross\_sector\_welfare.py}) follows from
+Eq.~\eqref{eq:phi_general} whenever $\sigma_{kh}\equiv\sigma$ is constant across all pairs — true
+here since $\sigma_{kh}=1$ (Cobb-Douglas) for every domestic-domestic and domestic-labor-import pair,
+and only the domestic-vs.-import-composite pairs get $\sigma_{kh}=\eta$.
+
+\begin{keyresult}
+\textbf{Why the three terms have the shape they do.} Term 1 comes purely from preference curvature
+and holds with \emph{no} reference to price stickiness at all (it would exist even with flexible
+prices, if output happened to deviate from efficient for some other reason). Terms 2 and 3 both come
+from the \emph{same} underlying source — CES aggregation of heterogeneous prices — but at two
+different levels of the model: Term 2 is dispersion \emph{within} a sector's own variety continuum
+(entirely a Calvo/stickiness artifact, vanishes if $\delta_i=1$), while Term 3 is misallocation
+\emph{across} sectors/goods in a bundle (a property of the aggregator's curvature $\sigma_{kh}$,
+vanishes only if every relevant elasticity is exactly 1, regardless of stickiness). This is also
+why Term 3 needed a genuinely new elasticity object ($\eta$) that Terms 1--2 never used.
+\end{keyresult}
+
+%==============================================================
+\section{Worked Toy Example}
+%==============================================================
+
+To make this concrete before touching the real 3-sector Chile model, consider a minimal toy economy
+with \textbf{two} sectors: Sector 1 (upstream, directly FX-exposed) and Sector 2 (downstream,
+buys from Sector 1, resets prices slowly). Three independent shocks hit each period: $\chi_1,\chi_2$
+(sector TFP) and $\Delta e$ (FX depreciation). Full code: \texttt{toy\_welfare.py} (scratchpad).
+
+\subsection{Primitives}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & Sector 1 (upstream) & Sector 2 (downstream) \\
+\midrule
+Domar weight $\lambda_i$ & 0.30 & 0.70 \\
+Calvo reset prob. $\hat\delta_i$ & 0.40 & 0.15 \\
+Welfare weight $\kappa_i = \lambda_i\varepsilon\frac{1-\hat\delta_i}{\hat\delta_i}$ & 2.70 & 23.80 \\
+\bottomrule
+\end{tabular}
+\end{center}
+($\varepsilon=6$, $\gamma+\varphi=1$ for both sectors — Sector 2's $\kappa$ is nearly 9$\times$
+Sector 1's despite being only $2.3\times$ larger in Domar weight, because it is also far stickier.)
+
+\subsection{Impact loadings (a stand-in for the full Phillips-curve solution)}
+Instead of solving a full DSGE, assign each variable a linear loading on each shock directly —
+this is exactly what the real model's $\mathcal{B}, \mathcal{V}, \Gamma$ vectors do (network-amplified
+loadings), just without deriving them from IO data:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & $\chi_1$ & $\chi_2$ & $\Delta e$ \\
+\midrule
+$\pi_1$ & 1.00 & 0.00 & 0.25 \\
+$\pi_2$ & 0.40 & 1.00 & 0.08 \\
+$y$     & 0.50 & 0.50 & $-0.20$ \\
+$\mu_1$ & 0.50 & 0.00 & 0.12 \\
+$\mu_2$ & 0.20 & 0.50 & 0.04 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Sector 2's loading of $0.40$ on $\chi_1$ (a shock to Sector \emph{1}) is the network channel: Sector 2
+inherits cost-push from its upstream supplier even though $\chi_1$ never touches it directly — the
+same logic as $\mathcal{V}=\Delta(I-\Omega\Delta)^{-1}(\cdots)$ in the real model. Shock sizes:
+$\sigma_{\chi_1}=\sigma_{\chi_2}=0.010$, $\sigma_{\Delta e}=0.020$ (FX more volatile, as calibrated
+in the real model).
+
+\subsection{Results}
+
+\textbf{Term decomposition} (Eq.~\ref{eq:welfare}, evaluated numerically):
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Term & Value ($\times10^{-3}$) & Share \\
+\midrule
+Output-gap & 0.033 & 2.0\% \\
+Within-sector & 1.580 & 97.7\% \\
+\quad Cross-sector & 0.0038 & 0.2\% \\
+\midrule
+\textbf{Total} $\mathbb{W}$ & \textbf{1.616} & 100\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Within-sector dispersion dominates — same qualitative pattern as the real Chile result
+(\S\ref{sec:real}), and for the same structural reason: Cobb-Douglas cross-sector nests make the
+cross-sector term small \emph{by construction} (elasticity exactly 1), not because misallocation is
+empirically unimportant.
+
+\textbf{Sector decomposition} of the within-sector term:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+ & Contribution ($\times10^{-3}$) & Share of within-sector \\
+\midrule
+Sector 1 (upstream) & 0.169 & 10.7\% \\
+Sector 2 (downstream/sticky) & 1.411 & 89.3\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Despite Sector 1 having \emph{larger} exposure to the FX shock directly, Sector 2 absorbs almost
+90\% of the within-sector loss — because $\kappa_2 \gg \kappa_1$ dominates $\mathrm{Var}(\pi_1) >
+\mathrm{Var}(\pi_2)$. This is the toy version of the real model's ``Why Services?'' result: size
+$\times$ stickiness beats direct exposure.
+
+\textbf{Shock decomposition} of total $\mathbb{W}$ (exact, by additivity of Eq.~\ref{eq:linear}):
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Shock & Contribution ($\times10^{-3}$) & Share \\
+\midrule
+$\chi_1$ (Sector-1 TFP) & 0.339 & 21.0\% \\
+$\chi_2$ (Sector-2 TFP) & 1.206 & 74.6\% \\
+$\Delta e$ (FX depreciation) & 0.073 & 4.5\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Even though the FX shock is \emph{twice} as volatile as either TFP shock, it contributes the least
+to welfare loss — because neither sector's $\kappa_i$ nor its $\Gamma_i$-type loading on $\Delta e$
+is large enough to compound with that extra volatility. This is exactly the kind of result that
+looks surprising until you decompose it, and exactly why the real project's risk-premium-volatility
+sweep (\S\ref{sec:regime}) was necessary rather than assumed.
+
+\textbf{Between/within split of the within-sector term.} Term 2 itself further decomposes, exactly
+like weighted ANOVA, into an \emph{aggregate}-inflation piece and a \emph{dispersion}-around-that-
+aggregate piece:
+\begin{equation}
+    \sum_i \kappa_i \pi_{it}^2 \;=\; \kappa_{\mathrm{tot}}\,\bar\pi_t^2 \;+\; \kappa_{\mathrm{tot}}\sum_i w_i(\pi_{it}-\bar\pi_t)^2,
+    \qquad w_i \equiv \kappa_i/\kappa_{\mathrm{tot}},\ \ \bar\pi_t\equiv\sum_i w_i\pi_{it}
+    \label{eq:between_within}
+\end{equation}
+an identity ($E[X^2]=(E[X])^2+\mathrm{Var}(X)$ applied with $\kappa$-weights), true state-by-state,
+not just on average. In the toy example:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+ & Value ($\times10^{-3}$, raw, no $\tfrac12$) & Share of Term 2 \\
+\midrule
+Between ($\kappa_{\mathrm{tot}}\bar\pi^2$) & 2.801 & 88.7\% \\
+Within (dispersion around $\bar\pi$) & 0.358 & 11.3\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Most of the ``within-sector'' term is, in this toy, actually the level of a $\kappa$-weighted average
+inflation rate moving, not sectors diverging from one another. \textbf{Caveat:} $\bar\pi_t$ here uses
+the \emph{welfare} weights $\kappa_i$ (Domar $\times$ rigidity), not the consumption weights
+$\bm\beta^H$ that define the true CPI — so $\bar\pi_t$ is a welfare-relevant proxy, not literally
+$\pi_t^C$. The two coincide only if $\kappa_i\propto\beta_i^H$, which need not hold since $\kappa_i$
+also carries the rigidity ratio $(1-\hat\delta_i)/\hat\delta_i$.
+
+\textbf{Regime decomposition} (toggling how much of the FX shock passes through, as a stand-in for
+Float/Managed/Peg):
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Regime & Output-gap & Within-sector & Cross-sector & Total \\
+\midrule
+Float (full pass-through) & 0.033 & 1.580 & 0.0038 & 1.616 \\
+Managed (50\% offset) & 0.027 & 1.530 & 0.0036 & 1.560 \\
+Peg (0\% pass-through) & 0.025 & 1.520 & 0.0036 & 1.545 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{insight}
+\textbf{Why this toy says ``Peg is best,'' while the real project says ``Peg is worst.''} In this
+toy, killing FX pass-through only ever \emph{removes} a cost channel — there's no offsetting cost to
+pegging. The real model's Peg is dominated instead because pegging doesn't eliminate the
+risk-premium/UIP shock, it just closes off the one instrument (the exchange rate) that could
+otherwise absorb it, so that shock's variance gets pushed into $\pi_i$ and $y$ instead. This toy
+doesn't have a risk-premium shock at all, which is exactly why it can't reproduce that result — a
+useful illustration that the shock decomposition step is not optional set-dressing, it's what
+determines the regime ranking. See \S\ref{sec:regime}.
+\end{insight}
+
+%==============================================================
+\section{Scaling to the Real Chile Model}
+\label{sec:real}
+%==============================================================
+
+The real pipeline is structurally identical to the toy above; only the loadings $L_{i,k}$ come from
+solving the full linearized DSGE in Dynare (via the QZ decomposition, \texttt{pol\_fct\_m.m}-style)
+instead of being assigned by hand, and there is a genuine third sector plus a fourth shock type
+(monetary policy).
+
+\subsection{Where each term is computed}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Term & File & Object \\
+\midrule
+Output-gap + within-sector & \texttt{welf.m} / Dynare \texttt{oo\_.var} & \texttt{50*((gamma+phi)*y\^{}2 + pi'*D1*pi)} \\
+Cross-sector & \texttt{code/cross\_sector\_welfare.py} & $\Phi_C + \sum_s\lambda_s\Phi_s$, closed form (Remark, \S6) \\
+Shock decomposition & \texttt{results/variance\_decomposition.csv} & Dynare's native \texttt{oo\_.variance\_decomposition} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{cross\_sector\_welfare.py} reads the full $3\times3$ unconditional covariance matrix of the
+markup gap $\bm\mu_t$ (\texttt{results/markupgap\_chile\_covar.csv}, from reporting variables
+\texttt{MARKUPGAP1/2/3} added to the \texttt{.mod} files) rather than just each sector's own
+variance — necessary because $\Phi_C,\Phi_s$ are quadratic forms in the \emph{full} covariance
+matrix, exactly as in the toy's $\mathrm{Cov}(\mu_1,\mu_2)$ step.
+
+\subsection{Headline numbers (term decomposition, real Chile calibration)}
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+($\times10^{-4}$) & Float & Managed & Peg \\
+\midrule
+Output-gap + within-sector & 25.47 & 10.17 & 102.05 \\
+Cross-sector (added 2026-07-23) & 0.84 & 0.86 & 4.57 \\
+\midrule
+\textbf{Total} & \textbf{26.31} & \textbf{11.03} & \textbf{106.62} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Same qualitative pattern as the toy: cross-sector is small relative to within-sector (3--8\% here vs.
+0.2\% in the toy — the real model's outer CES nest, $\eta=1.5\neq1$, makes it somewhat larger than
+the toy's all-Cobb-Douglas case, but still second-order).
+
+\subsection{Shock decomposition (real model)}
+\label{sec:regime}
+\texttt{results/variance\_decomposition.csv} is Dynare's own forecast-error variance decomposition,
+computed the same additive way as \S2's Step 4 (independence of shocks). Reading it for
+$\mathtt{y\_gap}$: under Float, the risk-premium shock \texttt{eps\_rp} explains 68.9\% of output-gap
+variance; under Peg, 85.8\%; under Managed, 22.2\%. This is the real-model analogue of the toy's
+Step 4 table — and it is precisely because \texttt{eps\_rp} dominates so heavily under Peg (not
+eliminated by pegging, since UIP/risk-premium is a financial-account object, not an exchange-rate
+object) that Peg ends up \emph{worst}, the opposite of the toy's naive "less FX exposure is always
+better" intuition. Confirmed directly in the risk-premium-volatility sweep
+(\texttt{code/sweep\_risk\_premium\_chile.m}): switching \texttt{eps\_rp} off entirely makes Peg
+\emph{roughly tied with Float}, fractionally better — see \texttt{results\_summary.md}.
+
+\subsection{Sector decomposition (real model)}
+Mirrors the toy's Step 3 exactly: Domar weight $\lambda_{D,i}$ (size) times a rigidity multiplier
+$(1-\hat\delta_i)/\hat\delta_i$ (stickiness) gives $\kappa_i$; combined with each sector's simulated
+$\mathrm{Var}(\pi_i)$, Services (the most Domar-weighted, stickiest sector in the Chile calibration)
+absorbs the largest share of loss in every regime — the ``Why Services?'' decomposition in
+\texttt{code/services\_mechanism\_decomposition.py}, full writeup in \texttt{results\_summary.md}.
+
+\begin{keyresult}
+The four decompositions — term, sector, shock, regime — are not four different techniques. They are
+the \emph{same} additive-variance identity (Eq.~\ref{eq:linear}) sliced along different axes: sum
+over shocks $k$ (term/sector decomposition, holding the object fixed) or sum over objects
+(shock decomposition, holding the shock fixed), or recompute the whole object with one loading
+zeroed out (regime decomposition). Once you have the loadings $L_{i,k}$ and shock variances
+$\sigma_k^2$, every one of these tables is a different reduction of the same matrix
+$L_{i,k}^2\sigma_k^2$ — nothing more is needed.
+\end{keyresult}
+
+\end{document}
