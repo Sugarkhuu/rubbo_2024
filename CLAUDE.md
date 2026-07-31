@@ -1,8 +1,16 @@
 # Project: Small Open Economy Extension of Rubbo (2024)
 
 Extending Rubbo (2024) "Networks, Phillips Curves, and Monetary Policy" to a small open economy
-with FX policy analysis. Presentation given **July 22, 2026**; work is now in the
-**post-presentation revision** phase.
+with FX policy analysis. Presentation given **July 22, 2026**. Post-presentation revision phase
+(Christian/Benny/Adam feedback) is done, followed by a full robustness campaign (2026-07-30/31,
+~350 additional Dynare solves). A full dissertation-style paper draft now exists:
+**`dissertation.tex` / `dissertation.pdf`** (47 pages — intro, literature review, model, theory
+with proofs, calibration, results, full robustness section, discussion, appendix). It is a
+first complete draft, not a referee-ready submission — see its own §8.2 ("Limitations and
+Directions for Future Work") for the concrete remaining gaps (genuinely multi-sector calibration,
+estimated risk-premium process, empirical validation section). **Read `dissertation.tex` first**
+for a from-scratch orientation — it's the single most complete, current summary of the whole
+project, more so than any individual `docs_notes/` file.
 
 ## Where things live
 Detailed project notes have been split out of this file into `docs_notes/` — read the relevant one
@@ -21,13 +29,21 @@ before starting work rather than relying on memory of past sessions:
   remain in `rubbo_proofs_and_extension.tex`.
 - **[docs_notes/calibration.md](docs_notes/calibration.md)** — data sources, key parameters,
   toolchain invocations, sweep inventory.
-- **[docs_notes/results_summary.md](docs_notes/results_summary.md)** — headline welfare numbers and
-  the full post-presentation-revision findings (Christian/Benny/Adam feedback).
+- **[docs_notes/results_summary.md](docs_notes/results_summary.md)** — headline welfare numbers,
+  the post-presentation-revision findings, the three follow-up exercises, and the full robustness
+  campaign (psi/rigidity × network density, alt topologies, regime-rule variants). This is the
+  primary source `dissertation.tex`'s results/robustness sections were written from.
 - **[docs_notes/slides_outline.md](docs_notes/slides_outline.md)** — deck structure/slide order and
   style constraints to respect when editing `soe_fx_presentation.tex`.
 - `speech_feedback_20260722.txt` — raw feedback notes from Christian/Benny/Adam (source of the
-  post-presentation revision work).
+  post-presentation revision work), plus a later follow-up reply from Christian appended to it.
 - `speech_notes.md` — full talk script + anticipated Q&A, kept in sync with the deck.
+
+## Known gap: the deck is stale relative to the paper
+`soe_fx_presentation.tex` does **not** yet reflect the full robustness campaign or
+`dissertation.tex` — that was a deliberate scope decision when the campaign was run (paper/
+robustness work, not deck content, unless asked). If a next session is asked to update the
+presentation, treat it as a fresh, not-yet-started task.
 
 ## GitHub
 https://github.com/Sugarkhuu/rubbo_2024
