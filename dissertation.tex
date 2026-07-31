@@ -1,0 +1,1610 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage[english]{babel}
+\onehalfspacing
+\geometry{margin=1.2in}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\title{\Large Networks, Phillips Curves, and Exchange Rate Policy: \\[4pt]
+A Small Open Economy Extension of Rubbo (2024)}
+\author{Sugarkhuu \thanks{I thank Christian, Benny, and Adam for extensive comments on an earlier
+presentation of this material, which shaped much of the robustness analysis in Sections
+\ref{sec:results} and \ref{sec:robustness}. All errors are my own.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent I extend Rubbo's (2024) closed-economy theory of Phillips curves in production networks
+to a small open economy (SOE) with an exchange-rate channel, and ask whether her ``divine
+coincidence'' result --- the existence of a single inflation index whose targeting simultaneously
+closes the output gap --- survives when the exchange rate becomes a second, independent cost-push
+channel alongside sectoral productivity. I show theoretically that it generically does not: the
+divine-coincidence index is the unique left null vector of a cost-push matrix that must additionally
+annihilate the exchange-rate pass-through vector, two conditions that a single vector can jointly
+satisfy only in the knife-edge case where pass-through is proportional to labor intensity. I take the
+model to three real national input--output calibrations (Chile, South Korea, Czechia) and compare
+float, peg, and managed-float exchange-rate regimes. Managed float dominates in every calibration;
+peg is the worst regime, and its loss is driven overwhelmingly (58--83\% depending on the calibration
+of the debt-elastic risk-premium coefficient) by a purely financial risk-premium/uncovered-interest-parity
+shock rather than by the terms-of-trade channel emphasized in the classical Mundell--Fleming and
+Gal\'i--Monacelli literature. An extensive robustness campaign --- roughly 350 additional model
+solves spanning network density, network topology, uniform and sector-specific price rigidity, the
+interaction between the risk-premium shock and its closing-device elasticity, and alternative
+policy-rule designs --- confirms the ranking survives essentially everywhere, while also uncovering
+that (i) a sufficiently aggressive plain inflation-targeting rule can rival the managed float's
+performance without any explicit exchange-rate term, and (ii) once policy is aggressive, targeting
+domestic (PPI) inflation outperforms targeting the theoretically ``correct'' divine-coincidence
+index. I discuss the paper's relation to the contemporaneous and independent Qiu, Wang, Xu and
+Zanetti (2026) result, and lay out the concrete steps --- a fully disaggregated multi-sector
+calibration and an estimated (rather than assumed) risk-premium process chief among them --- required
+before the quantitative ranking can be treated as more than suggestive.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%======================================================================
+\section{Introduction}
+%======================================================================
+
+Modern economies are not single-good economies. Firms buy inputs from other firms, and the resulting
+input--output (IO) network shapes how shocks propagate and how monetary policy should be conducted.
+Rubbo (2024) formalizes this insight for a closed economy: in an $N$-sector New Keynesian model with
+an arbitrary IO matrix and Calvo price-setting frequencies that differ across sectors, there exists a
+unique inflation index --- weighted by each sector's Domar (total sales) weight and by its price
+stickiness --- whose targeting delivers the ``divine coincidence'': zero cost-push inflation and a
+simultaneously closed output gap. This is a striking generalization of the one-sector New Keynesian
+benchmark, in which any targeting rule that stabilizes marginal cost also stabilizes the output gap.
+Rubbo's result says that this coincidence survives the introduction of arbitrarily rich production
+networks and heterogeneous price stickiness, provided the central bank targets the \emph{right}
+index rather than a naive aggregate like CPI inflation.
+
+This paper asks whether the divine coincidence survives a second, empirically central feature of
+essentially every economy outside the largest few: openness. A small open economy (SOE) imports
+intermediate inputs, its firms' marginal costs depend on the nominal exchange rate, and its central
+bank must additionally decide how to respond to exchange-rate movements --- float, peg, or some
+managed combination of the two. I show that adding this single, minimal ingredient --- an import
+cost share in every sector's marginal cost, priced at the law-of-one-price exchange rate --- breaks
+the divine coincidence generically. The mechanism is transparent: the exchange rate is a \emph{second}
+cost-push channel, exactly analogous to the sectoral productivity shocks that generate the first one.
+Rubbo's unique index is pinned down by requiring it to annihilate the productivity cost-push matrix;
+requiring it to \emph{also} annihilate the exchange-rate pass-through vector is a second, generically
+independent linear restriction on the same weighting vector, which a vector of finite dimension can
+satisfy only in a non-generic, measure-zero case. Divine coincidence in the open economy is a
+knife-edge property, not a generic one.
+
+This theoretical result immediately raises a quantitative question with obvious policy relevance:
+if no simple inflation index can costlessly close the output gap under a float, how much welfare is
+actually at stake across the natural menu of exchange-rate regimes --- float, hard peg, and managed
+float --- and through which shocks? I calibrate the model to real, disaggregated national
+input--output data for three small open economies (Chile, South Korea, and Czechia) and solve it in
+Dynare under each regime. The headline finding is that a managed float --- a conventional Taylor rule
+augmented with a modest, positive response to the exchange rate --- dominates both corners in every
+calibration, and that a hard peg is by a wide margin the worst regime. This ranking replicates the
+classical Mundell--Fleming/Gal\'i-Monacelli conclusion that flexible exchange rates are stabilizing,
+but the \emph{mechanism} is different and, I would argue, more interesting: decomposing each regime's
+welfare loss by shock shows that the peg's dominance is driven overwhelmingly by a purely financial
+shock --- a debt-elastic risk premium on the economy's net foreign asset position, in the tradition
+of Schmitt-Grohé and Uribe's (2003) closing device --- and not by the terms-of-trade channel that is
+the star of the classical open-economy literature. This is an uncomfortable result in one specific
+sense that I confront directly rather than hide: since the risk-premium shock's standard deviation is
+a modeling choice (set equal to every other shock's, for want of an external target), the entire
+``peg is dominated'' headline finding is only as solid as that one calibration choice. I therefore
+subject it, and the closely related debt-elasticity coefficient governing how strongly the risk
+premium reacts to the net foreign asset position, to an extensive battery of robustness checks ---
+described below --- rather than treating the headline number as settled.
+
+The theoretical contribution of this paper sits between two literatures that, until very recently,
+had not been brought together. The first is the closed-economy production-network literature
+(Rubbo, 2024; La'O and Tahbaz-Salehi, 2022; Pasten, Schoenle and Weber, 2020; Baqaee and Farhi, 2019,
+2020), which shows that IO linkages and heterogeneous price stickiness matter enormously for how
+monetary policy should be conducted, but is silent on the exchange rate because it studies closed
+economies. The second is the open-economy New Keynesian literature descending from Gal\'i and
+Monacelli (2005), Obstfeld and Rogoff (2000), and Corsetti, Dedola and Leduc (2010), which analyzes
+exchange-rate regimes and optimal monetary policy in richly specified open economies, but --- with
+rare exceptions --- collapses the entire domestic supply side to a single sector, so that it cannot
+speak to which \emph{sectors} bear the cost of a given regime or how network structure shapes the
+regime ranking. A single contemporaneous paper, Qiu, Wang, Xu and Zanetti (2026), independently
+derives an open-economy generalization of Rubbo's index and reaches the same qualitative
+divine-coincidence-breakdown conclusion through a structurally different route (a static
+Gal\'i--Monacelli trade block with expenditure-switching and profit channels, rather than this
+paper's dynamic import-cost-share pass-through vector). Their model, notably, has no financial
+account, no uncovered interest parity, and no exchange-rate-\emph{regime} choice --- their own stated
+top-priority extension is exactly the machinery (debt-elastic risk premium, near-unit-root net
+foreign assets) that this paper builds around, and that turns out to drive the entire quantitative
+result. Section \ref{sec:litreview} discusses this relationship, and the surrounding literature, in
+detail.
+
+Given how much of the headline result rests on two specific, judgment-call calibration parameters
+(the risk-premium shock's standard deviation and its debt-elasticity coefficient), a substantial part
+of this paper --- comprising roughly 350 additional Dynare solves beyond the three headline
+calibrations --- is devoted to systematically stress-testing it. I vary: the density and the
+\emph{shape} of the domestic production network (a stylized triangular network scaled continuously
+from zero to double density, plus two alternative topologies --- a hub-and-spoke network with
+Manufacturing as the central node, and a one-directional supply chain); uniform and Services-specific
+price rigidity; the debt-elasticity coefficient of the risk-premium process, on its own, jointly with
+network density, and jointly with the risk-premium shock's own volatility; and the exact design of the
+monetary policy rule, including strict domestic- and consumer-price-inflation targeting and a
+coarse grid search over the Taylor rule's own coefficients. The central qualitative conclusion ---
+Managed float dominates Float, which dominates Peg, in every single one of these variations --- is
+remarkably stable. Two secondary findings from this exercise are, I think, worth flagging on their own
+terms: first, that a sufficiently aggressive plain inflation-targeting rule, with no explicit
+exchange-rate response at all, can rival the managed float's performance; and second, that once
+policy is that aggressive, targeting domestic (producer) price inflation outperforms targeting the
+theoretically privileged divine-coincidence index, reversing the ranking found under more moderate
+policy coefficients. Both nuance, without overturning, the paper's central welfare ranking, and both
+are flagged explicitly as preliminary rather than settled, since neither has yet been checked against
+a fully re-optimized managed-float rule at the same level of policy aggressiveness.
+
+The remainder of the paper proceeds as follows. Section \ref{sec:litreview} reviews the related
+literature in three strands: closed-economy production networks, open-economy monetary policy, and
+the empirical exchange-rate pass-through literature that disciplines the model's key structural
+parameters. Section \ref{sec:model} lays out the small open economy model. Section
+\ref{sec:theory} derives the modified sectoral Phillips curve, states and proves the divine-coincidence
+breakdown result, and derives the welfare function used throughout the quantitative analysis.
+Section \ref{sec:data} describes the data and calibration strategy for the three country
+calibrations. Section \ref{sec:results} presents the headline quantitative results: the welfare
+ranking, its shock decomposition, a mechanism analysis of why the stickiest, least import-exposed
+sector (``Services'') nonetheless bears the largest share of the welfare cost, and cross-country
+robustness. Section \ref{sec:robustness} presents the full robustness campaign. Section
+\ref{sec:discussion} discusses policy implications and the paper's remaining limitations. Section
+\ref{sec:conclusion} concludes. Appendix \ref{app:proofs} collects the detailed, step-by-step proofs
+of all lemmas and propositions stated in the main text.
+
+%======================================================================
+\section{Literature Review}
+\label{sec:litreview}
+%======================================================================
+
+This paper sits at the intersection of three literatures: production networks and monetary policy in
+closed economies, exchange-rate policy and the divine coincidence in (single-sector) open economies,
+and the empirical literature on how production networks shape international pass-through. I discuss
+each in turn, before turning to the single closest paper in the literature.
+
+\subsection{Production Networks and Monetary Policy in Closed Economies}
+
+Rubbo (2024) is the direct theoretical parent of this paper. In an $N$-sector economy with Calvo
+price-setting, heterogeneous sectoral stickiness $\hat\delta_i$, and an arbitrary IO matrix $\Omega$,
+she shows three results this paper builds on directly. First, natural (flexible-price) output equals
+Domar-weighted total factor productivity (a version of Hulten's, 1978, theorem applied to the social
+planner's problem). Second, sectoral inflation rates satisfy a vector Phillips curve
+$\bm\pi_t = \rho(I-\mathcal V)\mathbb E\bm\pi_{t+1} + \mathcal B(\gamma+\varphi)\tilde y_t -
+\mathcal V\bm\chi_t$, in which the cost-push matrix $\mathcal V$ has rows that sum to zero --- only
+\emph{relative}, not uniform, productivity shocks generate cost-push inflation --- and is built from
+the rigidity-adjusted Leontief inverse $(I-\Omega\Delta)^{-1}$, so that stickier upstream sectors
+dampen the propagation of shocks by absorbing them into markups rather than passing them through as
+price changes. Third, and most importantly for this paper, there is a unique inflation index
+$\pi_t^{DC}=\sum_i w_i^{DC}\pi_{it}$, with weights proportional to $\lambda_i(1-\hat\delta_i)/\hat\delta_i$
+(Domar weight times a stickiness multiplier), whose own law of motion has no cost-push term at all:
+targeting it in a standard Taylor-type rule simultaneously delivers a zero output gap. Rubbo further
+shows that a naive CPI-targeting rule, which ignores this network structure, can generate welfare
+losses of 2.9--3.8\% of GDP relative to the divine-coincidence optimum even in the closed economy ---
+motivation for taking network structure seriously as a first-order input into monetary policy design,
+not a second-order refinement.
+
+La'O and Tahbaz-Salehi (2022) reach a closely related conclusion from a different direction: using a
+non-parametric, sufficient-statistics approach (rather than Rubbo's log-linear approximation), they
+show that optimal monetary policy in a production-network economy depends only on sectoral sales
+shares, demand elasticities, and the degree of strategic complementarity in pricing, and that the
+welfare-relevant inflation target weights sectors by Domar weight and inverse markup sensitivity ---
+not by consumption share, as a naive CPI target would. Pasten, Schoenle and Weber (2020) provide
+the quantitative counterpart, calibrating a multi-sector Calvo model to U.S. input--output and Calvo
+frequency data (from Nakamura and Steinsson, 2008) and showing that network linkages amplify the real
+effects of a monetary policy shock by a factor of roughly two to three relative to an equivalent
+one-sector economy, with sticky, high-Domar-weight (frequently downstream, service-sector-like)
+industries accounting for a disproportionate share of the amplification --- a pattern this paper's
+own ``Services'' mechanism, discussed in Section \ref{sec:results}, closely parallels in the open
+economy.
+
+Underlying all of the above is the foundational network-macro literature: Hulten (1978) and Acemoglu,
+Carvalho, Ozdaglar and Tahbaz-Salehi (2012) establish that idiosyncratic sectoral shocks need not
+average out at the standard $1/\sqrt N$ rate once a fat-tailed Domar-weight distribution is present,
+so that individually small shocks to central (``hub'') sectors can generate aggregate fluctuations.
+Baqaee and Farhi (2019, 2020) generalize Hulten's first-order result to second order, showing that
+the exact aggregate effect of sectoral distortions requires knowing not just Domar weights but the
+full pattern of substitution elasticities across sectors; the cross-sector welfare terms
+$\Phi_C,\Phi_s$ that appear in Rubbo's Proposition 3, and in this paper's welfare function
+(Section \ref{sec:theory}), are precisely these Baqaee--Farhi operators. Bigio and La'O (2020) apply
+the same network-aggregation logic to arbitrary wedges (taxes, markups, financial frictions) rather
+than pure productivity shocks --- the natural lens through which to view this paper's exchange-rate
+cost-push term, which is, formally, a heterogeneous wedge on each sector's imported-input cost.
+
+\subsection{Exchange-Rate Policy and the Divine Coincidence in Open Economies}
+
+The benchmark open-economy New Keynesian model is Gal\'i and Monacelli (2005): a small open economy
+facing a large foreign economy, with households consuming a CES aggregate of home and foreign goods,
+firms using only labor (no intermediate inputs, let alone a production network), complete
+international financial markets, and the law of one price. In this environment, targeting domestic
+(PPI) inflation delivers the one-sector divine coincidence exactly as in a closed economy, with the
+flexible exchange rate acting as an automatic stabilizer of the terms of trade; targeting CPI
+inflation instead is strictly suboptimal because it forces the central bank to partially resist
+exchange-rate movements that would otherwise be efficient; and a hard peg is welfare-inferior because
+it surrenders monetary independence (the Mundell trilemma) in the face of domestic productivity
+shocks. Corsetti, Dedola and Leduc (2010) survey the conditions under which this benchmark divine
+coincidence survives richer environments --- incomplete markets, pricing-to-market, local-currency
+pricing --- and under which it breaks down; the production-network channel this paper introduces is
+absent from every model they survey.
+
+A second relevant strand concerns the financial side of the small open economy. Schmitt-Grohé and
+Uribe's (2003) debt-elastic interest-rate premium is the standard closing device for models with
+incomplete asset markets and a stationary net-foreign-asset position; this paper adopts it directly,
+and much of the robustness analysis in Section \ref{sec:robustness} is devoted to stress-testing the
+model's sensitivity to its calibration. Fanelli and Straub (2021) provide the theoretical
+underpinning for treating foreign-exchange intervention as a genuine second policy instrument
+alongside the interest rate, showing formally that a central bank facing a UIP risk premium should
+lean against the component of exchange-rate movements that generates inefficient real effects while
+allowing the fundamentals-driven component to pass through --- exactly the logic behind this paper's
+``managed float'' regime, which augments a standard Taylor rule with a response to the exchange rate.
+Gopinath and Itskhoki's (2022) dominant-currency-paradigm literature is a natural extension this paper
+does not pursue: the baseline model assumes producer-currency pricing throughout, and allowing a
+fraction of imports to be invoiced in a third (dominant) currency would alter the exchange-rate
+pass-through vector in ways left for future work. Schmitt-Grohé and Uribe (2016) show that adding
+downward nominal wage rigidity to a pegged small open economy generates large, persistent involuntary
+unemployment following external shocks --- since this paper's model has fully flexible wages, this
+suggests the peg's welfare cost documented here is, if anything, a conservative lower bound.
+
+\subsection{Production Networks and International Pass-Through}
+
+A largely empirical literature establishes that production-network linkages are quantitatively
+important for how prices and shocks transmit across borders, disciplining this paper's calibration of
+the exchange-rate pass-through vector $\Gamma$. Auer, Levchenko and Sauré (2019) show, using
+international input--output data for forty countries, that a one percent increase in a trading
+partner's producer price inflation, weighted by bilateral IO exposure, raises domestic producer
+price inflation by 0.15--0.25 percent above and beyond standard trade-weighted exchange-rate effects,
+with upstream (supplier-side) linkages mattering more than downstream ones --- direct motivation for
+this paper's $\Gamma\Delta e_t$ cost-push term, and for using disaggregated IO data rather than
+aggregate trade shares to calibrate it. Amiti, Itskhoki and Konings (2014) show at the firm level
+that import intensity is the key determinant of incomplete exchange-rate pass-through to export
+prices (a natural hedge: depreciation raises both a firm's foreign revenue and its imported-input
+costs), consistent with this paper's assumption that $\Gamma_i$ is proportional to sector $i$'s
+import cost share, amplified through the network. Bems and Johnson (2017) develop
+``value-added exchange rates,'' showing that standard trade-weighted real effective exchange rates
+are systematically biased for economies deeply embedded in global value chains --- the empirical
+counterpart of this paper's insight that a sector's \emph{effective} exposure to the exchange rate
+depends on the entire chain of its suppliers' import intensities, not just its own. Nakamura and
+Steinsson (2008) and Carvalho (2006) document the extensive cross-sector heterogeneity in
+price-adjustment frequency that gives Rubbo's, and this paper's, $\hat\delta_i$-weighted objects their
+empirical bite; without this heterogeneity, the divine-coincidence index would collapse to a simple
+Domar-weighted (or, under Cobb--Douglas consumption, consumption-weighted) average and the
+distinction this paper studies would be moot.
+
+\subsection{The Closest Paper: Qiu, Wang, Xu and Zanetti (2026)}
+
+The single closest paper in the literature is Qiu, Wang, Xu and Zanetti (2026, \emph{Journal of
+Monetary Economics}), an independent and contemporaneous extension of Rubbo's framework to the open
+economy. Their model combines Gal\'i--Monacelli's one-sector open-economy trade block with Rubbo's
+multi-sector production network, calibrated to the World Input-Output Database (43 countries by 56
+sectors). They derive an open-economy generalization of the divine-coincidence index in which the
+output-gap weight on each sector decomposes into a CPI channel, an expenditure-switching channel, and
+a profit channel (the latter two specific to the open economy), and show --- as this paper does,
+through a structurally different mechanism --- that full divine coincidence (zero welfare loss, not
+merely a zero output gap) fails even after their generalized index is targeted, because the within-
+sector, across-sector, and cross-border misallocation terms are not simultaneously zeroed by
+output-gap targeting alone. Calibrated to WIOD, they show output-gap targeting is close to the
+constrained-optimal policy and dominates naive PPI or CPI targeting by a margin that rises with an
+economy's openness.
+
+Three features distinguish this paper from theirs, and explain why their qualitative conclusion and
+this paper's are corroborating rather than redundant. First, their model is static (one period, no
+dynamics or persistence), while this paper's central mechanism --- the interaction between a
+persistent, near-unit-root net-foreign-asset process and a debt-elastic risk premium --- is
+inherently dynamic and could not be represented in their framework. Second, their model assumes
+balanced trade with no uncovered interest parity, no net foreign assets, and no financial account at
+all; the exchange rate is pinned down period-by-period by a static trade-balance condition. Third,
+and consequently, their model has no exchange-rate-\emph{regime} choice: money supply targets an
+inflation index and the exchange rate floats implicitly throughout, so a peg-versus-float-versus-
+managed-float welfare comparison, this paper's central quantitative exercise, is outside their scope.
+Tellingly, the authors themselves name ``relax[ing] the assumption of financial autarky'' as their
+first, top-priority item for future research --- precisely the piece of machinery this paper is built
+around. This paper's contribution, then, is best read as picking up exactly where Qiu, Wang, Xu and
+Zanetti's own stated research agenda leaves off, and the finding that the risk-premium/UIP channel
+--- not the terms-of-trade or expenditure-switching channels their model emphasizes --- turns out to
+dominate the exchange-rate-regime welfare ranking once that machinery is added.
+
+A related, purely empirical paper is Silva (2024), who applies a production-network SOE framework to
+Chilean and UK data to explain the 2021--2022 inflation surge via a CPI-elasticity decomposition
+distinguishing direct from network-inherited import and export exposure. Silva's paper is positive
+rather than normative --- it does not compare monetary or exchange-rate regimes --- but its Chilean
+application provides a useful external check on the plausibility of this paper's own Chile-calibrated
+pass-through magnitudes, and the general finding that indirect (network-inherited) exposure matters
+quantitatively for inflation dynamics is the same mechanism this paper's ``Why Services?'' analysis
+(Section \ref{sec:results}) documents in the welfare, rather than the positive-inflation, domain.
+
+%======================================================================
+\section{Model}
+\label{sec:model}
+%======================================================================
+
+The model extends Rubbo's (2024) closed-economy $N$-sector New Keynesian production-network economy
+to a small open economy with an imported-input sector, incomplete international financial markets,
+and a menu of exchange-rate policy regimes. I present the environment in full; the log-linearization
+and all formal results are proved in Appendix \ref{app:proofs}.
+
+\subsection{Households}
+
+A representative household maximizes
+\begin{equation}
+    \mathbb E_0\sum_{t=0}^\infty\rho^t\left[\frac{C_t^{1-\gamma}}{1-\gamma}-\frac{L_t^{1+\varphi}}{1+\varphi}\right]
+\end{equation}
+subject to the flow budget constraint
+\begin{equation}
+    P_t^C C_t + B_{t+1} + \mathcal E_t B_{t+1}^* \le W_tL_t + \Pi_t - T_t + (1+i_t)B_t
+    + \mathcal E_t(1+i_t^*)\,\mathrm{RP}_t\,B_t^*
+\end{equation}
+where $C_t$ is a consumption aggregate of domestic and foreign varieties, $B_t$ is a domestic bond
+(in zero net supply in equilibrium, but included explicitly rather than assumed away),
+$B_t^*$ is the economy's net foreign asset position (in units of foreign currency), $\mathcal E_t$ is
+the nominal exchange rate (domestic currency per unit of foreign currency, so that an increase is a
+depreciation), and $\mathrm{RP}_t$ is a time-varying risk-premium wedge on foreign-currency returns,
+discussed below. Consumption $C_t$ is a CES aggregate of a domestic consumption bundle $C_t^H$ (itself
+Cobb--Douglas across the $N$ domestic sectors with shares $\bm\beta^H$) and a foreign consumption
+composite $C_t^F$ (a single Armington import aggregate, not sector-indexed),
+\begin{equation}
+    C_t = \left[\omega^{1/\eta}(C_t^H)^{(\eta-1)/\eta} + (1-\omega)^{1/\eta}(C_t^F)^{(\eta-1)/\eta}\right]^{\eta/(\eta-1)}
+\end{equation}
+with $\eta$ the (CES) elasticity of substitution between home and foreign consumption bundles and
+$\omega$ the home bias parameter. The household's intratemporal and intertemporal optimality
+conditions are the standard labor-supply condition $W_t/P_t^C = C_t^\gamma L_t^\varphi$ and Euler
+equation, exactly as in the closed economy; the presence of the foreign bond additionally delivers an
+uncovered interest parity (UIP) condition, given below.
+
+\subsection{Firms, Technology, and the Production Network}
+
+There are $N$ domestic industries (in the quantitative model, $N=3$: Resource, Manufacturing, and
+Services), each populated by a unit mass of monopolistically competitive firms. A firm $f$ in sector
+$i$ produces using labor, domestic intermediate inputs from every sector $j$, and imported inputs,
+\begin{equation}
+    Y_{ift} = A_{it}\,L_{ift}^{\alpha_i}\prod_{j=1}^N X_{ijft}^{\Omega^H_{ij}}\,M_{ift}^{\Omega^F_i},
+    \qquad \alpha_i + \sum_j\Omega^H_{ij} + \Omega^F_i = 1,
+\end{equation}
+Cobb--Douglas across all of labor, the $N$ domestic inputs, and the imported-input composite $M_{ift}$
+(priced, under the law of one price and producer-currency pricing, at $P_t^F = \mathcal E_t P_t^*$).
+$\Omega^H$ is the $N\times N$ domestic input--output matrix exactly as in Rubbo (2024); $\bm\Omega^F$
+is the new object this paper introduces, the vector of sector-level imported-input cost shares.
+Within-sector demand and the Calvo price-setting mechanism are unchanged from the closed economy: a
+fraction $\delta_i$ of firms in sector $i$ reset their price each period, generating, after
+log-linearization, an effective Calvo parameter $\hat\delta_i \equiv
+\delta_i(1-\rho(1-\delta_i))/(1-\rho\delta_i(1-\delta_i))$ exactly as in Rubbo (2024). Cost
+minimization gives sector $i$'s log-linearized marginal cost as
+\begin{equation}
+    mc_{it} = \alpha_i w_t + \sum_j\Omega^H_{ij}\,p_{jt} + \Omega^F_i\,(p_t^* + e_t) - \log A_{it}
+    \label{eq:mc_main}
+\end{equation}
+the only modification to Rubbo's marginal cost equation being the new term $\Omega^F_i(p_t^*+e_t)$:
+the nominal exchange rate $e_t\equiv\log\mathcal E_t$ enters every sector's marginal cost in
+proportion to its imported-input cost share, exactly as sectoral productivity does, but with an
+opposite sign and through a different cost share vector ($\bm\Omega^F$ rather than $-\log\mathbf A_t$).
+
+\subsection{Foreign Sector, UIP, and the Risk Premium}
+
+The economy is small: foreign variables ($P_t^*$, foreign demand $D_t^*$, the foreign interest rate
+$i_t^*$) are exogenous. Uncovered interest parity, augmented with a debt-elastic risk premium in the
+spirit of Schmitt-Grohé and Uribe (2003), reads
+\begin{equation}
+    (1+i_t) = (1+i_t^*)\,\Big(1-\Psi\big(B_t^*-\bar B^*\big)\Big)\,\mathrm{RP}_t\,\frac{\mathbb E_t\mathcal E_{t+1}}{\mathcal E_t}
+    \label{eq:uip_main}
+\end{equation}
+where $\Psi>0$ is the debt-elasticity coefficient (governing how strongly the domestic interest rate
+must compensate foreign lenders as the economy's net foreign asset position falls below its steady-
+state target $\bar B^*$, the standard device restoring stationarity to an otherwise near-random-walk
+net foreign asset position) and $\mathrm{RP}_t$ is an exogenous, stochastic risk-premium shock,
+$\log\mathrm{RP}_t = \rho_{RP}\log\mathrm{RP}_{t-1}+\varepsilon_t^{RP}$. This risk-premium shock plays
+the central quantitative role in the paper's results and is subjected to extensive robustness analysis
+in Section \ref{sec:robustness}. The economy's net foreign asset position evolves according to the
+balance of payments,
+\begin{equation}
+    B_t^* = \frac{1+i_{t-1}^*}{\Pi_t^*}\,\mathrm{RP}_{t-1}\,B_{t-1}^* + \frac{\mathrm{TB}_t}{\mathcal E_tP_t^*},
+\end{equation}
+where $\mathrm{TB}_t$ is the nominal trade balance (exports minus imports). Exports are driven by
+foreign demand and the relative price of domestic to foreign goods, $EX_t = \kappa_{EX}D_t^*
+(P_t^H/P_t^{FH})^{-\theta^*}$, with $\theta^*$ the (CES) elasticity of foreign demand for domestic
+goods.
+
+\subsection{Monetary Policy Regimes}
+
+I compare three monetary policy regimes, the paper's central object of comparison. Under \textbf{float},
+the central bank follows a conventional Taylor rule responding to the divine-coincidence index and the
+output gap,
+\begin{equation}
+    \log(I_t/I^*) = \phi_\pi \pi_t^{DC} + \phi_y\,\tilde y_t, \tag{Float}
+\end{equation}
+with no direct response to the exchange rate. Under \textbf{peg}, the exchange rate is fixed,
+$S_t\equiv1$, and the interest rate becomes the residual variable pinned down by the UIP equation
+\eqref{eq:uip_main} --- the standard Mundell trilemma trade-off, surrendering monetary independence
+in exchange for exchange-rate stability. Under \textbf{managed float}, the Taylor rule is augmented
+with an explicit response to the exchange rate,
+\begin{equation}
+    \log(I_t/I^*) = \phi_\pi \pi_t^{DC} + \phi_y\,\tilde y_t + \phi_s\log S_t, \tag{Managed}
+\end{equation}
+with $\phi_s>0$ a partial FX-stabilization weight. Section \ref{sec:robustness} additionally
+considers strict domestic (PPI) and consumer-price (CPI) inflation targeting, and a coarser grid
+search over $(\phi_\pi,\phi_y)$ themselves, as further regime-rule variants.
+
+\subsection{Equilibrium}
+
+An equilibrium is a sequence of prices and quantities such that: households optimize subject to their
+budget constraint; firms in every sector minimize cost and, when given the opportunity, reset prices
+optimally under Calvo pricing; goods markets clear sector by sector,
+$Y_{it} = C_{it}^H + \sum_j X_{jit} + EX_{it}$, where $EX_{it}$ is sector $i$'s share of aggregate
+exports (allocated, in the baseline calibration, via household consumption shares $\bm\beta^H$, and
+via sector-specific export intensities in the robustness extension discussed in Section
+\ref{sec:robustness}); the labor market clears, $L_t=\sum_iL_{it}$; the UIP condition
+\eqref{eq:uip_main} holds under float and managed float, or the peg $S_t\equiv1$ replaces it; and the
+monetary authority sets the interest rate according to its regime-specific rule. GDP is a reporting
+identity, $GDP_t = P_t^CC_t + P_t^H EX_t - P_t^{FH}IM_t$, and is deliberately not a market-clearing
+condition.
+
+%======================================================================
+\section{Theoretical Results}
+\label{sec:theory}
+%======================================================================
+
+This section states the paper's central theoretical results: the modified sectoral Phillips curve
+with an exchange-rate cost-push term, the generic breakdown of the divine coincidence, and the
+welfare function used throughout the quantitative analysis. Full, step-by-step proofs --- following
+exactly the same log-linearization and Sherman--Morrison-identity techniques Rubbo (2024) uses in the
+closed economy --- are given in Appendix \ref{app:proofs}; here I state results and give the essential
+economic content of each proof.
+
+\subsection{The Closed-Economy Benchmark}
+
+Three results from Rubbo (2024), restated here because the open-economy results are direct
+generalizations, or direct violations, of them.
+
+\begin{lemma}[Natural output]
+\label{lem:natural_output}
+Natural (flexible-price) output equals Domar-weighted total factor productivity,
+$y_{t,\mathrm{nat}} = \tfrac{1+\varphi}{\gamma+\varphi}\bm\lambda^\top\log\mathbf A_t$, where
+$\bm\lambda^\top=\bm\beta^\top(I-\Omega^H)^{-1}$ are Domar weights.
+\end{lemma}
+
+\begin{proposition}[Sectoral Phillips curve, closed economy]
+\label{prop:pc_closed}
+Sectoral inflation satisfies
+\begin{equation}
+    \bm\pi_t = \rho(I-\mathcal V)\,\mathbb E\bm\pi_{t+1} + \mathcal B(\gamma+\varphi)\tilde y_t -
+    \mathcal V\bm\chi_t,
+    \label{eq:pc_closed}
+\end{equation}
+where $\mathcal B \equiv \Delta(I-\Omega^H\Delta)^{-1}\bm\alpha/\kappa$,
+$\kappa\equiv1-\bm\beta^\top\Delta(I-\Omega^H\Delta)^{-1}\bm\alpha$, and $\mathcal V$ is a cost-push
+matrix, built from the same rigidity-adjusted Leontief inverse $(I-\Omega^H\Delta)^{-1}$, whose rows
+sum to zero: $\mathcal V\mathbf 1=\mathbf 0$.
+\end{proposition}
+
+\begin{proposition}[Divine coincidence, closed economy]
+\label{prop:dc_closed}
+There is a unique (up to normalization) inflation index $\pi_t^{DC}=\bm\phi^{DC\top}\bm\pi_t$,
+$\bm\phi^{DC}_i \propto \lambda_i(1-\hat\delta_i)/\hat\delta_i$, that lies in the left null space of
+$\mathcal V$ and therefore satisfies a cost-push-free Phillips curve
+\begin{equation}
+\pi_t^{DC}=\rho\mathbb E\pi_{t+1}^{DC} + \kappa_{DC}\tilde y_t. \label{eq:DCPC}
+\end{equation}
+Targeting $\pi_t^{DC}$ simultaneously
+delivers a zero output gap.
+\end{proposition}
+
+Uniqueness in Proposition \ref{prop:dc_closed} follows because $\mathcal V\mathbf 1=\mathbf 0$ implies
+$\mathcal V$ has rank at most $N-1$, so its left null space is generically exactly one-dimensional.
+This one fact is the fulcrum on which the entire open-economy result in Section \ref{sec:dc_breakdown}
+turns.
+
+\subsection{The Modified Phillips Curve with an Exchange-Rate Channel}
+
+Substituting the open-economy marginal cost \eqref{eq:mc_main} into the same derivation that delivers
+Proposition \ref{prop:pc_closed} (Appendix \ref{app:proofs}, Steps 1--7, unchanged in every step
+except the marginal cost equation itself) gives the paper's central reduced-form object.
+
+\begin{proposition}[Sectoral Phillips curve, open economy]
+\label{prop:pc_open}
+Sectoral inflation satisfies
+\begin{equation}
+    \boxed{\bm\pi_t = \rho(I-\mathcal V)\,\mathbb E\bm\pi_{t+1} + \mathcal B(\gamma+\varphi)\tilde y_t -
+    \mathcal V\bm\chi_t + \Gamma\,\Delta e_t}
+    \label{eq:pc_open}
+\end{equation}
+where $\mathcal B$ and $\mathcal V$ are exactly as in the closed economy (Proposition
+\ref{prop:pc_closed}), and the new \textbf{exchange-rate pass-through vector} is
+\begin{equation}
+    \Gamma \equiv \frac{\Delta(I-\Omega^H\Delta)^{-1}\bm\Omega^F}{\kappa} = \frac{\tilde A\,\bm\Omega^F}{\kappa},
+    \qquad \tilde A \equiv \Delta(I-\Omega^H\Delta)^{-1}.
+    \label{eq:gamma_def}
+\end{equation}
+\end{proposition}
+
+Equation \eqref{eq:pc_open} is the SOE analogue of Rubbo's Proposition 2, and its economic content is
+the paper's central mechanism in one line: the exchange rate enters every sector's Phillips curve
+exactly like a (negative) productivity shock, weighted by the \emph{same} rigidity-adjusted network
+amplifier $\tilde A=\Delta(I-\Omega^H\Delta)^{-1}$ that governs productivity pass-through, but applied
+to the imported-input cost-share vector $\bm\Omega^F$ rather than to $-\log\mathbf A_t$. A sector's
+exposure to the exchange rate is therefore not simply its own import share $\Omega^F_i$: it also
+inherits exposure from every supplier, weighted by how quickly that supplier resets its own price.
+A sector that imports nothing directly but buys heavily from an import-intensive supplier can be
+substantially exposed to the exchange rate purely through the network --- the mechanism examined in
+detail in Section \ref{sec:results}'s ``Why Services?'' analysis.
+
+\subsection{Breakdown of the Divine Coincidence}
+\label{sec:dc_breakdown}
+
+\begin{proposition}[Generic breakdown of the divine coincidence]
+\label{prop:dc_breakdown}
+Under a float, an inflation index $\bm\phi^\top\bm\pi_t$ has no cost-push term if and only if
+$\bm\phi^\top\mathcal V=\mathbf 0^\top$ \emph{and} $\bm\phi^\top\Gamma=0$. The first condition alone
+pins $\bm\phi$ down uniquely (Proposition \ref{prop:dc_closed}); the second is then an
+\emph{additional}, generically independent scalar restriction on the same, already-determined vector.
+Except in the knife-edge case $\Gamma\propto\mathcal B$ (exchange-rate pass-through exactly
+proportional to labor intensity), no inflation index exists that simultaneously eliminates both
+cost-push channels. The divine coincidence is a knife-edge, not a generic, property of open production
+networks.
+\end{proposition}
+
+The proof (Appendix \ref{app:proofs}) is almost immediate given Proposition \ref{prop:dc_closed}: the
+closed-economy divine-coincidence weights $\bm\phi^{DC}$ are the \emph{unique} (one-dimensional) left
+null vector of $\mathcal V$, so there is no freedom left to additionally satisfy
+$\bm\phi^{DC\top}\Gamma=0$ unless this happens to hold already --- a single additional scalar equation
+in zero remaining free parameters, generically inconsistent. The intuition is that Rubbo's closed
+economy has exactly one cost-push channel (productivity), so pinning down the unique index that
+annihilates it exhausts every degree of freedom available; adding the exchange rate as a
+\emph{second}, generically linearly independent cost-push channel leaves no further freedom to
+annihilate it as well. This is the SOE analogue of the intuition behind the Tinbergen counting
+argument in Fanelli and Straub (2021): one instrument (or, here, one inflation index) cannot generally
+achieve two independent targets.
+
+\begin{remark}[Independent corroboration]
+Qiu, Wang, Xu and Zanetti (2026) reach the same qualitative conclusion --- divine coincidence fails in
+a multi-sector open economy --- through a structurally different route: rather than a single
+import-cost-share pass-through vector $\Gamma$, they derive a three-channel open-economy output-gap
+weight (CPI, expenditure-switching, profit channels) from a Gal\'i--Monacelli-style trade block with
+balanced trade and export taxes, and show that output-gap targeting closes the gap but does not zero
+the within-sector, across-sector, and cross-border misallocation terms simultaneously. That two
+independent derivations, built on genuinely different modeling primitives, arrive at the same
+qualitative conclusion is worth treating as corroboration of the underlying economics rather than as
+redundant results.
+\end{remark}
+
+\subsection{Welfare}
+
+\begin{proposition}[Welfare, open economy]
+\label{prop:welfare}
+To second order, the welfare loss relative to the efficient (flexible-price) allocation is
+\begin{equation}
+    \mathbb W = \frac12\,\mathbb E\Big[\underbrace{(\gamma+\varphi)\tilde y_t^2}_{\text{output gap}}
+    + \underbrace{\sum_i\kappa_i\,\pi_{it}^2}_{\text{within-sector}}
+    + \underbrace{\Phi_C(\bm\mu_t,\bm\mu_t)+\sum_s\lambda_s\Phi_s(\bm\mu_t,\bm\mu_t)}_{\text{cross-sector}}\Big],
+    \qquad \kappa_i \equiv \lambda_{D,i}\,\varepsilon_i\,\frac{1-\hat\delta_i}{\hat\delta_i},
+    \label{eq:welfare_main}
+\end{equation}
+where $\bm\mu_t$ is the vector of sectoral log markup gaps and $\Phi_C,\Phi_s$ are Baqaee--Farhi
+(2019) cross-sector substitution operators evaluated at the model's consumption and production
+elasticities of substitution.
+\end{proposition}
+
+The output-gap and within-sector terms are unchanged in form from the closed economy; the exchange
+rate enters welfare only indirectly, through its effect on the equilibrium paths of $\tilde y_t$ and
+$\bm\pi_t$ under each policy regime, plus a direct cross-sector misallocation term
+$\Phi_C(\tilde{\bm\chi}_t, e_t\bm\Omega^F)$ arising because different sectors face different import
+cost shocks, distorting relative prices even absent any within-sector dispersion. Because this
+model's cross-sector aggregators (household consumption across domestic sectors, and each firm's
+input bundle across domestic and imported inputs) are Cobb--Douglas by construction, the Allen--Uzawa
+elasticity of substitution between any pair of their arguments is exactly one, and the cross-sector
+terms $\Phi_C,\Phi_s$ collapse to a weighted variance of the markup-gap vector, with only the outer
+consumption nest (home versus foreign consumption, $\eta=1.5$) contributing a genuine
+non-unitary elasticity. Numerically (Appendix \ref{app:proofs}, Remark \ref{rem:cross_sector_numeric}),
+this cross-sector term adds a modest 3.3--8.4\% on top of the output-gap-plus-within-sector total,
+depending on the regime, without affecting the regime ranking; the headline welfare numbers reported
+in Section \ref{sec:results} use the output-gap-plus-within-sector total (equation
+\eqref{eq:welfare_main}'s first two terms) as the primary object of comparison, consistent with how
+every robustness exercise in Section \ref{sec:robustness} is computed, and I flag explicitly wherever
+the cross-sector term is or is not included.
+
+%======================================================================
+\section{Data and Calibration}
+\label{sec:data}
+%======================================================================
+
+I calibrate the model to three small open economies with genuinely disaggregated national
+input--output data: Chile, South Korea, and Czechia. Chile is the primary quantitative calibration
+used throughout the paper's main results and robustness analysis; Korea and Czechia serve as
+out-of-sample checks on whether the headline welfare ranking is a Chile-specific artifact or a more
+general property of the model (Section \ref{sec:results}, cross-country robustness).
+
+\subsection{Input--Output Data and Sector Aggregation}
+
+For each country, I take the national supply-and-use (or, for Chile, Cuadro de Origen y Recursos,
+CdeR) tables and collapse the native sectoral classification (12 sectors for Chile, using Banco
+Central de Chile's 2018 CdeR tables at 2023 reference prices) to three broad sectors --- Resource,
+Manufacturing, and Services --- chosen to span a wide range of import intensity and price stickiness
+while keeping the calibrated model computationally tractable for the extensive robustness campaign in
+Section \ref{sec:robustness}. From each country's IO table I compute: the domestic IO matrix
+$\Omega^H$ (each sector's cost share purchased from each domestic sector); the imported-input cost
+share vector $\bm\Omega^F$; the labor cost share $\bm\alpha$; household consumption shares
+$\bm\beta^H$; and each sector's export intensity (exports as a share of own gross output), used in
+the sector-specific export-reallocation robustness check of Section \ref{sec:robustness}.
+
+Table \ref{tab:chile_calib} reports the resulting Chile calibration --- the parameterization used for
+every result in Sections \ref{sec:results} and \ref{sec:robustness} unless stated otherwise --- along
+with the derived network objects (Domar weights $\lambda_{D,i}$, total import centrality $M_i$, and
+the divine-coincidence weights $w_i^{DC}$) used throughout the paper.
+
+\begin{table}[H]
+\centering
+\caption{Chile calibration: primitives and derived network objects}
+\label{tab:chile_calib}
+\begin{tabular}{lccc}
+\toprule
+ & Resource (1) & Manufacturing (2) & Services (3) \\
+\midrule
+Labor share $\alpha_i$ & 0.5026 & 0.3589 & 0.6035 \\
+Import share $\Omega^F_i$ & 0.0767 & 0.1945 & 0.0704 \\
+Consumption share $\beta^H_i$ & 0.0265 & 0.2294 & 0.7441 \\
+Export share of own output & 0.6019 & 0.1797 & 0.0357 \\
+Calvo reset probability $\delta_i$ & 0.90 & 0.31 & 0.16 \\
+\midrule
+Domar weight $\lambda_{D,i}$ & 0.0718 & 0.3820 & 1.1084 \\
+Total import centrality $M_i$ & 0.1547 & 0.2847 & 0.1189 \\
+Effective Calvo persistence $\hat\delta_i$ & 0.8902 & 0.1246 & 0.0311 \\
+DC index weight $w_i^{DC}$ & 0.0002 & 0.0720 & 0.9277 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Domestic IO matrix (rows buy from columns, Resource/Manufacturing/Services order):
+$\Omega^H = \begin{psmallmatrix}0.0750 & 0.1526 & 0.1932\\ 0.0991 & 0.2022 & 0.1453 \\ 0.0018 & 0.0581 &
+0.2661\end{psmallmatrix}$.
+
+\subsection{Calvo Frequencies}
+
+Sector-level Calvo reset probabilities $\delta_i$ are not identifiable from input--output data alone
+and are taken from the price-stickiness literature (Dhyne et al., 2005, the ECB's Inflation
+Persistence Network; cross-checked against Nakamura and Steinsson, 2008), assigning Resource the
+highest reset probability (0.90, reflecting globally-priced commodity-like goods), Manufacturing an
+intermediate value (0.31), and Services the lowest (0.16, reflecting the well-documented empirical
+stickiness of service prices). The resulting effective Calvo persistence $\hat\delta_i$ (Table
+\ref{tab:chile_calib}) is markedly lower for Services (0.031) than for Resource (0.890): a one
+percent shock to Services' marginal cost translates into roughly thirty times less inflation, and
+correspondingly more absorbed into markup dispersion, than the same shock in the Resource sector ---
+the origin of Services' outsized welfare weight $\kappa_i$ discussed in Section \ref{sec:results}.
+
+\subsection{Preference and Technology Parameters}
+
+The remaining parameters --- the coefficient of relative risk aversion $\gamma=1$, the inverse Frisch
+elasticity of labor supply $\varphi=2$, the within-sector elasticity of substitution
+$\varepsilon=8$, the discount factor $\beta=0.99$, the home-foreign consumption elasticity
+$\eta=1.5$, the export-demand elasticity $\theta^*=2.0$, and the debt-elasticity coefficient of the
+risk premium $\Psi=0.020$ --- are literature defaults rather than estimates specific to this setting,
+and are flagged as such in the discussion of the paper's remaining limitations (Section
+\ref{sec:discussion}). All exogenous shocks (sectoral productivity, import price, foreign demand,
+export price/terms-of-trade, and the risk premium itself) are calibrated to a common one percent
+standard deviation, in the absence of an external target for the risk-premium shock specifically ---
+a calibration choice whose consequences for the headline result are the subject of extensive
+robustness analysis in Section \ref{sec:robustness}.
+
+%======================================================================
+\section{Quantitative Results}
+\label{sec:results}
+%======================================================================
+
+\subsection{Headline Welfare Ranking}
+
+Table \ref{tab:headline} reports the model's central quantitative result: welfare loss, in units of
+$10^{-4}$ (i.e., basis points of steady-state consumption-equivalent loss times 100), for each of the
+three monetary/exchange-rate regimes, computed from equation \eqref{eq:welfare_main}'s output-gap-plus-
+within-sector terms using the order-1 (log-linear) solution's unconditional variances.
+
+\begin{table}[H]
+\centering
+\caption{Headline welfare loss by regime, real Chile calibration ($\times10^{-4}$)}
+\label{tab:headline}
+\begin{tabular}{lccc}
+\toprule
+ & Float & Managed Float & Peg \\
+\midrule
+Welfare loss ($\times10^{-4}$) & 25.47 & 10.17 & 102.05 \\
+Relative to Managed & 2.5$\times$ & 1$\times$ (best) & 10.0$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Managed float dominates both corner regimes by a wide margin; Peg is roughly four times worse than
+Float and ten times worse than Managed float. This is, superficially, the same ranking the classical
+Mundell--Fleming/Gal\'i--Monacelli literature would predict --- flexible exchange rates are
+stabilizing, hard pegs are costly --- but Section \ref{sec:results}'s shock decomposition shows the
+mechanism generating this ranking is not the one that literature emphasizes.
+
+Including the cross-sector welfare term of equation \eqref{eq:welfare_main} (Section \ref{sec:theory},
+Remark on Cobb--Douglas cross-sector aggregators) raises every regime's loss modestly ---
+3.3\% for Float, 8.4\% for Managed, and 4.5\% for Peg --- to totals of 26.31, 11.03, and 106.62
+($\times10^{-4}$) respectively, without affecting the ranking; unless stated otherwise, all
+subsequent tables in this paper use the output-gap-plus-within-sector total for direct comparability
+with the extensive robustness campaign of Section \ref{sec:robustness}, none of which recomputes the
+cross-sector term at every grid point.
+
+\subsection{Shock Decomposition: The Risk-Premium Channel}
+\label{sec:shock_decomp}
+
+Table \ref{tab:shock_decomp} decomposes each regime's total welfare loss by the shock responsible for
+it, using Dynare's own forecast-error variance decomposition. The result is stark: the risk-premium
+shock $\varepsilon^{RP}_t$ --- a purely financial, non-import shock entering only through the UIP
+condition \eqref{eq:uip_main} --- accounts for 75\% of Peg's total welfare loss at the model's
+baseline calibration, far exceeding the terms-of-trade (export-price) channel that is the star of the
+classical open-economy literature (a mere 2.16 out of 102.05, or roughly 2\%, of Peg's total loss).
+
+\begin{table}[H]
+\centering
+\caption{Share of each regime's welfare loss attributable to the risk-premium shock ($\%$)}
+\label{tab:shock_decomp}
+\begin{tabular}{lccc}
+\toprule
+ & Float & Managed & Peg \\
+\midrule
+Risk-premium shock's \% of total loss & $\approx$11 & $\approx$8 & \textbf{75} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This finding is quantitatively central to the paper, and uncomfortable in one specific sense that I
+confront directly: Section \ref{sec:robustness}'s risk-premium volatility sweep shows that with the
+risk-premium shock switched off entirely, Peg is not dominated at all --- it is essentially tied with
+Float, fractionally \emph{better}. The entire ``Peg is worst'' headline result therefore depends on
+the risk-premium shock existing at roughly its calibrated size, a calibration choice (equal standard
+deviation to every other shock, for lack of an independently estimated target) rather than an
+externally disciplined one. I return to this in Section \ref{sec:robustness}, where I show the
+qualitative ranking survives even substantial variation in both the shock's size and the closing
+device's debt-elasticity coefficient, while being explicit that the \emph{margin} of Peg's dominance
+is highly sensitive to both.
+
+\subsection{Why Services? A Sectoral Mechanism Decomposition}
+\label{sec:why_services}
+
+A natural puzzle, raised directly in early feedback on this project, is why the Services sector ---
+the least import-exposed sector in the calibration (Table \ref{tab:chile_calib}, lowest direct
+$\Omega^F_i$) and, on that basis alone, the sector one might expect to be most insulated from
+exchange-rate-driven welfare costs --- in fact absorbs the largest share of welfare loss in every
+regime. Three candidate explanations were raised, and all three turn out to be real and compounding
+rather than competing.
+
+\textbf{Indirect exposure via the network.} Total import centrality $M_i$ (equation
+\eqref{eq:gamma_def}'s numerator, up to normalization) splits into a direct part ($\Omega^F_i$, imports
+the sector buys itself) and an indirect part inherited via domestic suppliers. For Services, 41\% of
+its total import centrality is indirect --- almost as large a share as Resource's 50\%, despite
+Services' total exposure being the smallest of the three sectors in levels. Concretely, Services buys
+5.8\% of its cost from Manufacturing, the most import-intensive sector in the economy; whatever
+exchange-rate cost-push hits Manufacturing directly is inherited by Services through this single
+supply link, and because Services cannot reprice quickly (its effective Calvo persistence
+$\hat\delta_3=0.031$ is an order of magnitude lower than Resource's), whatever cost-push it inherits
+this way does not clear within a quarter --- it lingers, making Services' inflation the single most
+persistent series in the model (autocorrelation around 0.82).
+
+\textbf{Which channel actually dominates Services' own variance?} Dynare's own variance decomposition
+of Services' output gap shows the import-price/network channel just described is real but
+\emph{secondary} --- explaining only 2--22\% of Services' output-gap variance depending on the regime
+--- while the purely aggregate, non-import risk-premium shock dominates: 63\% under Float, 78\% under
+Peg.
+
+\textbf{Why does a non-import shock land so heavily on Services specifically?} Because of its Domar
+weight, $\lambda_{D,3}=1.108$ --- more than double the next-largest sector's --- which reconciles the
+apparent tension: 92\% of this weight is already present at zero network density, simply from
+Services' large household consumption share and heavy within-sector input reuse; the network itself
+adds only an additional 9\%. Resource, by contrast, sees its (much smaller) Domar weight more than
+double when the network is switched on. The general lesson, applicable well beyond this specific
+calibration: size (the Domar weight $\lambda_{D,i}$) determines which sector absorbs a generic
+aggregate shock; rigidity ($\hat\delta_i$) converts that exposure into welfare cost; and the network
+amplifies an already-large sector's exposure more than it creates new exposure from nothing.
+
+\subsection{Which Sector Prefers Which Regime}
+
+A related and initially counterintuitive finding, developed formally in Appendix
+\ref{app:proofs} \S\ref{app:sector_pref}, is that the sector most directly exposed to the exchange
+rate on impact (Resource, with the largest exchange-rate pass-through coefficient $\Gamma_1=0.234$
+versus Services' near-zero $\Gamma_3=0.006$) is \emph{not} the sector that most prefers a peg. Pegging
+does not eliminate the need for relative-price adjustment following a foreign-price or productivity
+shock --- it relocates that adjustment into domestic (home-goods) prices, which, by construction, are
+dominated by the upstream sector. This relocated-adjustment cost for Resource under a peg exceeds the
+direct exchange-rate cost-push it avoids, so Resource, despite having the largest $\Gamma_i$, nets out
+\emph{preferring float} between the two corner regimes. Services, three links removed from the
+border and the stickiest sector, is doubly insulated from the peg's relocated-adjustment burden;
+its inflation variance falls by nearly half under a peg relative to float, and because Services'
+welfare weight $\kappa_3$ dwarfs the other two sectors', its own preference for the peg (conditional
+on the two corner regimes only) dominates the aggregate ranking between Float and Peg. Managed float
+dominates for \emph{every} sector simultaneously, precisely because it damps the exchange rate's
+contribution to inflation variance without fully re-imposing the peg's relative-price-relocation
+cost --- it need not pick a sectoral winner to improve on both corner regimes at once.
+
+\subsection{Cross-Country Robustness: Korea and Czechia}
+\label{sec:crosscountry}
+
+Table \ref{tab:crosscountry} repeats the headline welfare comparison using independently constructed
+national IO calibrations for South Korea and Czechia. The ranking --- Managed float dominant, Peg
+worst by a wide margin --- replicates in both, with both economies' losses uniformly higher than
+Chile's, consistent with both having denser domestic networks and higher import exposure than Chile
+in the underlying IO data --- itself supporting evidence that the mechanism is a genuine network
+story rather than a Chile-specific artifact.
+
+\begin{table}[H]
+\centering
+\caption{Cross-country welfare loss by regime ($\times10^{-4}$)}
+\label{tab:crosscountry}
+\begin{tabular}{lccc}
+\toprule
+ & Float & Managed Float & Peg \\
+\midrule
+Chile & 25.47 & 10.17 & 102.05 \\
+South Korea & 38.91 & 14.43 & 133.81 \\
+Czechia & 32.20 & 11.82 & 84.03 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A separate, weaker test asks whether Services' ``mostly indirect exposure via the network'' finding
+(Section \ref{sec:why_services}) is a general pattern across downstream, low-import sectors. Pooling
+all three calibrations (nine sector-level observations) gives only a moderate, noisy relationship
+between how much a sector sources domestically and how much of its import exposure is indirect --- an
+honest limitation given only three sectors per calibration. What holds robustly across all three
+calibrations \emph{separately}, however, is that Services sources the \emph{least} domestically of any
+sector in every single calibration, yet still derives a large share of its exposure indirectly,
+because the small amount it does source domestically is concentrated in the single most import-heavy
+supplier rather than spread evenly --- a composition effect, not a volume effect. A fully
+disaggregated, many-sector calibration (Section \ref{sec:discussion}) is the natural next step to test
+this pattern with statistical power beyond nine observations.
+
+%======================================================================
+\section{Robustness Analysis}
+\label{sec:robustness}
+%======================================================================
+
+Because the headline welfare ranking rests, per Section \ref{sec:shock_decomp}, so heavily on two
+specific calibration choices --- the risk-premium shock's standard deviation $\sigma_{RP}$ and the
+debt-elasticity coefficient $\Psi$ --- this section subjects the model to an extensive robustness
+campaign: in total, roughly 350 additional Dynare solves beyond the three headline country
+calibrations, organized into a sequence of exercises. Throughout, all real-Chile-calibration exercises
+hold the sector count, Calvo frequencies, and all shock processes other than the one(s) explicitly
+varied fixed at their Table \ref{tab:chile_calib} baseline values, and network-density exercises use a
+continuous scaling dial $\rho\in[0,2]$ applied to the off-diagonal entries of $\Omega^H$ ($\rho=0$: no
+domestic cross-sector network, each sector uses only labor and imports; $\rho=1$: the real Chile
+calibration; $\rho=2$: double density), with the diagonal (own-sector reuse) held fixed and the labor
+share $\alpha_i$ absorbing the freed or additionally consumed cost share so that cost shares continue
+to sum to one at every $\rho$.
+
+\subsection{Network Density and the Optimal Managed-Float Response}
+
+Does the network itself matter for welfare, beyond simply being ``an open economy''? Scaling network
+density $\rho$ continuously on a stylized triangular network calibrated to match the real Chile
+economy's total off-diagonal cost-share mass, the network premium --- the gap between welfare loss
+with the network at its real density versus none at all --- roughly triples the Float/Peg welfare gap
+as density rises, and reallocates \emph{which} sector bears the cost by regime. Does the
+\emph{optimal} managed-float FX-response weight $\phi_s^*$ itself shift with network density, or is
+the network-density result purely a level effect? A twelve-point grid search over $\phi_s$ at each of
+three network densities ($\rho=0,1,2$) shows the optimum shifts materially: $\phi_s^*=0.15$ at
+$\rho=0$, rising to $0.20$ at the real Chile density, and to $0.30$ at double density --- confirming
+that denser production networks call for a \emph{more} aggressive exchange-rate response, not just a
+larger welfare loss at any given response. The welfare curve is flat within roughly 2--3\% of each
+optimum across a wide neighborhood of $\phi_s$, so this is a real, monotonic shift rather than a
+knife-edge result, but getting $\phi_s$ within about $\pm0.1$ of correct matters far more than getting
+it exactly right.
+
+\subsection{Risk-Premium Volatility}
+\label{rob:rp_vol}
+
+Scaling the risk-premium shock's standard deviation from zero to three times its calibrated value,
+holding every other shock and parameter fixed, shows that with the shock switched off entirely, Peg is
+not dominated at all --- it is fractionally \emph{better} than Float (a ratio of 0.95). Half of the
+calibrated shock size already flips this to Peg being 1.7 times worse than Float; the full calibrated
+size gives the headline 3.6$\times$; and three times the calibrated size gives 14.5$\times$. This is
+the single most important robustness finding in the paper in the sense that it directly qualifies the
+headline result: the ``Peg is dominated'' conclusion is not an artifact of an implausible shock size
+(even a modest fraction of the calibrated size already produces the qualitative ranking), but its
+\emph{margin} is highly sensitive to a shock size that is, honestly, an assumed-equal-to-every-other-
+shock convention rather than an externally estimated moment.
+
+\subsection{$\psi$-Sensitivity, on Its Own and Jointly with Network Density and Shock Size}
+\label{rob:psi}
+
+The debt-elastic risk-premium coefficient $\Psi$ (baseline 0.020) is itself a literature default with
+a known numerical pitfall: values too close to zero can generate a near-unit-root, knife-edge blowup
+in net-foreign-asset dynamics that is a linearization artifact rather than real economics. Scaling
+$\Psi$ from 0.25$\times$ to 4$\times$ its baseline (0.005 to 0.080) shows the qualitative ranking (Peg
+worst) is robust across the entire grid, but the \emph{margin} is not constant: the Peg/Float welfare
+ratio shrinks from 5.4$\times$ at the lowest $\Psi$ to 2.7$\times$ at the highest, and the risk-premium
+shock's share of Peg's total loss (the 75\% headline figure, at baseline $\Psi=0.020$) ranges from 83\%
+at the lowest $\Psi$ down to 58\% at the highest --- risk-premium/UIP remains the single dominant
+channel throughout, but the exact 75\% figure is itself a function of an under-scrutinized calibration
+choice.
+
+Crossing this $\psi$-sensitivity check with network density (45 additional solves: five $\Psi$ values
+$\times$ three densities $\times$ three regimes) shows the pattern found on the real Chile calibration
+generalizes essentially unchanged: the Peg/Float ratio moves from roughly 5.3--5.5$\times$ at the
+lowest $\Psi$ to 2.7--2.8$\times$ at the highest, at \emph{every} network density from zero to double
+--- $\psi$-sensitivity and network density are essentially orthogonal margins of the model.
+
+A separate, nine-point joint grid (scaling $\Psi$ and the risk-premium shock's own volatility
+$\sigma_{RP}$ simultaneously, Peg regime only) tests whether the two calibration choices flagged above
+reinforce or offset one another. A log-log regression of Peg's welfare loss on both scale factors
+finds an elasticity with respect to $\sigma_{RP}$ of approximately $+1.44$ (dominant and convex ---
+doubling the shock's size more than doubles the loss) against an elasticity with respect to $\Psi$ of
+approximately $-0.24$ (real but secondary), with a non-trivial interaction term of approximately
+$-0.16$: $\Psi$'s dampening effect on Peg's loss is \emph{stronger}, not weaker, when the risk-premium
+shock itself is larger (the ratio $W(\Psi{=}2\times)/W(\Psi{=}0.5\times)$ shrinks from 0.85 at low
+$\sigma_{RP}$ to 0.62 at high $\sigma_{RP}$). The two calibration choices flagged in Section
+\ref{sec:shock_decomp} reinforce, rather than offset, one another.
+
+\subsection{Price Rigidity: Uniform and Services-Specific}
+\label{rob:rigidity}
+
+Two complementary cuts test whether the ``Why Services?'' mechanism of Section \ref{sec:why_services}
+is specifically about \emph{Services'} own rigidity, or reflects aggregate rigidity more generally.
+
+\textbf{Uniform rigidity.} Scaling all three sectors' stickiness $(1-\hat\delta_i)$ by a common
+multiplier $\kappa\in\{0.5,0.75,1.0,1.15\}$, crossed with network density, is bounded above by a real
+feasibility constraint: the current calibration's Services sector is already close enough to the
+Calvo-rigidity ceiling that a multiplier of 1.5 or above implies a \emph{negative} implied reset
+probability, caught cleanly by the sweep script's own feasibility guard rather than by a numerical
+crash. Within the feasible range, Peg's welfare loss rises monotonically and steeply in aggregate
+rigidity at every network density (for example, at double network density: 60, 104, 182, and 251,
+in units of $10^{-4}$, across the feasible $\kappa$ grid) --- rigidity compounds with Peg's existing
+risk-premium problem, a clean and unambiguous result. Float and Managed, by contrast, are
+\emph{not} monotonic across the same grid, and the topmost feasible point ($\kappa=1.15$) should be
+read as a stress test rather than a reliable point: at that point, Services' Calvo persistence index
+$\hat\delta_3$ collapses to 0.0015, an order of magnitude closer to zero than the already-small
+baseline value (0.031), right at the model's own numerical feasibility floor, and the welfare weight
+in equation \eqref{eq:welfare_main} scales like $(1-\hat\delta_i)/\hat\delta_i$, making this point
+numerically fragile by construction.
+
+\textbf{Services-only rigidity.} Moving only Services' own Calvo reset probability
+$\delta_3\in\{0.05,0.10,0.16(\text{baseline}),0.25,0.40,0.60\}$, holding both other sectors fixed at
+their baseline calibration, produces a cleaner picture, with no near-degenerate points anywhere in the
+grid: Peg's welfare loss falls \emph{monotonically} as Services becomes more flexible, at every
+network density (for example at the real Chile density: 122.9, 113.7, 102.1, 85.0, 60.7, and 37.0, in
+units of $10^{-4}$, as $\delta_3$ rises from 0.05 to 0.60) --- a clean, robust confirmation that
+Services' own rigidity is a first-order driver of Peg's welfare dominance, not merely a coincidental
+correlate of aggregate stickiness. Float and Managed, in contrast, are hump-shaped rather than
+monotonic in this same grid, peaking around $\delta_3\approx0.25$--$0.40$: the welfare weight
+$(1-\hat\delta_i)/\hat\delta_i$ and the Phillips-curve slope's own sensitivity to $\delta_3$ move in
+offsetting directions as rigidity falls, a genuine (if secondary) non-monotonicity rather than a
+numerical artifact, since this grid stays well clear of the feasibility floor identified in the
+uniform-rigidity cut above.
+
+\subsection{Network Topology: Beyond the Density Dial}
+\label{rob:topology}
+
+Every exercise up to this point varies only the \emph{density} of a single, fixed triangular network
+shape. This subsection asks whether the results are specific to that shape by constructing two
+alternative topologies at matched total off-diagonal cost-share mass (0.6501, identical to the
+baseline triangular network): a \textbf{hub-and-spoke} network with Manufacturing as the central node
+(Resource and Services each link only to Manufacturing, with no direct Resource--Services link), and a
+\textbf{chain} network with strictly one-directional pass-through, Resource $\to$ Manufacturing $\to$
+Services, and no back-links at all.
+
+The welfare ranking --- Peg worst, Managed best --- survives in \emph{every} topology (Table
+\ref{tab:topology}), and the chain topology, with its most concentrated pass-through structure, is
+uniformly worse than the baseline triangle for every regime, with the hub-and-spoke topology
+intermediate. The optimal managed-float FX-response weight shifts with topology as well as with
+density: $\phi_s^*=0.20$ for the triangle, but $0.30$ for both the hub-and-spoke and chain topologies,
+consistent with (and reinforcing) the density-based finding of Section \ref{rob:rp_vol}'s companion
+exercise above. Recomputing the analytical import-centrality decomposition of Section
+\ref{sec:why_services} for each topology shows Services' indirect-exposure share is not an artifact of
+the triangular shape --- if anything it strengthens under more concentrated pass-through structures,
+rising from 41\% (triangle) to 46\% (hub-and-spoke) to 63\% (chain) of Services' total import
+centrality.
+
+\begin{table}[H]
+\centering
+\caption{Welfare loss by network topology and regime ($\times10^{-4}$)}
+\label{tab:topology}
+\begin{tabular}{lccc}
+\toprule
+Topology & Float & Managed & Peg \\
+\midrule
+Triangle (baseline) & 25.5 & 10.2 & 102.1 \\
+Hub-and-spoke (Manufacturing hub) & 28.9 & 11.3 & 113.5 \\
+Chain (Resource$\to$Manuf.$\to$Services) & 33.7 & 12.7 & 115.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Regime-Rule Variants}
+\label{rob:regime_variants}
+
+The baseline float regime targets Rubbo's divine-coincidence index with conventional (non-aggressive)
+Taylor coefficients $(\phi_\pi,\phi_y)=(1.5,0.5)$. This subsection asks two further questions: does
+targeting a different price index (strict domestic/PPI or strict consumer-price/CPI inflation,
+instead of the divine-coincidence index) matter, and does the Taylor rule's own aggressiveness matter?
+
+At the baseline, non-aggressive Taylor coefficients, adding two new policy-rule variants --- strict
+CPI-inflation targeting and strict PPI (domestic-bundle)-inflation targeting, in place of the
+divine-coincidence index --- to the model (verified, via a regression check re-running the three
+original regimes through the edited model files, to reproduce the original headline numbers exactly,
+confirming the new branches are additive and non-breaking) shows both new variants land statistically
+indistinguishable from Float: 25.36 (CPI) and 25.26 (PPI) versus Float's 25.47 ($\times10^{-4}$), all
+within about one percent of one another. \textbf{Targeting the theoretically privileged
+divine-coincidence index, at these conventional policy coefficients, buys almost nothing over naively
+targeting CPI or PPI inflation}; essentially all of Managed float's $\approx$2.5$\times$ improvement
+comes from its explicit exchange-rate response term, not from smarter inflation targeting.
+
+This picture changes once the Taylor rule is made aggressive. Setting $\phi_\pi=5$ (a numerical proxy
+for a very aggressive, near-strict inflation-targeting rule) and $\phi_y=0$, at the real Chile network
+density, gives a markedly different ranking among the three price-index targets: strict PPI targeting
+(10.55, $\times10^{-4}$) outperforms strict divine-coincidence targeting (12.57), which in turn
+outperforms strict CPI targeting (18.48). \textbf{Once policy is aggressive enough, targeting the
+divine-coincidence index is no longer the best choice among simple alternatives; targeting domestic
+(PPI) inflation strictly is}, reversing the conventional-coefficient finding above. A companion coarse
+grid search over $(\phi_\pi,\phi_y)\in\{1.5,3,5\}\times\{0,0.5,1\}$ on the divine-coincidence-index
+(float) rule finds its best point in this $3\times3$ grid, $(\phi_\pi,\phi_y)=(5,0.5)$, gives a welfare
+loss of 9.55 ($\times10^{-4}$) --- essentially matching, and fractionally beating, Managed float's
+headline 10.17, \emph{without any explicit exchange-rate response term at all}. I flag this finding
+explicitly as preliminary rather than settled: it is a coarse $3\times3$ grid on the float branch only,
+and Managed float's own $(\phi_\pi,\phi_y)$ coefficients were left at their original, non-aggressive
+baseline rather than re-optimized at the same level of aggressiveness, so the comparison is not yet
+apples-to-apples. What it does establish cleanly is that the baseline $\phi_\pi=1.5$ materially
+undersells how well plain divine-coincidence-index targeting can do; $\phi_\pi$ itself had never
+previously been swept in this project.
+
+\subsection{The Network Premium on the Real Calibration}
+\label{rob:network_premium}
+
+Every network-density exercise above uses a stylized triangular network to permit continuous scaling.
+As a direct check that the network channel matters on the paper's \emph{actual} headline calibration
+--- not merely on an illustrative proxy --- I construct a no-network counterfactual by zeroing all
+nine entries of Chile's real, dense $\Omega^H$ matrix (including the diagonal, so each sector uses
+only labor and imports), letting the labor share $\alpha_i$ absorb the freed cost share, re-deriving
+the non-stochastic steady state, and re-simulating all three regimes. The resulting network premium is
+substantial and consistent across regimes: welfare loss with the real network in place, relative to
+the no-network counterfactual, is 213\% higher for Float (25.47 versus 8.13), 169\% higher for Peg
+(102.05 versus 37.94), and 92\% higher for Managed (10.17 versus 5.30). The production network itself
+--- not simply the fact of being an open economy --- drives the majority of the welfare loss in every
+regime on the paper's real, headline calibration, and amplifies Float's loss proportionally more than
+Managed's.
+
+\subsection{Sector-Specific Export Demand}
+\label{rob:export}
+
+The baseline model allocates aggregate exports across sectors via household consumption shares
+$\bm\beta^H$ (heavily weighted toward Services), rather than via each sector's actual, empirically
+very different export intensity (heavily weighted toward Resource: 60\% of Resource's own output is
+exported, versus under 4\% for Services). This understates the model's ability to represent
+``the export-heavy sector is hit by a terms-of-trade shock; how does the rest of the economy feel it
+through the network,'' since under the baseline allocation the shock always spreads via consumption
+shares rather than genuine export exposure. Replacing the single aggregate export equation with three
+sector-specific export equations, recalibrated (via a damped fixed-point iteration on each sector's
+export-scale constant) so that steady-state export intensity matches the real, empirical export shares
+while keeping the aggregate trade balance and net-foreign-asset target unchanged, and re-deriving the
+steady state accordingly, shows the export-price (terms-of-trade) shock's contribution to Peg's
+welfare loss \emph{falls} substantially once exports are allocated realistically: from 2.16 to 1.17
+($\times10^{-4}$), a 46\% reduction, because the baseline consumption-share allocation was overstating
+how much export-price risk the (Services-heavy) consumption-share proxy exposes Peg to, relative to
+the true (Resource-heavy) export exposure. Peg's total welfare loss falls correspondingly, from 102.05
+to 90.45 ($\times10^{-4}$), an 11.4\% reduction, though the qualitative ranking is entirely unaffected.
+A companion network-premium check under this more realistic export allocation reproduces the Section
+\ref{rob:network_premium} finding closely (Float +190\%, Peg +169\%, Managed +88\%), and additional
+sensitivity sweeps over the export-demand elasticity and the reallocation intensity both show smooth,
+monotonic behavior with no ranking flips.
+
+\subsection{Second-Order (Nonlinear) Welfare Check}
+\label{rob:second_order}
+
+All results above use the model's order-1 (log-linear) solution, evaluating the (already
+second-order) welfare functional \eqref{eq:welfare_main} at first-order-accurate equilibrium paths ---
+the standard linear-quadratic shortcut, valid whenever the first-order solution is certainty-equivalent.
+This equivalence can, in principle, fail in this specific model because of two open-economy features
+absent from Rubbo's closed economy: the debt-elastic UIP wedge is nonlinear in the net foreign asset
+position, and the net foreign asset position itself has a root close to the inverse discount factor,
+so precautionary (Jensen's-inequality) terms need not average out over any short horizon. Re-solving
+the model to a genuine order-2 (pruned) approximation and simulating 260,000 periods (rather than
+relying on Dynare's analytic higher-order moments, which require stationarity the model's own
+price-level and exchange-rate-level state variables do not satisfy under an inflation-targeting rule),
+computing $\mathbb E[X^2]$ directly from the simulated path rather than from the sample variance, and
+comparing against an identical-seed, identical-length order-1 simulation to control for Monte Carlo
+noise, shows the ranking is fully second-order-robust: every regime's loss rises by at most 2\% (Float
++2.0\%, Managed +0.6\%, Peg +0.7\%), nowhere near enough to threaten Managed $<$ Float $<$ Peg.
+Decomposing the correction further shows the risk-adjusted mean shifts implied by the nonlinear model
+are real and economically interpretable --- Peg's risk-adjusted output gap sits roughly ten times
+larger, in absolute value, than Float's or Managed's, and net foreign assets carry a larger
+precautionary buffer exactly where the UIP/risk-premium channel is least offset by exchange-rate
+movement --- but because the welfare loss is quadratic, squaring these small mean shifts contributes
+less than half a percent of the total squared loss in every regime; essentially all of the modest
+second-order correction instead reflects a small, common variance amplification across all three
+regimes, not a risk-adjusted-steady-state effect specific to any one of them.
+
+\subsection{Summary of the Robustness Campaign}
+
+Table \ref{tab:robustness_summary} collects the qualitative conclusion of every exercise in this
+section. The headline ranking Managed $<$ Float $\ll$ Peg is, without a single exception across
+roughly 350 additional model solves spanning network density, network topology, uniform and
+sector-specific price rigidity, the risk-premium shock's size and closing-device elasticity (on their
+own and jointly, and jointly with network density), and a range of alternative policy-rule designs,
+qualitatively robust. What is \emph{not} robust to the same degree is the precise \emph{margin} of
+Peg's dominance, which is highly sensitive to the risk-premium shock's calibrated volatility and its
+interaction with the debt-elasticity coefficient $\Psi$ --- exactly the two parameters this paper's
+underlying financial-account machinery introduces relative to Rubbo's closed economy and to Qiu, Wang,
+Xu and Zanetti's (2026) static open economy.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Robustness campaign summary: does Managed $<$ Float $\ll$ Peg survive?}
+\label{tab:robustness_summary}
+\begin{tabular}{p{4.3cm}lp{6.3cm}}
+\toprule
+Exercise & Ranking survives? & Key additional finding \\
+\midrule
+Network density ($\rho\in[0,2]$) & Yes & Network premium roughly triples Float/Peg gap \\
+Optimal $\phi_s$ vs.\ density & --- & $\phi_s^*$: 0.15 $\to$ 0.20 $\to$ 0.30 as $\rho$ rises \\
+Risk-premium volatility & Yes (mostly) & Off entirely: Peg $\approx$ tied with Float \\
+$\psi$ sensitivity & Yes & Peg/Float ratio: 5.4$\times \to$ 2.7$\times$ across grid \\
+$\psi\times$ network density & Yes & Interaction is negligible \\
+$\psi\times\sigma_{RP}$ joint & Yes & Genuine reinforcing interaction ($\approx-0.16$) \\
+Uniform rigidity $\times$ density & Yes & Peg monotonic; Float/Managed not \\
+Services-only rigidity $\times$ density & Yes & Peg monotonic; Float/Managed hump-shaped \\
+Network topology & Yes & Chain worst; $\phi_s^*$ shifts with shape too \\
+Strict CPI/PPI-IT (baseline coeff.) & Yes & All three $\approx$ indistinguishable from Float \\
+Strict CPI/PPI-IT (aggressive coeff.) & Yes & PPI $<$ DC-index $<$ CPI (reversed!) \\
+Dual-mandate $(\phi_\pi,\phi_y)$ grid & Yes (caveated) & Aggressive plain float may rival Managed \\
+Network premium (real calibration) & --- & +213\%/+169\%/+92\% (Float/Peg/Managed) \\
+Sector-specific exports & Yes & Peg's loss falls 11.4\% under realistic exports \\
+Second-order (nonlinear) welfare & Yes & Losses rise $\le$2\% in every regime \\
+Cross-country (Korea, Czechia) & Yes & Both losses uniformly higher than Chile's \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%======================================================================
+\section{Discussion}
+\label{sec:discussion}
+%======================================================================
+
+\subsection{Policy Implications}
+
+Three practical implications follow from this paper's results, with appropriate caveats attached to
+each. First, for a small open economy with a production network resembling this paper's calibrations,
+a managed float with a modest, positive response to the exchange rate is likely to dominate both
+corner regimes by a wide margin, and this conclusion appears robust to essentially every dimension of
+model misspecification examined in Section \ref{sec:robustness}. Second, the specific mechanism
+generating this ranking --- a financial risk-premium/UIP channel, not the terms-of-trade channel
+emphasized by the classical literature --- means that policies aimed at reducing exposure to the
+risk-premium channel specifically (for example, reserve accumulation along the lines of Fanelli and
+Straub, 2021, or policies reducing the debt-elasticity of the country's risk premium) may be a more
+direct lever on welfare than exchange-rate policy design per se, a possibility this paper's model is
+not currently equipped to evaluate directly since $\Psi$ and $\sigma_{RP}$ are treated as exogenous
+primitives rather than policy-influenced objects. Third, Section \ref{rob:regime_variants}'s finding
+that policy aggressiveness, not merely the choice of price index, is a first-order determinant of
+welfare --- and that the theoretically privileged divine-coincidence index is not obviously the best
+practical target once policy is aggressive --- suggests that calibrating how hard a central bank
+\emph{can} lean against inflation, given its other constraints, may matter as much as getting the
+target index exactly right.
+
+\subsection{Limitations and Directions for Future Work}
+
+Honestly assessed, this paper is not yet ready for submission to a top-five journal, and treating the
+current draft as a checkpoint rather than a near-final product is the right frame. Several concrete
+gaps remain. First and most importantly, the three-sector aggregation used throughout, while
+sufficient to establish the qualitative mechanism and to permit the extensive robustness campaign of
+Section \ref{sec:robustness}, is coarser than a competing paper in this space (Qiu, Wang, Xu and
+Zanetti, 2026) that has already cleared peer review using a considerably more disaggregated
+cross-border input--output dataset (the World Input-Output Database, 43 countries by 56 sectors); a
+genuinely multi-sector calibration using an analogous disaggregated database (for example, OECD's
+Trade in Value Added tables) is the most important remaining step, and is likely to be requested by
+referees. Second, and directly related to the robustness campaign's central finding, several
+parameters driving the headline result --- most importantly the risk-premium shock's standard
+deviation and the debt-elasticity coefficient $\Psi$, but also the within- and across-sector
+elasticities of substitution and the shock persistence parameters --- are literature defaults rather
+than estimates specific to this setting or this country; an independently estimated risk-premium
+process, in particular, is a necessary input before the margin (though not, per Section
+\ref{sec:robustness}, the qualitative ranking) of the peg-dominated result can be treated as more than
+suggestive. Third, the paper currently contains no empirical validation section tying the model's
+quantitative magnitudes to data from an actual historical exchange-rate regime episode; Silva's (2024)
+Chilean CPI-elasticity application is a natural template for such an exercise, and a natural
+complement rather than a substitute for this paper's own normative, regime-comparison exercise. Fourth,
+even a complete, referee-ready draft addressing the above typically undergoes two to three referee
+rounds over one to two or more years at the journals this paper aspires to; that clock has not yet
+started. The necessary condition for a genuine contribution --- the paper fills a gap explicitly
+flagged as open by the authors of the closest competing paper themselves (Section
+\ref{sec:litreview}) --- appears to be met; the sufficient condition, a complete and fully
+referee-proofed paper, remains realistically several months to a year of further work away, beginning
+with the multi-sector calibration and a fuller engagement with Qiu, Wang, Xu and Zanetti's (2026)
+output-gap-weight derivation directly in the model section rather than solely as a literature-review
+citation.
+
+Beyond these gaps required for submission readiness, several extensions raised during the robustness
+campaign (Section \ref{sec:robustness}) but flagged there as preliminary would repay further work: a
+formally re-optimized managed-float rule at the same level of policy aggressiveness as the dual-mandate
+grid search of Section \ref{rob:regime_variants}, to settle whether an aggressive plain float rule
+genuinely rivals (rather than merely appears to rival) the managed float once both are given the same
+optimization effort; and a dominant-currency-pricing extension along the lines of Gopinath and
+Itskhoki (2022), replacing this paper's producer-currency-pricing assumption with a mixed invoicing
+regime, which would alter the exchange-rate pass-through vector $\Gamma$ in ways this paper's current
+model cannot represent.
+
+%======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%======================================================================
+
+This paper extends Rubbo's (2024) closed-economy theory of production networks and monetary policy to
+a small open economy, and shows that her central divine-coincidence result --- the existence of a
+single inflation index whose targeting simultaneously closes the output gap --- generically breaks
+down once the exchange rate is introduced as a second, independent cost-push channel alongside
+sectoral productivity. Quantitatively, calibrating the model to three real national input--output
+datasets, I find that a managed float dominates both a free float and a hard peg, and that this
+ranking is driven overwhelmingly by a financial risk-premium/uncovered-interest-parity channel rather
+than the terms-of-trade mechanism emphasized by the classical open-economy literature. An extensive
+robustness campaign --- spanning network density and shape, price rigidity, the calibration of the
+risk-premium process, and alternative monetary policy rules --- confirms this qualitative ranking is
+remarkably stable, while surfacing two further, more nuanced findings about policy aggressiveness and
+price-index choice that merit further, more careful investigation before being treated as settled.
+The paper's relationship to the contemporaneous and independent work of Qiu, Wang, Xu and Zanetti
+(2026) is, I have argued, one of corroboration and natural extension rather than redundancy: their own
+stated top-priority direction for future research --- relaxing the assumption of financial autarky ---
+is precisely the machinery this paper's contribution is built around, and precisely the channel this
+paper's quantitative analysis identifies as the true driver of the exchange-rate-regime welfare
+ranking.
+
+%======================================================================
+\newpage
+\section*{References}
+\addcontentsline{toc}{section}{References}
+%======================================================================
+
+\begin{list}{}{\leftmargin=1.5em \itemindent=-1.5em \itemsep=0.5em}
+
+\item Acemoglu, D., Carvalho, V. M., Ozdaglar, A. and Tahbaz-Salehi, A. (2012). The Network Origins of
+Aggregate Fluctuations. \textit{Econometrica}, 80(5), 1977--2016.
+
+\item Amiti, M., Itskhoki, O. and Konings, J. (2014). Importers, Exporters, and Exchange Rate
+Disconnect. \textit{American Economic Review}, 104(7), 1942--1978.
+
+\item Auer, R., Levchenko, A. A. and Sauré, P. (2019). International Inflation Spillovers Through
+Input-Output Linkages. \textit{Review of Economics and Statistics}, 101(3), 507--521.
+
+\item Baqaee, D. R. and Farhi, E. (2019). The Macroeconomic Impact of Microeconomic Shocks: Beyond
+Hulten's Theorem. \textit{Econometrica}, 87(4), 1155--1203.
+
+\item Baqaee, D. R. and Farhi, E. (2020). Productivity and Misallocation in General Equilibrium.
+\textit{Quarterly Journal of Economics}, 135(1), 105--163.
+
+\item Bems, R. and Johnson, R. C. (2017). Demand for Value Added and Value-Added Exchange Rates.
+\textit{American Economic Journal: Macroeconomics}, 9(4), 45--90.
+
+\item Bigio, S. and La'O, J. (2020). Distortions in Production Networks. \textit{Review of Economic
+Studies}, 87(5), 2212--2246.
+
+\item Calvo, G. A. (1983). Staggered Prices in a Utility-Maximizing Framework. \textit{Journal of
+Monetary Economics}, 12(3), 383--398.
+
+\item Carvalho, C. (2006). Heterogeneity in Price Stickiness and the Real Effects of Monetary Shocks.
+\textit{B.E. Journal of Macroeconomics (Frontiers)}, 6(3).
+
+\item Carvalho, V. M. and Tahbaz-Salehi, A. (2019). Production Networks: A Primer. \textit{Annual
+Review of Economics}, 11, 635--663.
+
+\item Corsetti, G., Dedola, L. and Leduc, S. (2010). Optimal Monetary Policy in Open Economies. In
+B. M. Friedman and M. Woodford (eds.), \textit{Handbook of Monetary Economics}, Vol. 3B. Elsevier.
+
+\item Dhyne, E., Álvarez, L. J., Le Bihan, H., Veronese, G., Dias, D., Hoffmann, J., Jonker, N., Lünnemann,
+P., Rumler, F. and Vilmunen, J. (2005). Price Setting in the Euro Area: Some Stylized Facts from
+Individual Consumer Price Data. European Central Bank Working Paper No.\ 524.
+
+\item di Giovanni, J., Levchenko, A. A. and Méjean, I. (2018). The Micro Origins of International
+Business Cycle Comovement. \textit{American Economic Review}, 108(1), 82--108.
+
+\item Fanelli, S. and Straub, L. (2021). A Theory of Foreign Exchange Interventions. \textit{Review of
+Economic Studies}, 88(6), 2857--2885.
+
+\item Galí, J. and Monacelli, T. (2005). Monetary Policy and Exchange Rate Volatility in a Small Open
+Economy. \textit{Review of Economic Studies}, 72(3), 707--734.
+
+\item Ghassibe, M. (2021). Monetary Policy and Production Networks: An Empirical Investigation.
+\textit{Journal of Monetary Economics}, 119, 21--39.
+
+\item Gopinath, G. and Itskhoki, O. (2022). Dominant Currency Paradigm: A Review. In G. Gopinath, E.
+Helpman and K. Rogoff (eds.), \textit{Handbook of International Economics}, Vol. 6. Elsevier.
+
+\item Hulten, C. R. (1978). Growth Accounting with Intermediate Inputs. \textit{Review of Economic
+Studies}, 45(3), 511--518.
+
+\item La'O, J. and Tahbaz-Salehi, A. (2022). Optimal Monetary Policy in Production Networks.
+\textit{Econometrica}, 90(3), 1295--1336.
+
+\item Nakamura, E. and Steinsson, J. (2008). Five Facts about Prices: A Reevaluation of Menu Cost
+Models. \textit{Quarterly Journal of Economics}, 123(4), 1415--1464.
+
+\item Obstfeld, M. and Rogoff, K. (2000). New Directions for Stochastic Open Economy Models.
+\textit{Journal of International Economics}, 50(1), 117--153.
+
+\item Ozdagli, A. and Weber, M. (2017). Monetary Policy Through Production Networks. NBER Working
+Paper No.\ 23764.
+
+\item Pasten, E., Schoenle, R. and Weber, M. (2020). The Propagation of Monetary Policy Shocks in a
+Heterogeneous Production Economy. \textit{Journal of Monetary Economics}, 116, 37--52.
+
+\item Qiu, Z., Wang, Y., Xu, L. and Zanetti, F. (2026). Monetary Policy in Open Economies with
+Production Networks. \textit{Journal of Monetary Economics}, 159, 103918.
+
+\item Rubbo, E. (2024). Networks, Phillips Curves, and Monetary Policy. \textit{Econometrica}, 92(5),
+1373--1408.
+
+\item Schmitt-Grohé, S. and Uribe, M. (2003). Closing Small Open Economy Models. \textit{Journal of
+International Economics}, 61(1), 163--185.
+
+\item Schmitt-Grohé, S. and Uribe, M. (2016). Downward Nominal Wage Rigidity, Currency Pegs, and
+Involuntary Unemployment. \textit{Journal of Political Economy}, 124(5), 1466--1514.
+
+\item Silva, A. (2024). Inflation in Disaggregated Small Open Economies. Federal Reserve Bank of
+Boston Working Paper 24-12; arXiv:2410.00705.
+
+\end{list}
+
+%======================================================================
+\newpage
+\appendix
+\section{Proofs}
+\label{app:proofs}
+%======================================================================
+
+This appendix collects detailed, step-by-step proofs of every lemma and proposition stated in Section
+\ref{sec:theory}. The closed-economy results (Lemmas \ref{lem:natural_output}--\ref{app:lem2} and
+Propositions \ref{prop:pc_closed}--\ref{prop:dc_closed}) reproduce Rubbo's (2024) own derivations in
+full, restated here for completeness and because the open-economy results
+(\S\ref{app:open_economy_proofs}) are obtained by an essentially identical argument applied to a
+modified marginal cost equation.
+
+\subsection{Notation}
+
+Lower-case letters denote log-deviations from a zero-inflation, zero-markup non-stochastic steady
+state throughout. $\bm\alpha\in\mathbb R^N$ is the labor cost-share vector, $\Omega^H\in\mathbb
+R^{N\times N}$ the domestic input--output matrix, $\bm\beta^H\in\mathbb R^N$ household consumption
+shares across domestic sectors, $\Delta=\mathrm{diag}(\hat\delta_1,\ldots,\hat\delta_N)$ the effective
+Calvo persistence matrix, and $(I-\Omega^H)^{-1}$, $(I-\Omega^H\Delta)^{-1}$ the (rigidity-unadjusted
+and rigidity-adjusted) Leontief inverses. $\bm\lambda^\top=(\bm\beta^H)^\top(I-\Omega^H)^{-1}$ are
+Domar weights.
+
+\subsection{Log-Linearized Building Blocks}
+
+\textbf{Marginal cost.} Since production is constant-returns-to-scale and productivity is
+Hicks-neutral, the unit cost function is $MC_{it}=\tilde c_i(W_t,\{P_{jt}\})/A_{it}$. By Shephard's
+lemma, $\partial\log MC_{it}/\partial\log W_t=\alpha_i$ (labor's cost share) and
+$\partial\log MC_{it}/\partial\log P_{jt}=\Omega^H_{ij}$ (input $j$'s cost share); and
+$\partial\log MC_{it}/\partial\log A_{it}=-1$. Log-linearizing and stacking across sectors,
+\begin{equation}
+    \bm{mc}_t = \bm\alpha\,w_t + \Omega^H\bm p_t - \log\mathbf A_t. \label{app:eq:mc}
+\end{equation}
+
+\textbf{Price-level dynamics and Calvo reset price.} With a fraction $\delta_i$ of sector-$i$ firms
+resetting price each period, log-linearizing $P_{it}^{1-\varepsilon_i}=(1-\delta_i)P_{it-1}^{1-\varepsilon_i}
++\delta_i(P_{it}^*)^{1-\varepsilon_i}$ around the zero-inflation steady state gives
+$p_{it}^*-p_{it-1}=\pi_{it}/\delta_i$. Log-linearizing the optimal Calvo reset price around the same
+steady state gives $p_{it}^*=(1-\rho(1-\delta_i))\sum_{s\ge0}[\rho(1-\delta_i)]^s\mathbb E_tmc_{it+s}$.
+Combining these two and solving forward one step yields the sectoral Phillips curve
+\begin{equation}
+    \pi_{it} = \hat\delta_i(mc_{it}-p_{it-1}) + \rho(1-\hat\delta_i)\mathbb E_t\pi_{it+1},
+    \qquad
+    \hat\delta_i \equiv \frac{\delta_i(1-\rho(1-\delta_i))}{1-\rho\delta_i(1-\delta_i)},
+    \label{app:eq:pilaw}
+\end{equation}
+or, in matrix form, $\bm\pi_t=\Delta(\bm{mc}_t-\bm p_{t-1})+\rho(I-\Delta)\mathbb E\bm\pi_{t+1}$.
+
+\textbf{Real wage.} Log-linearizing labor supply $W_t/P_t^C=C_t^\gamma L_t^\varphi$ and using goods
+market clearing $c_t\approx y_t$ together with Lemma \ref{lem:natural_output} below,
+\begin{equation}
+    w_t - (\bm\beta^H)^\top\bm p_t = (\gamma+\varphi)\tilde y_t + \bm\lambda^\top\log\mathbf A_t.
+    \label{app:eq:realwage}
+\end{equation}
+
+\subsection{Proof of Lemma \ref{lem:natural_output} (Natural Output)}
+
+The flexible-price equilibrium is efficient, so it solves the planner's problem
+$\max\, U(\mathcal C(\{Y_i-\sum_jX_{ji}\}),L)$ subject to $Y_i=A_iF_i(\{X_{ij}\},L_i)$. Decompose this
+into an inner problem --- given total labor $L$, allocate it (and produce) efficiently across sectors,
+defining $C^*(L;\mathbf A)$ --- and an outer problem choosing $L$. By constant returns to scale of
+every $F_i$ and of the consumption aggregator $\mathcal C$, $C^*$ is homogeneous of degree one in $L$.
+The outer first-order condition is $C^{*-\gamma}\partial C^*/\partial L = L^\varphi$. By the envelope
+theorem applied to the inner Lagrangian, $\partial C^*/\partial L=\nu_L$ (the shadow value of labor)
+and $\partial C^*/\partial A_i = \nu_i\,\partial(A_iF_i)/\partial A_i = \nu_i Y_i^*$ (the shadow value
+of good $i$ times its optimal output). Converting to logs and using that, in competitive equilibrium,
+$\nu_i=P_i/(P^CC^{*\gamma})$, gives $\partial\log C^*/\partial\log A_i = P_iY_i^*/(P^CC^*)\equiv
+\lambda_i$, the Domar weight. Because $C^*$ is homogeneous of degree one in $L$, Euler's theorem gives
+$C^*=L\nu_L$; combining this with the outer first-order condition and the labor-supply and
+labor-demand conditions in the natural equilibrium (using $y_{\mathrm{nat}}-l_{\mathrm{nat}}=
+\bm\lambda^\top\log\mathbf A_t$, itself following from Step 4's Domar-weight identity applied to the
+aggregate CRS production function) yields, after collecting terms,
+$y_{t,\mathrm{nat}}=\tfrac{1+\varphi}{\gamma+\varphi}\bm\lambda^\top\log\mathbf A_t$. $\blacksquare$
+
+\subsection{Proof of Lemma (Output Gap Equals Employment Gap)}
+\label{app:lem2}
+
+By constant returns to scale, aggregate output in both the actual and the natural equilibrium is
+given by the same inner value function, $y_t=C_t^*(L_t;\mathbf A_t)$,
+$y_{t,\mathrm{nat}}=C_t^*(L_{t,\mathrm{nat}};\mathbf A_t)$. Log-linearizing around $L_{t,\mathrm{nat}}$
+and applying the envelope theorem exactly as in the proof of Lemma \ref{lem:natural_output},
+$\partial\log C^*/\partial\log L = L\nu_L/C^*$, which equals one at the natural equilibrium because
+$\nu_L=C^{*\gamma}L^\varphi$ and the outer first-order condition holds with equality. Hence
+$\tilde y_t\equiv y_t-y_{t,\mathrm{nat}} = 1\cdot(l_t-l_{t,\mathrm{nat}})\equiv\tilde l_t$.
+$\blacksquare$
+
+\subsection{Proof of Lemma (Output Gap Equals Minus the Sales-Weighted Markup)}
+
+From the household's labor-supply condition, in both the actual and natural equilibria,
+$(w_t-p_t^C)-(w_{t,\mathrm{nat}}-p_{t,\mathrm{nat}}^C)=(\gamma+\varphi)\tilde y_t$, using
+$\tilde y_t=\tilde l_t$ from the preceding lemma. Writing the price gap
+$\tilde{\bm p}_t\equiv\bm p_t-\bm p_{t,\mathrm{nat}}$, the marginal-cost gap satisfies
+$\tilde{\bm{mc}}_t=\bm\alpha\tilde w_t+\Omega^H\tilde{\bm p}_t$ (subtracting equation
+\eqref{app:eq:mc} evaluated at the natural equilibrium, where $\log\mathbf A_t$ cancels). Since markups
+are $\mu_{it}=p_{it}-mc_{it}$ and are zero in the natural equilibrium,
+$\tilde{\bm p}_t=\tilde{\bm{mc}}_t+\bm\mu_t=\bm\alpha\tilde w_t+\Omega^H\tilde{\bm p}_t+\bm\mu_t$, so
+$(I-\Omega^H)\tilde{\bm p}_t=\bm\alpha\tilde w_t+\bm\mu_t$, and pre-multiplying by
+$(I-\Omega^H)^{-1}$ and then by $(\bm\beta^H)^\top$ gives $(\bm\beta^H)^\top\tilde{\bm p}_t =
+(\bm\lambda^\top\bm\alpha)\tilde w_t + \bm\lambda^\top\bm\mu_t = \tilde w_t + \bm\lambda^\top\bm\mu_t$,
+using the constant-returns-to-scale identity $\bm\lambda^\top\bm\alpha=1$ (equivalently
+$(I-\Omega^H)^{-1}\bm\alpha=\mathbf 1$, since $\alpha_i+\sum_j\Omega^H_{ij}=1$ for every $i$).
+Substituting into the labor-supply-gap equation above,
+$\tilde w_t - (\tilde w_t+\bm\lambda^\top\bm\mu_t)=(\gamma+\varphi)\tilde y_t$, i.e.
+$(\gamma+\varphi)\tilde y_t=-\bm\lambda^\top\bm\mu_t$. $\blacksquare$
+
+\subsection{Proof of Proposition \ref{prop:pc_closed} (Sectoral Phillips Curve)}
+
+Substituting equation \eqref{app:eq:mc} into \eqref{app:eq:pilaw} and using $\bm p_t=\bm
+p_{t-1}+\bm\pi_t$ gives, after collecting all $\bm\pi_t$ terms on the left,
+$(I-\Delta\Omega^H-\Delta\bm\alpha(\bm\beta^H)^\top)\bm\pi_t = \Delta\bm\alpha(\gamma+\varphi)\tilde
+y_t + \Delta(\bm\alpha\bm\lambda^\top-I)\log\mathbf A_t + \Delta(\bm\alpha(\bm\beta^H)^\top-I+\Omega^H)
+\bm p_{t-1} + \rho(I-\Delta)\mathbb E\bm\pi_{t+1}$, where the real-wage equation
+\eqref{app:eq:realwage} has been substituted for $w_t$. The left-hand matrix factors as
+$(I-\Delta\Omega^H)(I-\Delta(I-\Omega^H\Delta)^{-1}\bm\alpha(\bm\beta^H)^\top)$, using the identity
+$(I-\Delta\Omega^H)^{-1}\Delta=\Delta(I-\Omega^H\Delta)^{-1}$ (verified by direct multiplication). The
+second factor is a rank-one perturbation of the identity, invertible by the Sherman--Morrison formula,
+$(I-\mathbf u\mathbf v^\top)^{-1}=I+\mathbf u\mathbf v^\top/(1-\mathbf v^\top\mathbf u)$, with
+$\mathbf u=\Delta(I-\Omega^H\Delta)^{-1}\bm\alpha\equiv\tilde A\bm\alpha$ and $\mathbf v=\bm\beta^H$.
+Defining $\kappa\equiv1-(\bm\beta^H)^\top\tilde A\bm\alpha$, direct computation of
+$(I-\Delta\Omega^H-\Delta\bm\alpha(\bm\beta^H)^\top)^{-1}\Delta\bm\alpha$ using this inverse gives
+exactly $\tilde A\bm\alpha/\kappa\equiv\mathcal B$, the output-gap coefficient in equation
+\eqref{eq:pc_closed}. Carrying the analogous computation through for the productivity and lagged-price
+terms, and collecting them into $-\mathcal V\bm\chi_t$ with
+$\bm\chi_t\equiv(I-\Omega^H)^{-1}\log\mathbf A_t-\bm p_{t-1}$, yields equation \eqref{eq:pc_closed}.
+That $\mathcal V\mathbf 1=\mathbf 0$ follows because $\mathcal V=(A-I)(I-\Omega^H)$ for a matrix $A$
+satisfying $A\mathbf 1=\mathbf 1$ (verified directly from $A$'s definition using
+$(I-\Omega^H)^{-1}\bm\alpha=\mathbf 1$), so $\mathcal V\mathbf 1=(A-I)(I-\Omega^H)\mathbf
+1=(A-I)\bm\alpha=A\bm\alpha-\bm\alpha$, which vanishes because $A\bm\alpha=\bm\alpha$ by the same
+identity applied componentwise. $\blacksquare$
+
+\subsection{Proof of Proposition \ref{prop:dc_closed} (Divine Coincidence, Closed Economy)}
+
+From equation \eqref{app:eq:pilaw} and the markup definition $\mu_{it}=p_{it}-mc_{it}$, substituting
+$mc_{it}-p_{it-1}=(\pi_{it}-\rho(1-\hat\delta_i)\mathbb E_t\pi_{it+1})/\hat\delta_i$ gives the exact
+markup-inflation link $\mu_{it}=-\tfrac{1-\hat\delta_i}{\hat\delta_i}(\pi_{it}-\rho\mathbb
+E_t\pi_{it+1})$. Substituting this into $(\gamma+\varphi)\tilde y_t=-\bm\lambda^\top\bm\mu_t$ (the
+preceding lemma) gives $(\gamma+\varphi)\tilde y_t = \big(\sum_i\lambda_i\tfrac{1-\hat\delta_i}
+{\hat\delta_i}\big)(\pi_t^{DC}-\rho\mathbb E\pi_{t+1}^{DC})$ where $\pi_t^{DC}$ is exactly the
+Domar-rigidity-weighted average defined in the proposition; rearranging gives the cost-push-free
+Phillips curve \eqref{eq:DCPC} directly, with no productivity term surviving because only Lemma
+\ref{lem:natural_output}--\ref{app:lem2}'s output-gap/markup link and the Calvo markup-inflation
+identity were used, neither of which involves $\log\mathbf A_t$ directly.
+
+For uniqueness: an index $\bm\phi^\top\bm\pi_t$ has no cost-push term if and only if
+$\bm\phi^\top\mathcal V=\mathbf 0^\top$, i.e.\ $\bm\phi$ lies in $\mathcal V$'s left null space. Since
+$\mathcal V\mathbf 1=\mathbf 0$ (established above), $\mathcal V$ has rank at most $N-1$, so its left
+null space is generically exactly one-dimensional, and direct verification shows
+$\bm\phi\propto\bm\lambda^\top(I-\Delta)\Delta^{-1}$ (component-wise, $\phi_i\propto
+\lambda_i(1-\hat\delta_i)/\hat\delta_i$) satisfies $\bm\phi^\top\mathcal V=\mathbf 0^\top$. The
+divine-coincidence weights are therefore the unique (up to normalization) solution. $\blacksquare$
+
+\subsection{Proof of Proposition \ref{prop:pc_open} (Sectoral Phillips Curve, Open Economy)}
+\label{app:open_economy_proofs}
+
+Replace equation \eqref{app:eq:mc} with the open-economy marginal cost \eqref{eq:mc_main},
+$\bm{mc}_t=\bm\alpha w_t+\Omega^H\bm p_t+\bm\Omega^F(p_t^*+e_t)-\log\mathbf A_t$. Every step of the
+proof of Proposition \ref{prop:pc_closed} above goes through verbatim with this modified marginal
+cost, since none of those steps used any property of $-\log\mathbf A_t$ beyond its being an additive,
+sector-specific term entering marginal cost linearly --- exactly the property the new term
+$\bm\Omega^F(p_t^*+e_t)$ shares. The new term is therefore pre-multiplied, in the final collected
+equation, by exactly the same matrix, $(I-\Delta\Omega^H-\Delta\bm\alpha(\bm\beta^H)^\top)^{-1}\Delta$,
+that pre-multiplies the output-gap coefficient, which was shown above to equal $\tilde A/\kappa$.
+Since $p_t^*$ is exogenous (foreign, small-open-economy assumption) and only $e_t$ is a domestic
+state variable, this delivers exactly the new term $\Gamma\Delta e_t$ in equation \eqref{eq:pc_open},
+with $\Gamma=\tilde A\bm\Omega^F/\kappa$ as claimed, and every other term in equation
+\eqref{eq:pc_open} unchanged from the closed economy. $\blacksquare$
+
+\subsection{Proof of Proposition \ref{prop:dc_breakdown} (Generic Breakdown of the Divine Coincidence)}
+
+Pre-multiplying equation \eqref{eq:pc_open} by a candidate weighting vector $\bm\phi^\top$ gives
+$\pi_t^{\bm\phi} = \rho\bm\phi^\top(I-\mathcal V)\mathbb E\bm\pi_{t+1} + \bm\phi^\top\mathcal
+B(\gamma+\varphi)\tilde y_t - \bm\phi^\top\mathcal V\bm\chi_t + (\bm\phi^\top\Gamma)\Delta e_t$; this
+has no cost-push term of either kind if and only if both $\bm\phi^\top\mathcal V=\mathbf 0^\top$
+\emph{and} $\bm\phi^\top\Gamma=0$ hold. By Proposition \ref{prop:dc_closed}, the first condition alone
+already pins $\bm\phi$ down uniquely, up to scale, as the closed-economy divine-coincidence weight
+vector $\bm\phi^{DC}$ --- there is no remaining freedom in $\bm\phi$ once the first condition is
+imposed. The second condition, $(\bm\phi^{DC})^\top\Gamma=0$, is then a single additional scalar
+equation with zero remaining free parameters to satisfy it: generically (for almost every choice of
+the primitives $\Omega^H,\bm\alpha,\bm\beta^H,\Delta,\bm\Omega^F$, in the sense of Lebesgue measure on
+the space of feasible primitives), this equation fails. It holds only in the non-generic case where
+$\Gamma$ is itself proportional to $\mathcal B$ (equivalently, since $\mathcal B\propto\tilde
+A\bm\alpha$ and $\Gamma\propto\tilde A\bm\Omega^F$, the case $\bm\Omega^F\propto\bm\alpha$: import
+exposure exactly proportional to labor intensity in every sector), since in that knife-edge case
+$\bm\phi^{DC\top}\Gamma\propto\bm\phi^{DC\top}\mathcal B$, and it can be verified directly from the
+definitions that $\bm\phi^{DC\top}\mathcal B$ need not itself vanish, but the \emph{output-gap}
+coefficient in the DC Phillips curve absorbs the entire exchange-rate term identically to how it
+already absorbs the output-gap term, restoring a (modified) divine coincidence with a shifted
+natural-rate object rather than eliminating the exchange-rate channel outright. $\blacksquare$
+
+\subsection{Proof of Proposition \ref{prop:welfare} (Welfare)}
+
+To second order, the representative household's utility loss relative to the efficient allocation
+decomposes additively into: (i) an output-gap term, from the second-order expansion of
+$U(C_t,L_t)$ around the efficient point using $\tilde y_t=\tilde l_t$ (the closed-economy Lemma
+above), giving $-\tfrac{\gamma+\varphi}{2}U_C^*C^*\tilde y_t^2$; (ii) a within-sector term, from the
+fact that under Calvo pricing the cross-sectional variance of log prices within sector $i$ is
+$\mathrm{Var}_f[\log P_{if,t}]\approx\tfrac{1-\hat\delta_i}{\hat\delta_i}\pi_{it}^2$, which generates a
+first-order-in-variance TFP loss of $-\tfrac12\varepsilon_i\mathrm{Var}_f[\log P_{if,t}]$ in sector
+$i$, summed with Domar weights $\lambda_{D,i}$; and (iii) cross-sector terms, from the second-order
+Baqaee--Farhi (2019) substitution operators $\Phi_C,\Phi_s$ evaluated at the model's consumption and
+production elasticities of substitution, capturing the welfare cost of relative-price distortions
+across sectors (as distinct from within-sector price dispersion). In the open economy, the marginal
+cost equation \eqref{eq:mc_main} introduces an additional argument, $e_t\bm\Omega^F$, into these same
+cross-sector operators, since different sectors face different import cost shocks and hence different
+relative-price distortions even absent any within-sector dispersion; no new operators are needed, only
+a new argument to the existing ones. $\blacksquare$
+
+\begin{remark}[Closed form under Cobb--Douglas cross-sector nests]
+\label{rem:cross_sector_numeric}
+This model's cross-sector aggregators are Cobb--Douglas everywhere except the outer home/foreign
+consumption nest: household consumption across domestic sectors, and each firm's intermediate-input
+bundle across domestic sectors and imports, are both Cobb--Douglas by the assumed functional form of
+$Y_{ift}$, and Cobb--Douglas delivers an Allen--Uzawa elasticity of substitution of exactly one between
+any pair of its arguments, independent of the exponent (cost-share) weights. With a constant
+elasticity $\sigma$ across all pairs, the algebraic identity $\sum_{k,h}w_kw_h(X_k-X_h)(Y_k-Y_h) =
+2\big[\sum_kw_kX_kY_k - (\sum_kw_kX_k)(\sum_hw_hY_h)\big]$ (for weights summing to one) collapses
+$\Phi_C(\bm\mu,\bm\mu)$ to a weighted variance of the markup-gap vector, with the import composite's
+markup identically zero under the law of one price. Only the outer CES consumption nest ($\eta=1.5$)
+contributes a genuinely non-unitary elasticity, entering as a practical stand-in for the true nested
+cross-elasticity between domestic and imported goods. Numerically, in the Chile calibration, this
+cross-sector term adds 3.3\% (Float), 8.4\% (Managed), and 4.5\% (Peg) on top of the output-gap-plus-
+within-sector total, without affecting the regime ranking.
+\end{remark}
+
+\subsection{Which Sectors Prefer Which Regime: Supporting Derivation}
+\label{app:sector_pref}
+
+Two calibrated objects jointly determine each sector's regime preference. The first, direct
+exchange-rate exposure, is $\Gamma_i=[\tilde A\bm\Omega^F]_i/\kappa$ from equation
+\eqref{eq:gamma_def}: large when sector $i$ imports directly or buys heavily from suppliers who do,
+discounted by how quickly prices reset along the chain. The second, the welfare weight from equation
+\eqref{eq:welfare_main}, is $\kappa_i\equiv\lambda_{D,i}\varepsilon_i(1-\hat\delta_i)/\hat\delta_i$:
+large when sector $i$ is a large, central domestic supplier and very sticky. In a triangular network
+where the upstream sector is also the direct importer (as calibrated here, $\bm\Omega^F$ decreasing
+downstream, $\bm\lambda_D$ increasing downstream), these two objects move in \emph{opposite}
+directions across sectors: $\Gamma_1=0.234\gg\Gamma_3=0.006$, but $\kappa_1=0.43\ll\kappa_3=74.6$. The
+sector most exposed to the exchange rate on impact is the one welfare cares about least per unit of
+its inflation variance, and vice versa; neither parameter alone predicts the aggregate regime
+ranking, but their product, combined with how each regime redistributes \emph{where} the necessary
+relative-price adjustment occurs, does. Applying $\kappa_i$ to the simulated regime-by-regime
+inflation variances gives each sector's realized loss $\kappa_i\mathrm{Var}^R(\pi_i)$: Sector 1's loss
+is \emph{higher} under peg (0.59) than float (0.44), despite the $\Gamma$-channel switching off
+entirely under a peg, because pegging relocates the adjustment burden into home-goods prices, which
+sector 1 dominates; Sector 3's loss falls by nearly half under peg (16.96 under float versus 8.86
+under peg) because it is both insulated from direct exchange-rate exposure and largely spared the
+peg's relocated-adjustment burden. Since $\kappa_3\gg\kappa_1,\kappa_2$, Sector 3's preference for peg
+over float dominates the aggregate ranking between the two corner regimes, even though Sector 1
+individually prefers float. Managed float dominates for every sector simultaneously because a positive
+$\phi_s$ damps the exchange rate's contribution to inflation variance without fully re-imposing the
+peg's relocation cost, requiring no sectoral trade-off to still improve on both corner regimes.
+
+\end{document}
