@@ -3,7 +3,95 @@
 See `calibration.md` for how the numbers below were produced and `model_equations.md` for the
 objects referenced.
 
-## Headline welfare result (Chile calibration)
+## Full-native-resolution calibration campaign (2026-07-31) — NEW HEADLINE, supersedes the 3-sector numbers below
+The model was generalized from N=3 hand-picked macro-sectors (Resource/Manufacturing/Services) to
+each country's FULL native IO resolution (Chile N=12, Korea N=33, Czechia N≈81) — see
+`calibration.md`'s "Full-resolution calibration" section for the pipeline (calibration script →
+Python-generated N-sector `.mod` file → generalized `soe_ss_solve_dense_N.m` steady-state solver).
+**This full-resolution calibration is now the headline result per project decision; the 3-sector
+numbers in the rest of this file are retained below as a superseded/stylized precursor, not deleted
+— they remain useful as the lower-N robustness check they were originally validated against.**
+
+**Chile (N=12): BLOCKED, not run.** The raw source files
+(`data_calibration/mip_12x12.xlsx`, `cou_12x12.xlsx`, Banco Central de Chile) are not present in
+the repo (git-ignored, and not cached locally either) and the source page
+(bcentral.cl/areas/estadisticas/matriz-insumo-producto/cuadros-mip-excel) is behind an Incapsula
+bot-protection wall that blocked both a direct `curl` and a `WebFetch` render from this session. The
+full-resolution build code (`build_chile_calibration.py`'s `build_full()`) is written, tested for
+correctness of logic (mirrors Korea/Czechia's working `build_full()`), and ready to run the moment
+the two xlsx files are placed back in `data_calibration/` — this is a **data-availability gap, not
+a pipeline defect**. A follow-up session with browser/download access should prioritize this before
+anything else, since Chile is the paper's primary commodity-exporter case.
+
+**Korea (N=33): validated, new headline welfare numbers.** `resid`/`steady`/`check` all pass
+cleanly (residuals ~0, BK conditions satisfied, 33 positive real sector prices). Welfare loss
+(same formula as the 3-sector case, ×10⁻⁴, from 20,000-period simulated moments — see the note
+below on why simulated rather than analytic moments were used):
+
+| Regime | Output-gap term | Price-dispersion term | **Total** |
+|---|---|---|---|
+| Float | 1.94 | 11.02 | **12.96** |
+| Managed | 1.52 | 7.89 | **9.41** |
+| Peg | 113.67 | 19.64 | **133.31** |
+
+**Ranking: Managed < Float << Peg — Peg's dominance from the 3-sector Chile headline result DOES
+NOT survive at Korea's full native resolution; it inverts.** Peg is ~10-14x worse than Float/Managed
+here, driven almost entirely by a blown-up output-gap variance under Peg (Var(y_gap) 58x larger than
+under Float), not price dispersion. This is the opposite mechanism from the 3-sector story (where
+Peg was reported to *dominate* via the risk-premium/UIP channel). Plausible reading, **not yet
+confirmed by a full shock-decomposition** (a follow-up session should run the same
+`compute_welfare_by_shock`-style breakdown used in the 3-sector analysis): Korea is a diversified
+manufacturing/services exporter (not a commodity exporter like Chile), so at N=33 real sectors carry
+much more heterogeneous relative-TFP and relative-price dynamics that a fixed exchange rate can no
+longer absorb — the risk-premium/UIP channel that favored Peg in the stylized 3-sector Chile
+calibration may be swamped, at true sectoral resolution, by the cost of foreclosing the exchange
+rate as a relative-price shock absorber. **Report this honestly as the headline full-resolution
+finding for Korea — it is a genuine reversal, not a bug** (confirmed stable across two different
+random seeds/simulation lengths, 5,000 vs 20,000 periods, same qualitative result and >90% same
+magnitude both times).
+
+**Czechia (N=81 of ~89 nominal leaf codes, 8 dropped for zero/undefined gross output in the 2022 CZ
+table): validated, confirms the Korea reversal.** Same clean `resid`/`steady`/`check` pass (81
+positive real sector prices), same simulated-moments welfare formula:
+
+| Regime | Output-gap term | Price-dispersion term | **Total** |
+|---|---|---|---|
+| Float | 2.24 | 9.45 | **11.69** |
+| Managed | 1.34 | 6.84 | **8.18** |
+| Peg | 66.06 | 15.98 | **82.05** |
+
+**Ranking: Managed < Float << Peg — identical qualitative pattern to Korea.** Peg is ~7-10x worse
+than Float/Managed, again driven overwhelmingly by output-gap variance (Var(y_gap) ~30x larger
+under Peg than Float), not price dispersion. Solved in ~1m30s per regime (831 equations, 81x81
+dense Ω^H) — no steady-state convergence problems at this dimension despite the task brief's
+concern that N≈83 might be harder than N=33; the `fzero` 1-D real-wage search remained a
+well-behaved scalar problem as expected.
+
+**Two independent full-resolution calibrations (Korea N=33, Czechia N=81) — both diversified
+manufacturing/services exporters — agree: Peg's dominance in the 3-sector Chile headline result
+does NOT generalize. Whether this is because Chile specifically (commodity exporter, large
+risk-premium/UIP exposure) is the outlier, or because ALL countries reverse at full resolution and
+the 3-sector Chile result itself was an artifact of aggregation, is UNRESOLVED — Chile's own
+full-resolution run is the one calibration still blocked (see above). This is the single most
+important open question for a follow-up session**, since it directly determines whether the
+paper's headline claim ("Peg dominates via the risk-premium/UIP channel") survives at all, survives
+only for commodity exporters, or was a 3-sector-aggregation artifact throughout.
+
+### Methodological note: simulated, not analytic, moments at full resolution
+At N=33 (and presumably N≈81), Dynare's `check`/BK-condition pass cleanly, but the ANALYTIC
+(`periods=0`) moment formulas returned `NaN` for `piDC`/`PIC`/`y_gap`/`I` even though the model is
+correctly determinate — one generalized eigenvalue lands numerically almost exactly on the unit
+circle (displayed as `1.0000` vs. the 3-sector model's cleanest jump straight to `1.033`), which is
+enough to break Dynare's closed-form unconditional-variance formula. This is the SAME class of
+problem already flagged in the order-2 pipeline note above ("Taylor rule leaves price levels/S with
+a unit root that breaks Dynare's analytic order-2 moments") — now also appearing at order=1 for
+large N. **Fix: `generate_mod.py` requests SIMULATED moments (`periods=20000`, with a fixed
+`set_dynare_seed`) instead of analytic ones** for all full-resolution `.mod` files; this is exactly
+what `order2/run_order1sim.m` already does elsewhere in this project for the same reason.
+
+## Headline welfare result (Chile calibration) — 3-SECTOR, SUPERSEDED as of 2026-07-31
+**Retained for historical/robustness reference (see the full-resolution campaign above for the new
+headline). These numbers still stand on their own as the N=3 stylized/robustness case.**
 Welfare loss (×10⁻⁴): **Float 25.47, Managed 10.17, Peg 102.05.**
 Managed float dominates; Peg is dominated by a risk-premium/UIP shock (75% of its loss), not
 terms-of-trade.

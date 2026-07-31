@@ -3,7 +3,72 @@
 See `model_equations.md` for the objects being calibrated and `results_summary.md` for what the
 calibrated model produces.
 
-## Data source and construction
+## Full-resolution calibration (2026-07-31) — NEW HEADLINE
+The model now runs at each country's FULL native IO resolution (Chile N=12, Korea N=33, Czechia
+N≈81) instead of the collapsed 3-macro-sector version, per project decision (see
+`results_summary.md`'s "Full-native-resolution calibration campaign" section for the numbers and
+findings). The 3-sector calibration/pipeline described below is retained as-is (files not deleted,
+still fully functional) and reframed as a superseded/stylized precursor / lower-N robustness check.
+
+**Pipeline (new files):**
+1. `data_calibration/full_calibration_common.py` — shared numpy logic: given a raw NxN Ω^H and
+   N-vectors Ω^F/β^H/export_share plus a raw-sector→{Resource,Manufacturing,Services} category map
+   (used ONLY to assign each raw sector its category's literature Calvo δ_i — everything else is
+   genuine full-resolution IO data), computes δ_i/δ̂_i/λ_D,i (Domar)/M_i (import centrality)/w_DC,i,
+   same formulas as the 3-sector `main()` in each build script, just at full N via
+   `numpy.linalg.inv`.
+2. Each `build_{chile,korea,czechia}_calibration.py` gained a `build_full()` function: identical
+   data-reading code to the existing `main()`, but skips the `CONCORDANCE`-based aggregation step
+   entirely and calls `compute_full_calibration()` on the raw N-resolution matrices. Writes
+   `{country}_calibration_full_results.json`. Czechia's `build_full()` also drops 8 leaf CPA codes
+   with zero/undefined gross output in the 2022 CZ table (`CPA_E37/E38/E39/G47/L68A/T97/T98/U`),
+   landing at N=81 of the nominal ~89 leaf codes in `LEAF_CODES`.
+3. `data_calibration/generate_mod.py` — ordinary Python string-templating generator (loops +
+   f-strings, explicitly NOT Dynare's `@#for` macro language, per the architectural decision that
+   loops in Python are far more debuggable at N=33/81 equation counts than Dynare macros) that reads
+   a `*_calibration_full_results.json` and emits a complete `oen_full_{country}_{regime}.mod` file:
+   sector-indexed variables/parameters/shocks for i=1..N, dense NxN Cobb-Douglas cost/market-
+   clearing equations, the same Calvo/Euler/UIP/policy-rule block structure as
+   `open_economy_network_chile.mod` reindexed to N, and LAMBDA_D_i/WDC_i/DHAT_i inserted as plain
+   calibrated PARAMETER CONSTANTS (computed in Python, per the "avoid hand-unrolling matrix algebra
+   in Dynare" decision — infeasible at N>3 via the old cofactor/adjugate approach).
+4. `soe_ss_solve_dense_N.m` / `soe_ss_resid_dense_N.m` — N-sector generalization of
+   `soe_ss_solve_dense.m` / `soe_ss_resid_dense.m` (kept unchanged for the 3-sector `.mod` files).
+   Same ordinary-MATLAB-matrix-algebra strategy (backslash solves), just NxN/N-vector instead of
+   3x3/3-vector.
+
+**Two Dynare `steady_state_model` restrictions discovered empirically while building the
+generator (neither documented anywhere, both confirmed via preprocessor errors, not assumed):**
+- Bracket matrix/vector literals (`[a;b;c]`, `[a b; c d]`) are **not** accepted as function-call
+  arguments inside `steady_state_model` (`syntax error, unexpected '['`) — so
+  `soe_ss_solve_dense_N.m` takes a FLAT scalar argument list (`varargin`) instead of a matrix/vector,
+  reconstructed inside the `.m` file via ordinary loops.
+- A locally-named multi-element array returned from a function (e.g. `SSPv` then indexed
+  `SSPv(1)`) is rejected too (`Symbol SSPv cannot take arguments`) — only declared model
+  variables/parameters may appear in `steady_state_model`. Fix: `soe_ss_solve_dense_N.m` returns
+  `varargout` unpacked directly into `P1,...,PN,MC1,...,MCN,Y1,...,YN,L1,...,LN` (N-generic version
+  of the existing `P1,P2,P3`/`MC1,MC2,MC3`/... pattern), assembled by `generate_mod.py`.
+
+**A third issue, not a bug but worth flagging for any future full-resolution work:** at N=33/81,
+Dynare's ANALYTIC (`periods=0`) unconditional-moment formulas return `NaN` for `piDC`/`PIC`/`y_gap`/
+`I` even though `check`/BK conditions pass cleanly — one generalized eigenvalue lands numerically
+almost exactly on the unit circle. `generate_mod.py` works around this by requesting SIMULATED
+moments (`periods=20000`, fixed `set_dynare_seed`) instead, mirroring what `order2/run_order1sim.m`
+already does elsewhere in this project for the identical class of problem at order=2. Welfare is
+computed by `code/run_full_regime_welfare.m` from the resulting `oo_.var` diagonal, using the exact
+same formula as `code/analysis.py`'s `compute_welfare()`.
+
+**Known gap: Chile (N=12) blocked.** `data_calibration/mip_12x12.xlsx` and `cou_12x12.xlsx` are not
+present in the repo (both are `*.xlsx`-gitignored) and are not cached anywhere in this environment;
+`data_calibration/build_chile_calibration.py`'s existing header docstring gives the exact download
+page (bcentral.cl/areas/estadisticas/matriz-insumo-producto/cuadros-mip-excel), but that page is
+behind Incapsula bot-protection that returned a JS-only redirect shell to both a raw `curl` and a
+`WebFetch` render attempt from this session. `build_chile_calibration.py`'s `build_full()` is
+written and untested only because the 2 input files are missing — re-run it the moment they're
+back in `data_calibration/`, then run `generate_mod.py` on the resulting JSON exactly as done for
+Korea/Czechia.
+
+## Data source and construction (3-sector version, superseded as headline, still functional)
 - `data_calibration/build_chile_calibration.py` builds the Chile IO calibration from Banco Central
   de Chile CdeR (Cuadro de Origen y Recursos) tables — 12-sector national IO table collapsed to 3
   (Resource / Manufacturing / Services). Also has Korea and Czechia variants.
@@ -13,7 +78,7 @@ calibrated model produces.
 
 ## Three real calibrations, one stylized network
 - **Chile, Korea, Czechia** — three real national IO calibrations, discrete data points, headline
-  numbers.
+  numbers (now superseded by the full-resolution versions above where available).
 - **Stylized triangular network** — a separate network built with a scalar density dial ρ, used for
   the continuous sweeps (φ_s, import intensity, exposure concentration, network density) since the
   three real calibrations can't be swept continuously. Slides label which numbers come from which

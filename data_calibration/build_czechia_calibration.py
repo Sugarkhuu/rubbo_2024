@@ -71,6 +71,8 @@ from pathlib import Path
 
 import numpy as np
 
+from full_calibration_common import compute_full_calibration, renormalize_shares
+
 HERE = Path(__file__).parent
 RAW = HERE / "czechia_raw"
 
@@ -252,5 +254,84 @@ def main():
     print(f"\nWrote {out_path}")
 
 
+def build_full():
+    """Full-native-resolution (N=len(LEAF_CODES), ~83) calibration: skip the
+    Resource/Manuf/Services aggregation entirely, keep every NACE/CPA leaf
+    code as its own sector. New HEADLINE calibration (see CLAUDE.md task);
+    main() 3-sector version kept for historical/robustness reference."""
+    tu, ta, tn, tval = load_jsonstat(RAW / "siot_total_2022.json")
+    du, da, dn, dval = load_jsonstat(RAW / "siot_dom_2022.json")
+    iu, ia, in_, ival = load_jsonstat(RAW / "siot_imp_2022.json")
+
+    NL = len(LEAF_CODES)
+    dom_use = np.zeros((NL, NL))  # [buyer_idx, seller_idx]
+    imp_use = np.zeros((NL, NL))
+    for si, seller_code in enumerate(LEAF_CODES):
+        for bi, buyer_code in enumerate(LEAF_CODES):
+            dom_use[bi, si] = get_cell(du, da, dn, dval, buyer_code, seller_code)
+            imp_use[bi, si] = get_cell(iu, ia, in_, ival, buyer_code, seller_code)
+
+    Yv = np.zeros(NL)
+    VAv = np.zeros(NL)
+    for i, code in enumerate(LEAF_CODES):
+        Yv[i] = get_cell(tu, ta, tn, tval, code, "P1")
+        VAv[i] = get_cell(tu, ta, tn, tval, code, "B1G")
+
+    hh_cons_v = np.zeros(NL)
+    exports_v = np.zeros(NL)
+    for i, seller_code in enumerate(LEAF_CODES):
+        hh_cons_v[i] = get_cell(tu, ta, tn, tval, "P3_S14", seller_code)
+        exports_v[i] = get_cell(tu, ta, tn, tval, "P6", seller_code)
+
+    OmegaH = np.zeros((NL, NL))
+    OmegaF = np.zeros(NL)
+    alpha = np.zeros(NL)
+    for i in range(NL):
+        for j in range(NL):
+            OmegaH[i, j] = dom_use[i, j] / Yv[i]   # buyer i, seller j (raw dom_use already [buyer,seller])
+        OmegaF[i] = imp_use[i, :].sum() / Yv[i]
+        alpha[i] = VAv[i] / Yv[i]
+
+    # A handful of leaf codes have zero/near-zero gross output in the CZ
+    # table (e.g. some finely split CPA categories) -> division above can
+    # produce NaN/inf. Drop such sectors (treat as structurally absent in
+    # this economy) before renormalizing, rather than silently NaN-poisoning
+    # the whole calibration.
+    finite_mask = np.isfinite(alpha) & np.isfinite(OmegaF) & np.all(np.isfinite(OmegaH), axis=1) & (Yv > 0)
+    dropped = [LEAF_CODES[i] for i in range(NL) if not finite_mask[i]]
+    if dropped:
+        print(f"[build_czechia_calibration.build_full] dropping {len(dropped)} zero/invalid-output leaf codes: {dropped}")
+    kept_idx = np.where(finite_mask)[0]
+    OmegaH = OmegaH[np.ix_(kept_idx, kept_idx)]
+    OmegaF = OmegaF[kept_idx]
+    alpha = alpha[kept_idx]
+    Yv = Yv[kept_idx]
+    hh_cons_v = hh_cons_v[kept_idx]
+    exports_v = exports_v[kept_idx]
+    kept_codes = [LEAF_CODES[i] for i in kept_idx]
+
+    alpha, OmegaH, OmegaF = renormalize_shares(alpha, OmegaH, OmegaF)
+
+    betaH = hh_cons_v / hh_cons_v.sum()
+    export_share = exports_v / Yv
+
+    category_of_sector = [CONCORDANCE[c] for c in kept_codes]
+
+    results = compute_full_calibration(
+        OmegaH, OmegaF, alpha, betaH, export_share, category_of_sector, kept_codes,
+        source="Eurostat naio_10_cp1700 (Symmetric input-output table at basic prices, product by product), "
+               "geo=CZ, time=2022 (FULL leaf-code resolution, no 3-sector aggregation)",
+        gross_output=Yv, gross_output_key="gross_output_mnEUR2022",
+    )
+
+    out_path = HERE / "czechia_calibration_full_results.json"
+    out_path.write_text(json.dumps(results, indent=2))
+    print(f"\n[full-resolution] N={len(kept_codes)} Czechia calibration written to {out_path}")
+    print(f"  min/max row check (should be 1.0): "
+          f"{np.min(alpha+OmegaH.sum(1)+OmegaF):.6f}/{np.max(alpha+OmegaH.sum(1)+OmegaF):.6f}")
+    return results
+
+
 if __name__ == "__main__":
     main()
+    build_full()

@@ -57,6 +57,8 @@ from pathlib import Path
 import numpy as np
 import openpyxl
 
+from full_calibration_common import compute_full_calibration, renormalize_shares
+
 HERE = Path(__file__).parent
 
 SECTOR_NAMES = {
@@ -310,5 +312,56 @@ def main():
     print(f"\nWrote {out_path}")
 
 
+def build_full():
+    """Full-native-resolution (N=12) calibration: skip the Resource/Manuf/
+    Services aggregation step entirely and keep the raw 12x12 CdeR activity
+    table as-is. This is the new HEADLINE calibration (see CLAUDE.md task);
+    the 3-sector main() above is retained for historical/robustness reference."""
+    mip = openpyxl.load_workbook(HERE / "mip_12x12.xlsx", data_only=True)
+    cou = openpyxl.load_workbook(HERE / "cou_12x12.xlsx", data_only=True)
+
+    dom_use = read_matrix_sheet(cou, "19")
+    imp_use = read_matrix_sheet(cou, "21")
+    final_nat = read_final_use_sheet(cou, "20")
+    ci_by_activity, va_by_activity = read_value_added_sheet(cou, "23")
+
+    Y12 = ci_by_activity + va_by_activity
+    hh_cons_12 = final_nat["Consumo de hogares"]
+    exports_12 = final_nat["Exportaciones"]
+
+    OmegaH = np.zeros((N12, N12))
+    OmegaF = np.zeros(N12)
+    alpha = np.zeros(N12)
+    for i in range(N12):
+        for j in range(N12):
+            OmegaH[i, j] = dom_use[j, i] / Y12[i]   # buyer i, seller j (transpose of raw sheet)
+        OmegaF[i] = imp_use[:, i].sum() / Y12[i]
+        alpha[i] = va_by_activity[i] / Y12[i]
+
+    alpha, OmegaH, OmegaF = renormalize_shares(alpha, OmegaH, OmegaF)
+
+    betaH = hh_cons_12 / hh_cons_12.sum()
+    export_share = exports_12 / Y12
+
+    category_of_sector = [CONCORDANCE[i + 1] for i in range(N12)]
+    sector_names = [SECTOR_NAMES[i + 1] for i in range(N12)]
+
+    results = compute_full_calibration(
+        OmegaH, OmegaF, alpha, betaH, export_share, category_of_sector, sector_names,
+        source="Banco Central de Chile, Cuadros 12x12, CdeR 2018, ano de referencia 2023 "
+               "(FULL 12-activity resolution, no 3-sector aggregation)",
+        gross_output=Y12, gross_output_key="gross_output_bnCLP2023",
+    )
+
+    out_path = HERE / "chile_calibration_full_results.json"
+    out_path.write_text(json.dumps(results, indent=2))
+    print(f"\n[full-resolution] N=12 Chile calibration written to {out_path}")
+    print(f"  sum(alpha)/N = {np.mean(alpha):.4f}, min/max OmegaH row-sum+alpha+OF = "
+          f"{np.min(alpha+OmegaH.sum(1)+OmegaF):.6f}/{np.max(alpha+OmegaH.sum(1)+OmegaF):.6f} (should be 1.0)")
+    print(f"  Domar weights (sector-order as in SECTOR_NAMES): {np.round(results['domar_weight'],4)}")
+    return results
+
+
 if __name__ == "__main__":
     main()
+    build_full()

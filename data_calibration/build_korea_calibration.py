@@ -50,6 +50,8 @@ from pathlib import Path
 import numpy as np
 import openpyxl
 
+from full_calibration_common import compute_full_calibration, renormalize_shares
+
 HERE = Path(__file__).parent
 RAW = HERE / "korea_raw" / "korea_io_2022.xlsx"
 
@@ -238,5 +240,62 @@ def main():
     print(f"\nWrote {out_path}")
 
 
+def build_full():
+    """Full-native-resolution (N=33) calibration: skip the Resource/Manuf/
+    Services aggregation entirely, keep the raw 33 BOK activities. New
+    HEADLINE calibration (see CLAUDE.md task); main() 3-sector version kept
+    for historical/robustness reference."""
+    wb = openpyxl.load_workbook(RAW, data_only=True)
+    dom_ws = wb["Transaction_domestic(producer)"]
+    imp_ws = wb["Transaction_imported(producer)"]
+    comb_ws = wb["Transaction(producer)"]
+
+    dom_use = read_flow_matrix(dom_ws)
+    imp_use = read_flow_matrix(imp_ws)
+
+    hh_cons_col = 37
+    exports_col = 43
+    hh_cons_33 = read_final_demand_column(comb_ws, hh_cons_col)
+    exports_33 = read_final_demand_column(comb_ws, exports_col)
+
+    row_labels = {comb_ws.cell(row=r, column=1).value: r for r in range(38, 50)
+                  if comb_ws.cell(row=r, column=1).value}
+    va_row = row_labels["9690"]
+    gross_row = row_labels["9790"]
+    VA_33 = read_bottom_row(comb_ws, va_row)
+    Y_33 = read_bottom_row(comb_ws, gross_row)
+
+    OmegaH = np.zeros((N33, N33))
+    OmegaF = np.zeros(N33)
+    alpha = np.zeros(N33)
+    for i in range(N33):
+        for j in range(N33):
+            OmegaH[i, j] = dom_use[j, i] / Y_33[i]
+        OmegaF[i] = imp_use[:, i].sum() / Y_33[i]
+        alpha[i] = VA_33[i] / Y_33[i]
+
+    alpha, OmegaH, OmegaF = renormalize_shares(alpha, OmegaH, OmegaF)
+
+    betaH = hh_cons_33 / hh_cons_33.sum()
+    export_share = exports_33 / Y_33
+
+    category_of_sector = [CONCORDANCE[c] for c in ACTIVITY_CODES]
+
+    results = compute_full_calibration(
+        OmegaH, OmegaF, alpha, betaH, export_share, category_of_sector, ACTIVITY_CODES,
+        source="Bank of Korea, 2022 Input-Output Tables (Producer's price, Large-Sized, 33-sector) "
+               "(FULL 33-activity resolution, no 3-sector aggregation)",
+        gross_output=Y_33, gross_output_key="gross_output_mnKRW2022",
+    )
+
+    out_path = HERE / "korea_calibration_full_results.json"
+    out_path.write_text(json.dumps(results, indent=2))
+    print(f"\n[full-resolution] N=33 Korea calibration written to {out_path}")
+    print(f"  min/max row check (should be 1.0): "
+          f"{np.min(alpha+OmegaH.sum(1)+OmegaF):.6f}/{np.max(alpha+OmegaH.sum(1)+OmegaF):.6f}")
+    return results
+
+
 if __name__ == "__main__":
     main()
+    build_full()

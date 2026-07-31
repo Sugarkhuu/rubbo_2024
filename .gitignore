@@ -59,6 +59,13 @@ order2/chile_*_o1sim.log
 order2/open_economy_network_chile_*_o2/
 order2/open_economy_network_chile_*_o2.log
 
+# Dynare build output for the full-native-resolution calibration campaign
+# (2026-07-31, data_calibration/generate_mod.py) -- the oen_full_*.mod files
+# themselves ARE tracked (Python-generated but the actual deliverable/
+# reproducible headline model files), only the Dynare build dirs aren't.
++oen_full_*/
+oen_full_*/
+
 # LaTeX artifacts if they end up at root anyway
 *.aux
 *.log
@@ -79,6 +86,8 @@ order2/open_economy_network_chile_*_o2.log
 !rubbo_2024.pdf
 !appendix_website_2.pdf
 !supplemental_revision.pdf
+
+__pycache__/
 
 # OS files
 .DS_Store
