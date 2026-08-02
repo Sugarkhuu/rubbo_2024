@@ -3,7 +3,7 @@
 See `calibration.md` for how the numbers below were produced and `model_equations.md` for the
 objects referenced.
 
-## Full-native-resolution calibration campaign (2026-07-31) — NEW HEADLINE, supersedes the 3-sector numbers below
+## Full-native-resolution calibration campaign (2026-07-31/2026-08-02) — NEW HEADLINE, supersedes the 3-sector numbers below
 The model was generalized from N=3 hand-picked macro-sectors (Resource/Manufacturing/Services) to
 each country's FULL native IO resolution (Chile N=12, Korea N=33, Czechia N≈81) — see
 `calibration.md`'s "Full-resolution calibration" section for the pipeline (calibration script →
@@ -11,6 +11,18 @@ Python-generated N-sector `.mod` file → generalized `soe_ss_solve_dense_N.m` s
 **This full-resolution calibration is now the headline result per project decision; the 3-sector
 numbers in the rest of this file are retained below as a superseded/stylized precursor, not deleted
 — they remain useful as the lower-N robustness check they were originally validated against.**
+
+**Correction (2026-08-02): earlier drafts of this section wrongly described the full-resolution
+result as a RANKING REVERSAL relative to the 3-sector headline. It is not.** The 3-sector headline
+already had Managed best and Peg worst (see "Headline welfare result... 3-SECTOR" below: Float
+25.47, Managed 10.17, **Peg 102.05** ×10⁻⁴ — "Managed float dominates; **Peg is dominated** by a
+risk-premium/UIP shock", i.e. Peg was always the worst regime, "dominated" meaning "loses", not
+"dominates the others"). Every full-resolution run below reproduces the exact same ranking, Managed
+< Float << Peg. **What changed is the margin, not the direction**: Peg's loss relative to Float
+grows from ~4.0x in the 3-sector case to 6.8–11.6x at full native resolution. The correct headline
+finding is that **the risk-premium/UIP penalty against Peg is quantitatively much larger than the
+3-sector proxy suggested — a robustness result that strengthens the original claim — not a reversal
+of it.**
 
 **Chile (N=12): UNBLOCKED and validated, 2026-08-02.** The user supplied the raw xlsx files
 manually. They turned out to be a 2008-vintage CdeR table with a materially different sheet layout
@@ -25,21 +37,19 @@ Korea/Czechia):
 | Managed | 1.45 | 7.91 | **9.35** |
 | Peg | 87.45 | 20.88 | **108.33** |
 
-**Ranking: Managed < Float << Peg — Chile REVERSES too, same qualitative pattern as Korea and
-Czechia.** Peg is ~6.8-11.6x worse than Float/Managed, and Dynare's own simulated variance
-decomposition confirms the same mechanism as the other two countries: under Peg, the risk-premium/
-UIP shock (`eps_rp`) explains **81.7% of `y_gap`'s variance** (vs. `eps_pF` a distant second at
-10.8%), and 99.6% of the nominal-rate `I`'s variance. **This closes the single most important open
-question flagged after the Korea/Czechia runs**: the reversal is not specific to diversified
-manufacturing/services exporters — Chile, the paper's own commodity-exporter case and the source of
-the original 3-sector "Peg dominates via risk-premium/UIP" headline claim, reverses at its own full
-native resolution. The straightforward reading is that **the 3-sector aggregation itself was
-producing the original result**, not some property specific to commodity exporters that full
-resolution happens to unmask in diversified economies. (Caveat: this Chile run uses a different-
+**Ranking: Managed < Float << Peg — same ranking as the 3-sector headline, margin amplified.** Peg
+is ~6.8-11.6x worse than Float/Managed (vs. ~4.0x/~10.0x in the 3-sector case), and Dynare's own
+simulated variance decomposition confirms the same mechanism as the 3-sector story and the other two
+full-resolution countries: under Peg, the risk-premium/UIP shock (`eps_rp`) explains **81.7% of
+`y_gap`'s variance** (vs. `eps_pF` a distant second at 10.8%), and 99.6% of the nominal-rate `I`'s
+variance. This closes the open question from the Korea/Czechia runs about whether the margin
+amplification was specific to diversified manufacturing/services exporters: it is not — Chile, the
+paper's own commodity-exporter case and the source of the original 3-sector calibration, shows the
+identical amplification at its own full native resolution. (Caveat: this Chile run uses a different-
 vintage IO table — 2008 base year — than the 3-sector Chile calibration it's being compared against,
 so part of the gap could in principle reflect real economic change over ~15 years rather than pure
 sectoral-resolution effects; the qualitative agreement with Korea/Czechia, which used contemporary
-2021-22 tables and show the identical reversal, is the stronger piece of evidence here, not the
+2021-22 tables and show the identical pattern, is the stronger piece of evidence here, not the
 Chile-vs-Chile comparison alone.)
 
 **Korea (N=33): validated, new headline welfare numbers.** `resid`/`steady`/`check` all pass
@@ -53,14 +63,14 @@ below on why simulated rather than analytic moments were used):
 | Managed | 1.52 | 7.89 | **9.41** |
 | Peg | 113.67 | 19.64 | **133.31** |
 
-**Ranking: Managed < Float << Peg — Peg's dominance from the 3-sector Chile headline result DOES
-NOT survive at Korea's full native resolution; it inverts.** Peg is ~10-14x worse than Float/Managed
-here, driven almost entirely by a blown-up output-gap variance under Peg (Var(y_gap) 58x larger than
-under Float), not price dispersion. This is the opposite mechanism from the 3-sector story (where
-Peg was reported to *dominate* via the risk-premium/UIP channel). **Report this honestly as the
-headline full-resolution finding for Korea — it is a genuine reversal, not a bug** (confirmed stable
-across two different random seeds/simulation lengths, 5,000 vs 20,000 periods, same qualitative
-result and >90% same magnitude both times).
+**Ranking: Managed < Float << Peg — same ranking as the 3-sector headline.** Peg is ~10-14x worse
+than Float/Managed here (vs. ~4.0x/~10.0x in the 3-sector case), driven almost entirely by a much
+larger output-gap variance under Peg (Var(y_gap) 58x larger than under Float) than in the 3-sector
+proxy — the risk-premium/UIP mechanism behind Peg's loss is the SAME mechanism as the 3-sector
+story, just quantitatively much stronger at full resolution. **Report this honestly as the headline
+full-resolution finding for Korea — the margin amplification is genuine, not a bug** (confirmed
+stable across two different random seeds/simulation lengths, 5,000 vs 20,000 periods, same
+qualitative result and >90% same magnitude both times).
 
 **UPDATE (2026-08-01/02): shock-by-shock decomposition confirms the mechanism — eps_rp is NOT
 swamped by the TFP shocks, it stays dominant; what changes is how much Peg amplifies it.** Built
@@ -108,12 +118,13 @@ addressed by this decomposition, since it isolates WHICH shock, not WHY Peg ampl
 structurally) exactly what about full sectoral resolution vs. 3-sector aggregation makes Peg
 amplify `eps_rp`'s pass-through into the output gap so much more than it did in the 3-sector Chile
 calibration — a mechanical UIP/interest-parity or steady-state-calibration explanation for the 25–51x
-amplification factor itself would be a good next step, along with finally resolving Chile's own
-full-resolution run (still blocked on data access, see below) to check whether the amplification is
-general or Korea/Czechia-specific.
+amplification factor itself would be a good next step. (Chile's own full-resolution run, done
+2026-08-02 after this decomposition, confirms the amplification is general — see above — but its
+own shock-by-shock decomposition hasn't been run yet; doing so, and getting a mechanical explanation
+for the amplification factor itself, remain the open items.)
 
 **Czechia (N=81 of ~89 nominal leaf codes, 8 dropped for zero/undefined gross output in the 2022 CZ
-table): validated, confirms the Korea reversal.** Same clean `resid`/`steady`/`check` pass (81
+table): validated, confirms the Korea pattern.** Same clean `resid`/`steady`/`check` pass (81
 positive real sector prices), same simulated-moments welfare formula:
 
 | Regime | Output-gap term | Price-dispersion term | **Total** |
@@ -129,19 +140,23 @@ dense Ω^H) — no steady-state convergence problems at this dimension despite t
 concern that N≈83 might be harder than N=33; the `fzero` 1-D real-wage search remained a
 well-behaved scalar problem as expected.
 
-**All three full-resolution calibrations (Chile N=12, Korea N=33, Czechia N=81) agree: Peg's
-dominance in the 3-sector headline result does NOT survive at full native resolution, in any of the
-three countries, including Chile itself.** This resolves the open question from immediately after
-the Korea/Czechia runs (was the reversal specific to diversified manufacturing/services exporters,
-or universal?) — it's universal across all three calibrations tried so far. The most defensible
-reading is that **the 3-sector Chile headline claim ("Peg dominates via the risk-premium/UIP
-channel") was itself a 3-sector-aggregation artifact** — the mechanism (risk-premium/UIP shock
-dominating Peg's output-gap variance) is real and survives at full resolution in all three
-countries, but its *sign* relative to Float/Managed flips once the network has enough sectors for
-the exchange rate's relative-price-absorption role to matter. **This is now the paper's central
-finding at full resolution and needs to be reflected as the new headline claim, not a robustness
-caveat, in any future `dissertation.tex`/deck update** (still out of scope for this session — see
-the "Not yet done" list at the end of this section).
+**All three full-resolution calibrations (Chile N=12, Korea N=33, Czechia N=81) agree: the 3-sector
+headline's RANKING (Managed best, Float middle, Peg worst) survives fully intact at full native
+resolution, in all three countries — there is no reversal.** What changes is the MARGIN: Peg's loss
+relative to Float grows from ~4.0x in the 3-sector case to 6.8–11.6x at full resolution, in all three
+countries independently. This resolves the open question from immediately after the Korea/Czechia
+runs (was the margin amplification specific to diversified manufacturing/services exporters, or
+universal?) — it's universal across all three calibrations tried so far. The confirmed mechanism
+(shock-decomposition section above) is that the risk-premium/UIP shock's contribution to Peg's
+output-gap variance gets 25–51x larger relative to Float at full resolution, without its *share* of
+the variance composition changing much — i.e. full sectoral resolution doesn't introduce a new
+channel, it makes the SAME channel from the 3-sector story quantitatively much more damaging under
+Peg. **This is a robustness result that strengthens the paper's existing headline claim, not a
+reversal of it — but the magnitude difference (4x vs. ~7-12x) is itself substantively important and
+should be reflected in any future `dissertation.tex`/deck update** (still out of scope for this
+session — see the "Not yet done" list at the end of this section). Exactly why full resolution
+amplifies the risk-premium channel's output-gap pass-through this much (vs. simply reproducing the
+3-sector magnitude) remains an open mechanical question — see the shock-decomposition section above.
 
 ### Methodological note: simulated, not analytic, moments at full resolution
 At N=33 (and presumably N≈81), Dynare's `check`/BK-condition pass cleanly, but the ANALYTIC
