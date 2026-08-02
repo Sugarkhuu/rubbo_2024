@@ -58,15 +58,26 @@ already does elsewhere in this project for the identical class of problem at ord
 computed by `code/run_full_regime_welfare.m` from the resulting `oo_.var` diagonal, using the exact
 same formula as `code/analysis.py`'s `compute_welfare()`.
 
-**Known gap: Chile (N=12) blocked.** `data_calibration/mip_12x12.xlsx` and `cou_12x12.xlsx` are not
-present in the repo (both are `*.xlsx`-gitignored) and are not cached anywhere in this environment;
-`data_calibration/build_chile_calibration.py`'s existing header docstring gives the exact download
-page (bcentral.cl/areas/estadisticas/matriz-insumo-producto/cuadros-mip-excel), but that page is
-behind Incapsula bot-protection that returned a JS-only redirect shell to both a raw `curl` and a
-`WebFetch` render attempt from this session. `build_chile_calibration.py`'s `build_full()` is
-written and untested only because the 2 input files are missing — re-run it the moment they're
-back in `data_calibration/`, then run `generate_mod.py` on the resulting JSON exactly as done for
-Korea/Czechia.
+**Chile (N=12): UNBLOCKED 2026-08-02.** The user supplied `mip_12x12.xlsx`/`cou_12x12.xlsx`
+directly (manual download, bypassing the Incapsula bot-protection that blocked automated retrieval
+the prior session). These turned out to be a **2008-vintage** CdeR table (base year 2008), not the
+"2023 vintage" the original docstring assumed sight-unseen — a completely different sheet layout:
+35 numbered sheets across four price-basis blocks (user/producer/basic prices + production/
+investment matrices) instead of 25 sheets, product/activity codes stored as strings not ints, zero
+cells as empty strings not `None`, a 13th residual PRODUCT row in the use matrices (a margins/taxes
+wedge with no matching activity column — dropped, not attributable to any of the 12 real sectors),
+and the final-use sheet's column headers spanning 2-3 physical rows. `build_chile_calibration.py`
+was rewritten (sheet numbers 7/27/28/30 in the basic-prices block, `_cell_num`/`_cell_code` helper
+coercions, header-anchored rather than fixed-offset parsing for the final-use sheet) rather than
+force-fitting the old assumptions — see the module's updated docstring for the full sheet map. The
+12-activity classification itself also differs slightly from the old placeholder (Pesca is its own
+activity, not merged into Agropecuario; Servicios de vivienda is its own activity) — `SECTOR_NAMES`/
+`CONCORDANCE` updated to match. Sanity check passed: `alpha + row-sum(Ω^H) + Ω^F = 1.000000` exactly
+for all 12 sectors after renormalization, and the resulting shares (Ω^F 0.08–0.21, β^H highly
+Services-concentrated, export share Resource 0.60/Manuf 0.19/Services 0.07) are in the same range as
+the old placeholder numbers. `generate_mod.py` + `run_full_regime_welfare.m` then ran all three
+regimes with no steady-state issues — see `results_summary.md` for the numbers, which **resolve**
+the open question from the 2026-07-31 campaign (see below).
 
 ## Data source and construction (3-sector version, superseded as headline, still functional)
 - `data_calibration/build_chile_calibration.py` builds the Chile IO calibration from Banco Central

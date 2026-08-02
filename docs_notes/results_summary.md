@@ -12,16 +12,35 @@ Python-generated N-sector `.mod` file → generalized `soe_ss_solve_dense_N.m` s
 numbers in the rest of this file are retained below as a superseded/stylized precursor, not deleted
 — they remain useful as the lower-N robustness check they were originally validated against.**
 
-**Chile (N=12): BLOCKED, not run.** The raw source files
-(`data_calibration/mip_12x12.xlsx`, `cou_12x12.xlsx`, Banco Central de Chile) are not present in
-the repo (git-ignored, and not cached locally either) and the source page
-(bcentral.cl/areas/estadisticas/matriz-insumo-producto/cuadros-mip-excel) is behind an Incapsula
-bot-protection wall that blocked both a direct `curl` and a `WebFetch` render from this session. The
-full-resolution build code (`build_chile_calibration.py`'s `build_full()`) is written, tested for
-correctness of logic (mirrors Korea/Czechia's working `build_full()`), and ready to run the moment
-the two xlsx files are placed back in `data_calibration/` — this is a **data-availability gap, not
-a pipeline defect**. A follow-up session with browser/download access should prioritize this before
-anything else, since Chile is the paper's primary commodity-exporter case.
+**Chile (N=12): UNBLOCKED and validated, 2026-08-02.** The user supplied the raw xlsx files
+manually. They turned out to be a 2008-vintage CdeR table with a materially different sheet layout
+than assumed — `build_chile_calibration.py`'s parsing was rewritten accordingly (see
+`calibration.md` for the full detail). All three regimes solve cleanly (`resid`/`steady`/`check`
+pass, 12 positive real sector prices). Welfare loss (×10⁻⁴, simulated moments, same formula as
+Korea/Czechia):
+
+| Regime | Output-gap term | Price-dispersion term | **Total** |
+|---|---|---|---|
+| Float | 1.74 | 14.19 | **15.93** |
+| Managed | 1.45 | 7.91 | **9.35** |
+| Peg | 87.45 | 20.88 | **108.33** |
+
+**Ranking: Managed < Float << Peg — Chile REVERSES too, same qualitative pattern as Korea and
+Czechia.** Peg is ~6.8-11.6x worse than Float/Managed, and Dynare's own simulated variance
+decomposition confirms the same mechanism as the other two countries: under Peg, the risk-premium/
+UIP shock (`eps_rp`) explains **81.7% of `y_gap`'s variance** (vs. `eps_pF` a distant second at
+10.8%), and 99.6% of the nominal-rate `I`'s variance. **This closes the single most important open
+question flagged after the Korea/Czechia runs**: the reversal is not specific to diversified
+manufacturing/services exporters — Chile, the paper's own commodity-exporter case and the source of
+the original 3-sector "Peg dominates via risk-premium/UIP" headline claim, reverses at its own full
+native resolution. The straightforward reading is that **the 3-sector aggregation itself was
+producing the original result**, not some property specific to commodity exporters that full
+resolution happens to unmask in diversified economies. (Caveat: this Chile run uses a different-
+vintage IO table — 2008 base year — than the 3-sector Chile calibration it's being compared against,
+so part of the gap could in principle reflect real economic change over ~15 years rather than pure
+sectoral-resolution effects; the qualitative agreement with Korea/Czechia, which used contemporary
+2021-22 tables and show the identical reversal, is the stronger piece of evidence here, not the
+Chile-vs-Chile comparison alone.)
 
 **Korea (N=33): validated, new headline welfare numbers.** `resid`/`steady`/`check` all pass
 cleanly (residuals ~0, BK conditions satisfied, 33 positive real sector prices). Welfare loss
@@ -67,15 +86,19 @@ dense Ω^H) — no steady-state convergence problems at this dimension despite t
 concern that N≈83 might be harder than N=33; the `fzero` 1-D real-wage search remained a
 well-behaved scalar problem as expected.
 
-**Two independent full-resolution calibrations (Korea N=33, Czechia N=81) — both diversified
-manufacturing/services exporters — agree: Peg's dominance in the 3-sector Chile headline result
-does NOT generalize. Whether this is because Chile specifically (commodity exporter, large
-risk-premium/UIP exposure) is the outlier, or because ALL countries reverse at full resolution and
-the 3-sector Chile result itself was an artifact of aggregation, is UNRESOLVED — Chile's own
-full-resolution run is the one calibration still blocked (see above). This is the single most
-important open question for a follow-up session**, since it directly determines whether the
-paper's headline claim ("Peg dominates via the risk-premium/UIP channel") survives at all, survives
-only for commodity exporters, or was a 3-sector-aggregation artifact throughout.
+**All three full-resolution calibrations (Chile N=12, Korea N=33, Czechia N=81) agree: Peg's
+dominance in the 3-sector headline result does NOT survive at full native resolution, in any of the
+three countries, including Chile itself.** This resolves the open question from immediately after
+the Korea/Czechia runs (was the reversal specific to diversified manufacturing/services exporters,
+or universal?) — it's universal across all three calibrations tried so far. The most defensible
+reading is that **the 3-sector Chile headline claim ("Peg dominates via the risk-premium/UIP
+channel") was itself a 3-sector-aggregation artifact** — the mechanism (risk-premium/UIP shock
+dominating Peg's output-gap variance) is real and survives at full resolution in all three
+countries, but its *sign* relative to Float/Managed flips once the network has enough sectors for
+the exchange rate's relative-price-absorption role to matter. **This is now the paper's central
+finding at full resolution and needs to be reflected as the new headline claim, not a robustness
+caveat, in any future `dissertation.tex`/deck update** (still out of scope for this session — see
+the "Not yet done" list at the end of this section).
 
 ### Methodological note: simulated, not analytic, moments at full resolution
 At N=33 (and presumably N≈81), Dynare's `check`/BK-condition pass cleanly, but the ANALYTIC
