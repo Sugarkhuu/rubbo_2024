@@ -57,17 +57,60 @@ below on why simulated rather than analytic moments were used):
 NOT survive at Korea's full native resolution; it inverts.** Peg is ~10-14x worse than Float/Managed
 here, driven almost entirely by a blown-up output-gap variance under Peg (Var(y_gap) 58x larger than
 under Float), not price dispersion. This is the opposite mechanism from the 3-sector story (where
-Peg was reported to *dominate* via the risk-premium/UIP channel). Plausible reading, **not yet
-confirmed by a full shock-decomposition** (a follow-up session should run the same
-`compute_welfare_by_shock`-style breakdown used in the 3-sector analysis): Korea is a diversified
-manufacturing/services exporter (not a commodity exporter like Chile), so at N=33 real sectors carry
-much more heterogeneous relative-TFP and relative-price dynamics that a fixed exchange rate can no
-longer absorb — the risk-premium/UIP channel that favored Peg in the stylized 3-sector Chile
-calibration may be swamped, at true sectoral resolution, by the cost of foreclosing the exchange
-rate as a relative-price shock absorber. **Report this honestly as the headline full-resolution
-finding for Korea — it is a genuine reversal, not a bug** (confirmed stable across two different
-random seeds/simulation lengths, 5,000 vs 20,000 periods, same qualitative result and >90% same
-magnitude both times).
+Peg was reported to *dominate* via the risk-premium/UIP channel). **Report this honestly as the
+headline full-resolution finding for Korea — it is a genuine reversal, not a bug** (confirmed stable
+across two different random seeds/simulation lengths, 5,000 vs 20,000 periods, same qualitative
+result and >90% same magnitude both times).
+
+**UPDATE (2026-08-01/02): shock-by-shock decomposition confirms the mechanism — eps_rp is NOT
+swamped by the TFP shocks, it stays dominant; what changes is how much Peg amplifies it.** Built
+`code/run_full_shock_decomposition.m` (isolates a shock group by zeroing every other shock's
+variance in `M_.Sigma_e` and rerunning `stoch_simul` on the already-solved decision rule — Dynare's
+built-in `oo_.variance_decomposition` is unavailable here since it's only populated by the analytic,
+periods=0 path, which is exactly the path that returns NaN at this N) and
+`code/full_calib_shock_decomposition_analysis.py`, results in
+`results/full_calib_shock_decomposition.csv`. Ran all 5 shock groups (all sectoral TFP together,
+`eps_pF` import price, `eps_D` foreign demand, `eps_pX` export price/ToT, `eps_rp` risk-premium/UIP)
+× {Float, Managed, Peg} × {Korea, Czechia}. **Additivity sanity check passed**: isolated-shock
+Var(y_gap) sums to within 0.5–2.5% of the `all_shocks` rerun in every one of the 6 country×regime
+cells (shocks are independent under order=1, so this bounds simulation noise and validates the
+isolation method).
+
+Answer to the open question — **`eps_rp` (risk-premium/UIP) is still the dominant driver of
+Var(y_gap), in both Float and Peg, at full resolution; it is not swamped by having 33/81 independent
+sectoral TFP shocks instead of 3.** Share of Var(y_gap):
+
+| | Korea Float | Korea Peg | Czechia Float | Czechia Peg |
+|---|---|---|---|---|
+| TFP (all N sectors together) | 0.4% | 0.9% | 0.3% | 1.0% |
+| Import price (`eps_pF`) | 2.6% | 11.0% | 2.6% | 13.8% |
+| Foreign demand (`eps_D`) | 1.0% | 2.3% | 1.1% | 3.2% |
+| Export price/ToT (`eps_pX`) | 1.0% | 2.9% | 1.0% | 3.9% |
+| **Risk premium/UIP (`eps_rp`)** | **94.0%** | **82.4%** | **92.9%** | **77.3%** |
+
+So the mechanism from the 3-sector Chile story (risk-premium/UIP drives the output gap) is fully
+intact at full resolution — what actually changed is **how much Peg scales up `eps_rp`'s absolute
+contribution relative to Float**, not which shock is responsible: `eps_rp`'s own Var(y_gap)
+contribution is **51x larger under Peg than Float for Korea, 25x larger for Czechia** (its *share*
+of the composition barely moves, ~94%→82% Korea, ~93%→77% Czechia — the blow-up is almost entirely
+Peg amplifying the SAME channel, not a shift to a different one). TFP-all stays under 1.1% of
+Var(y_gap) everywhere despite comprising the overwhelming majority of the model's shocks — many
+small, largely-idiosyncratic sectoral TFP shocks do not aggregate into a large *aggregate output
+gap* mover; they show up instead in the price-dispersion welfare term (`w_pi_total`), where TFP-all
+is the single largest contributor under Float/Managed (81–86%) but is overtaken by `eps_rp` under
+Peg (42–47%) — i.e. Peg's blow-up bleeds into the price-dispersion term too, just less dominantly
+than into the output-gap term. One wrinkle: under **Managed**, `eps_rp`'s share of Var(y_gap) drops
+sharply (15.5% Korea, 8.8% Czechia) and import price (`eps_pF`) becomes the largest single
+contributor (44.8%/49.0%) — consistent with the managed rule's FX intervention specifically damping
+the risk-premium/UIP channel's output-gap pass-through, which is plausibly *why* Managed dominates
+both Float and Peg in the headline welfare table above. This still leaves genuinely open (not
+addressed by this decomposition, since it isolates WHICH shock, not WHY Peg amplifies it
+structurally) exactly what about full sectoral resolution vs. 3-sector aggregation makes Peg
+amplify `eps_rp`'s pass-through into the output gap so much more than it did in the 3-sector Chile
+calibration — a mechanical UIP/interest-parity or steady-state-calibration explanation for the 25–51x
+amplification factor itself would be a good next step, along with finally resolving Chile's own
+full-resolution run (still blocked on data access, see below) to check whether the amplification is
+general or Korea/Czechia-specific.
 
 **Czechia (N=81 of ~89 nominal leaf codes, 8 dropped for zero/undefined gross output in the 2022 CZ
 table): validated, confirms the Korea reversal.** Same clean `resid`/`steady`/`check` pass (81
