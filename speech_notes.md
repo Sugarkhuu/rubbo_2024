@@ -500,6 +500,39 @@ itself more evidence this is a network story, not a Chile-specific quirk."
 
 ---
 
+## Full Native Resolution: Same Ranking, Bigger Margin (1:00)
+"One more check: everything so far collapses each country to three sectors.
+[point] Here I re-solve at each country's full input-output resolution --
+12 sectors for Chile, 33 for Korea, 81 for Czechia. The ranking is exactly
+the same: Managed, then Float, then Peg far behind. What changes is the
+margin -- Peg's loss relative to Float goes from about three or four times
+to seven to ten times. But look at *why*: Peg's loss barely moves, within
+six percent. It's Float and Managed that get cheaper."
+
+---
+
+## Why the Margin Grows: Diversification of Sectoral Shocks (1:00)
+"The risk-premium shock is one aggregate financial shock -- it enters
+through UIP once, however finely I slice the real side -- so Peg's loss
+doesn't depend on N. Float's loss is mostly sectoral productivity shocks,
+and with every sector getting the same one percent volatility, many small
+independent shocks diversify -- the Gabaix granularity argument. The sum of
+squared Domar weights falls to roughly a tenth to a quarter. [point] As a
+test I scaled sectoral volatility back up to match the three-sector
+aggregate: Float and Managed jump several-fold, Peg's output-gap term
+moves under seven percent. The test over-corrects, so read it as an upper
+bound. The honest caveat: the *level* of Float and Managed losses depends
+on a shock-volatility normalization no IO table pins down, so the exact
+Peg-to-Float ratio needs an estimated risk-premium process and estimated
+sectoral volatilities.
+
+Q&A: "Is this a reversal?" No -- ranking identical in all three countries.
+"Why is Peg unchanged?" Its loss is the aggregate risk-premium channel.
+"Is the 10x ratio a result?" No; it is a joint product of two
+un-estimated normalizations -- the ranking is the result.
+
+---
+
 ## Robustness: Is Indirect Exposure a General Pattern? (1:00)
 "Adam asked whether the Services story — low direct import, high indirect
 import — is a general downstream-sector pattern or a one-off. Honestly:

@@ -57,10 +57,14 @@ policy-rule designs --- confirms the ranking survives essentially everywhere, wh
 that (i) a sufficiently aggressive plain inflation-targeting rule can rival the managed float's
 performance without any explicit exchange-rate term, and (ii) once policy is aggressive, targeting
 domestic (PPI) inflation outperforms targeting the theoretically ``correct'' divine-coincidence
-index. I discuss the paper's relation to the contemporaneous and independent Qiu, Wang, Xu and
-Zanetti (2026) result, and lay out the concrete steps --- a fully disaggregated multi-sector
-calibration and an estimated (rather than assumed) risk-premium process chief among them --- required
-before the quantitative ranking can be treated as more than suggestive.
+index. Re-solving the model at each country's full native IO resolution (12, 33 and 81 sectors)
+leaves the ranking intact and shows that Peg's loss is invariant to sectoral resolution while Float's
+and Managed's fall by up to two-thirds, a granular-diversification effect of many small sectoral
+shocks, so that Peg's relative penalty grows from about 3--4 times Float's to 7--10 times. I discuss the paper's
+relation to the contemporaneous and independent Qiu, Wang, Xu and Zanetti (2026) result, and lay out
+the concrete steps --- a cross-border multi-sector calibration, an estimated (rather than assumed)
+risk-premium process, and an empirical validation exercise chief among them --- required before the
+quantitative ranking can be treated as more than suggestive.
 \end{abstract}
 
 \tableofcontents
@@ -115,7 +119,11 @@ a modeling choice (set equal to every other shock's, for want of an external tar
 ``peg is dominated'' headline finding is only as solid as that one calibration choice. I therefore
 subject it, and the closely related debt-elasticity coefficient governing how strongly the risk
 premium reacts to the net foreign asset position, to an extensive battery of robustness checks ---
-described below --- rather than treating the headline number as settled.
+described below --- rather than treating the headline number as settled. A further exercise re-solves the model at each
+country's full native input--output resolution, up to 81 sectors, and finds the ranking unchanged but
+the margin very different: Peg's loss does not depend on sectoral resolution, whereas Float's and
+Managed's fall sharply as many small independent sectoral shocks diversify (Section
+\ref{sec:fullres}).
 
 The theoretical contribution of this paper sits between two literatures that, until very recently,
 had not been brought together. The first is the closed-economy production-network literature
@@ -629,7 +637,10 @@ I calibrate the model to three small open economies with genuinely disaggregated
 input--output data: Chile, South Korea, and Czechia. Chile is the primary quantitative calibration
 used throughout the paper's main results and robustness analysis; Korea and Czechia serve as
 out-of-sample checks on whether the headline welfare ranking is a Chile-specific artifact or a more
-general property of the model (Section \ref{sec:results}, cross-country robustness).
+general property of the model (Section \ref{sec:results}, cross-country robustness). The main
+analysis uses a three-sector aggregation for tractability; Section \ref{sec:fullres} then re-solves
+every calibration at full native resolution (12, 33 and 81 sectors), against which the three-sector
+numbers are best read as a stylized precursor.
 
 \subsection{Input--Output Data and Sector Aggregation}
 
@@ -869,6 +880,137 @@ because the small amount it does source domestically is concentrated in the sing
 supplier rather than spread evenly --- a composition effect, not a volume effect. A fully
 disaggregated, many-sector calibration (Section \ref{sec:discussion}) is the natural next step to test
 this pattern with statistical power beyond nine observations.
+
+\subsection{Full Native-Resolution Calibration}
+\label{sec:fullres}
+
+Everything above collapses each country's native sectoral classification to three macro-sectors. I
+now remove that step: the model is re-solved at each country's \emph{full} native IO resolution ---
+$N=12$ for Chile (Banco Central de Chile's 2008-vintage CdeR table), $N=33$ for Korea, and $N=81$ for
+Czechia (the 2022 national table, after dropping eight leaf codes with zero or undefined gross
+output). Domestic IO matrices, imported-input shares, labor shares, consumption shares and export
+intensities are all taken at native resolution; the only sector-level object not identified from IO
+data, the Calvo reset probability $\delta_i$, is still assigned from the three-way
+Resource/Manufacturing/Services literature values according to each native sector's category. Every
+other parameter and shock (including the common one-percent standard deviation for all $N+4$ shocks)
+is unchanged. At these dimensions Dynare's analytic unconditional-moment formulas return \texttt{NaN}
+even though the Blanchard--Kahn conditions hold (one generalized eigenvalue lies numerically on the
+unit circle), so welfare is computed from 20,000-period simulated moments with a fixed seed.
+
+\begin{table}[H]
+\centering
+\caption{Welfare loss by regime at full native resolution vs.\ the three-sector aggregation
+($\times10^{-4}$)}
+\label{tab:fullres}
+\begin{tabular}{llcccc}
+\toprule
+ & & Float & Managed & Peg & Peg/Float \\
+\midrule
+Chile & $N=3$ & 25.47 & 10.17 & 102.05 & 4.0$\times$ \\
+      & $N=12$ & 15.93 & 9.35 & 108.33 & 6.8$\times$ \\
+\addlinespace
+South Korea & $N=3$ & 38.91 & 14.43 & 133.81 & 3.4$\times$ \\
+      & $N=33$ & 12.96 & 9.41 & 133.31 & 10.3$\times$ \\
+\addlinespace
+Czechia & $N=3$ & 32.20 & 11.82 & 84.03 & 2.6$\times$ \\
+      & $N=81$ & 11.69 & 8.18 & 82.05 & 7.0$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ranking Managed $<$ Float $\ll$ Peg is unchanged in all three countries --- there is no reversal.
+What changes is the \emph{margin}, and, on inspection of Table \ref{tab:fullres}, the change has a
+specific and somewhat surprising source: Peg's loss is essentially the same at full resolution as in
+the three-sector case (Chile $+6\%$, Korea $-0.4\%$, Czechia $-2\%$), whereas Float's loss falls by
+37--67\% and Managed's by 8--35\%. Peg's larger \emph{relative} penalty is thus not a new,
+resolution-induced Peg channel; it is Float and Managed becoming cheaper.
+
+\paragraph{Shock decomposition at full resolution.} Isolating each shock group by zeroing all others'
+variances and re-simulating the already-solved decision rule (the shocks are independent at order one,
+and the isolated variances sum to within 0.5--2.5\% of the all-shocks variance in every cell, which
+validates the method), Table \ref{tab:fullres_decomp} reports each group's share of $\mathrm{Var}(\tilde y_t)$. The
+risk-premium shock remains the dominant driver of the output gap under Float and Peg in all three
+countries, and it is not swamped by the $N$ sectoral productivity shocks, which jointly account for
+under 2.2\% of output-gap variance in every Float and Peg cell. Its absolute contribution under Peg is 25--51 times
+its contribution under Float. Under Managed, the risk-premium share collapses (9--16\%) and the
+import-price shock becomes the largest single contributor, consistent with the intervention term
+specifically damping the UIP channel.
+
+\begin{table}[H]
+\centering
+\caption{Share of $\mathrm{Var}(\tilde y_t)$ by shock group, full resolution (\%)}
+\label{tab:fullres_decomp}
+\begin{tabular}{llccccc}
+\toprule
+ & & TFP (all $N$) & Import price & Foreign demand & Export price & \textbf{Risk premium} \\
+\midrule
+Chile & Float & 1.5 & 2.6 & 1.0 & 0.9 & \textbf{94.0} \\
+      & Managed & 22.9 & 40.6 & 10.1 & 13.2 & 13.2 \\
+      & Peg & 2.1 & 10.7 & 2.1 & 2.7 & \textbf{82.4} \\
+Korea & Float & 0.4 & 2.6 & 1.0 & 1.0 & \textbf{94.9} \\
+      & Managed & 10.7 & 45.5 & 12.0 & 16.0 & 15.7 \\
+      & Peg & 0.9 & 11.1 & 2.3 & 2.9 & \textbf{82.8} \\
+Czechia & Float & 0.3 & 2.6 & 1.1 & 1.1 & \textbf{95.0} \\
+      & Managed & 6.7 & 50.3 & 14.6 & 19.3 & 9.1 \\
+      & Peg & 1.0 & 13.9 & 3.2 & 4.0 & \textbf{77.9} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Why the margin grows: a diversification mechanism.} Two facts explain Table
+\ref{tab:fullres}. First, the risk-premium shock is a single \emph{aggregate} financial shock: it
+enters through the UIP condition once, irrespective of how finely the real side is disaggregated, and
+under Peg it passes through to the nominal rate one-for-one. Its contribution to Peg's loss, which
+is 78--83\% of output-gap variance in every country, is therefore invariant to $N$. Second, Float's
+and Managed's losses are dominated by the \emph{price-dispersion} term, and 81--92\% of that term
+comes from sectoral productivity shocks (Chile 92\%, Korea and Czechia 81--86\%). With every
+one of the $N$ productivity shocks given the same one-percent standard deviation, moving from
+three macro-sectors to $N$ native sectors replaces three large, highly correlated shocks by many small
+independent ones. The sum of squared Domar weights $\sum_i\lambda_{D,i}^2$, which governs the variance
+of aggregate productivity, falls to 28\% (Chile), 11\% (Korea) and 14\% (Czechia) of its
+three-sector value: the granular-diversification logic of Gabaix (2011) and Acemoglu et al. (2012). Sectoral
+prices, which average many independent input-cost shocks through the network, become less volatile
+and so does the welfare-relevant dispersion.
+
+A direct test rescales the standard deviation of every sectoral productivity shock at full resolution by
+$\sqrt{\sum_i\lambda_{D,i}^2|_{N=3}/\sum_i\lambda_{D,i}^2|_{N}}$ (to 1.89\%, 3.02\% and 2.72\% for
+Chile, Korea and Czechia), which restores the aggregate-productivity variance of the three-sector case
+and leaves everything else untouched. Table \ref{tab:scaled_tfp} shows the prediction is borne out in
+its central respect: Float and Managed losses rise several-fold, while the \emph{output-gap} component
+of Peg's loss --- the risk-premium-driven part --- moves by only 5--7\%. (Peg's total rises because its
+price-dispersion term, too, has a productivity-driven part.) The rescaling over-corrects: because the
+price-dispersion term is linear in the Domar weights rather than quadratic, matching the
+sum of \emph{squared} weights overstates the required variance, and the Float and Managed losses land above their
+three-sector counterparts (compare Table \ref{tab:fullres}). This test therefore isolates the mechanism
+and bounds the effect, but should not be read as a calibrated counterfactual.
+
+\begin{table}[H]
+\centering
+\caption{Full-resolution welfare with sectoral TFP volatility rescaled to match three-sector aggregate
+TFP variance ($\times10^{-4}$; baseline full-resolution total in parentheses)}
+\label{tab:scaled_tfp}
+\begin{tabular}{lcccc}
+\toprule
+ & Float & Managed & Peg & Peg output-gap term \\
+\midrule
+Chile ($N=12$) & 49.40 (15.93) & 27.82 (9.35) & 129.03 (108.33) & 92.01 (87.45) \\
+Korea ($N=33$) & 88.87 (12.96) & 65.73 (9.41) & 193.73 (133.31) & 121.40 (113.67) \\
+Czechia ($N=81$) & 60.90 (11.69) & 46.02 (8.18) & 122.07 (82.05) & 70.15 (66.06) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The practical implication is a caution as much as a finding. The \emph{level} of the Float and Managed
+losses is governed by how the sectoral shock volatility is normalized as the sector count changes, an
+assumption no IO table disciplines; only the Peg loss and the shape of the ranking are invariant to it.
+The robust statements are (i) the ranking, (ii) the identity of the dominant shock, and (iii) the
+approximate invariance of Peg's loss to sectoral resolution. The precise Peg-to-Float ratio is a joint
+product of the risk-premium volatility (Section \ref{sec:robustness}) and of the sectoral shock
+normalization, and neither is estimated here. A caveat on the Chile comparison specifically: the
+$N=12$ table is a 2008-vintage table, whereas the $N=3$ calibration used the 2023-price-level
+aggregation of the 2018 table, so some of the Chile gap may reflect structural change rather than
+resolution; the Korea and Czechia comparisons, both from contemporaneous tables for both
+resolutions, show the same pattern.
 
 %======================================================================
 \section{Robustness Analysis}
@@ -1165,6 +1307,8 @@ Network premium (real calibration) & --- & +213\%/+169\%/+92\% (Float/Peg/Manage
 Sector-specific exports & Yes & Peg's loss falls 11.4\% under realistic exports \\
 Second-order (nonlinear) welfare & Yes & Losses rise $\le$2\% in every regime \\
 Cross-country (Korea, Czechia) & Yes & Both losses uniformly higher than Chile's \\
+Full native resolution ($N=12,33,81$) & Yes & Peg's loss unchanged ($\pm6\%$); Float falls 37--67\% \\
+TFP-volatility rescaling (full res.) & Yes & Float/Managed rise several-fold; Peg's output-gap term $\le7\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1198,14 +1342,18 @@ target index exactly right.
 
 Honestly assessed, this paper is not yet ready for submission to a top-five journal, and treating the
 current draft as a checkpoint rather than a near-final product is the right frame. Several concrete
-gaps remain. First and most importantly, the three-sector aggregation used throughout, while
+gaps remain. First and most importantly, the three-sector aggregation used in the main analysis, while
 sufficient to establish the qualitative mechanism and to permit the extensive robustness campaign of
 Section \ref{sec:robustness}, is coarser than a competing paper in this space (Qiu, Wang, Xu and
 Zanetti, 2026) that has already cleared peer review using a considerably more disaggregated
 cross-border input--output dataset (the World Input-Output Database, 43 countries by 56 sectors); a
-genuinely multi-sector calibration using an analogous disaggregated database (for example, OECD's
-Trade in Value Added tables) is the most important remaining step, and is likely to be requested by
-referees. Second, and directly related to the robustness campaign's central finding, several
+Section \ref{sec:fullres} partly closes this gap by re-solving the model at native national
+resolution (12, 33 and 81 sectors) and confirming the ranking, and it identifies a new caveat in the
+process: the level of Float's and Managed's losses depends on how sectoral shock volatility is
+normalized as the sector count changes. What remains is a genuinely cross-border multi-sector
+calibration using an analogous disaggregated database (for example, OECD's Trade in Value Added
+tables), together with an empirical discipline on sectoral shock volatilities; this is likely to be
+requested by referees. Second, and directly related to the robustness campaign's central finding, several
 parameters driving the headline result --- most importantly the risk-premium shock's standard
 deviation and the debt-elasticity coefficient $\Psi$, but also the within- and across-sector
 elasticities of substitution and the shock persistence parameters --- are literature defaults rather
@@ -1253,6 +1401,11 @@ robustness campaign --- spanning network density and shape, price rigidity, the 
 risk-premium process, and alternative monetary policy rules --- confirms this qualitative ranking is
 remarkably stable, while surfacing two further, more nuanced findings about policy aggressiveness and
 price-index choice that merit further, more careful investigation before being treated as settled.
+Re-solving the model at full native IO resolution (12, 33 and 81 sectors) leaves the ranking intact,
+shows that the peg's loss is invariant to sectoral resolution, and shows that the float regimes' losses
+are not: they fall as many small independent sectoral shocks diversify, so the margin of the peg's
+disadvantage is a joint product of the risk-premium process and the sectoral shock normalization, neither
+of which is estimated here.
 The paper's relationship to the contemporaneous and independent work of Qiu, Wang, Xu and Zanetti
 (2026) is, I have argued, one of corroboration and natural extension rather than redundancy: their own
 stated top-priority direction for future research --- relaxing the assumption of financial autarky ---
@@ -1310,6 +1463,8 @@ Business Cycle Comovement. \textit{American Economic Review}, 108(1), 82--108.
 
 \item Fanelli, S. and Straub, L. (2021). A Theory of Foreign Exchange Interventions. \textit{Review of
 Economic Studies}, 88(6), 2857--2885.
+
+\item Gabaix, X. (2011). The Granular Origins of Aggregate Fluctuations. \textit{Econometrica}, 79(3), 733--772.
 
 \item Galí, J. and Monacelli, T. (2005). Monetary Policy and Exchange Rate Volatility in a Small Open
 Economy. \textit{Review of Economic Studies}, 72(3), 707--734.

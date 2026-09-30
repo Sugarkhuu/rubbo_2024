@@ -39,11 +39,13 @@ before starting work rather than relying on memory of past sessions:
   post-presentation revision work), plus a later follow-up reply from Christian appended to it.
 - `speech_notes.md` — full talk script + anticipated Q&A, kept in sync with the deck.
 
-## Known gap: the deck is stale relative to the paper
-`soe_fx_presentation.tex` does **not** yet reflect the full robustness campaign or
-`dissertation.tex` — that was a deliberate scope decision when the campaign was run (paper/
-robustness work, not deck content, unless asked). If a next session is asked to update the
-presentation, treat it as a fresh, not-yet-started task.
+## Status (2026-09-30)
+`dissertation.tex` (now 51 pp.) includes the full-native-resolution section (§`sec:fullres`: N=12/33/81
+results, shock decomposition incl. Chile, diversification mechanism + TFP-rescaling test). The deck has
+two new full-resolution slides and an updated conclusion, but still does not carry the rest of the robustness
+campaign. **Remaining (not doable from the repo alone):** cross-border multi-sector calibration (WIOD/TiVA),
+an estimated risk-premium process and sectoral shock volatilities, an empirical validation section (needs
+external data), and a formally re-optimized managed-float rule / dominant-currency pricing extension.
 
 ## GitHub
 https://github.com/Sugarkhuu/rubbo_2024

@@ -46,6 +46,9 @@ Consolidated to **one slide** (network side / open-economy side / gap), paper-by
 table pushed to appendix backup — includes the closest competing paper (Qiu, Wang, Xu & Zanetti
 2026, see `literature_notes.md`).
 
+## Added 2026-09-30
+- **Full Native Resolution: Same Ranking, Bigger Margin** and **Why the Margin Grows: Diversification of Sectoral Shocks**, placed after Korea/Czechia robustness (deck now 32 pages; speech_notes.md updated).
+
 ## Appendix (backup, excluded from page count via `appendixnumberbeamer`)
 - IRF slides (7, the only multi-column ones)
 - Knife-edge DC-index test

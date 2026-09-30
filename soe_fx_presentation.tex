@@ -889,6 +889,67 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 \end{frame}
 
 %==============================================================
+\begin{frame}{Full Native Resolution: Same Ranking, Bigger Margin}
+%==============================================================
+
+{\footnotesize
+Re-solved at each country's full IO resolution ($N=12$ Chile, $33$ Korea, $81$ Czechia); welfare loss $\times10^{-4}$:
+
+\vspace{4pt}
+\begin{center}
+\begin{tabular}{llcccc}
+\toprule
+ & & Float & Managed & Peg & Peg/Float \\
+\midrule
+Chile   & $N=3$  & 25.5 & 10.2 & 102.1 & 4.0$\times$ \\
+        & $N=12$ & 15.9 & 9.4  & 108.3 & 6.8$\times$ \\
+Korea   & $N=3$  & 38.9 & 14.4 & 133.8 & 3.4$\times$ \\
+        & $N=33$ & 13.0 & 9.4  & 133.3 & 10.3$\times$ \\
+Czechia & $N=3$  & 32.2 & 11.8 & 84.0  & 2.6$\times$ \\
+        & $N=81$ & 11.7 & 8.2  & 82.1  & 7.0$\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item \textbf{Managed $<$ Float $\ll$ Peg survives} in all three countries --- no reversal
+\item \textbf{Peg's loss is unchanged} ($+6\%$, $-0.4\%$, $-2\%$); \textbf{Float falls 37--67\%}, Managed 8--35\%
+\item Risk premium still drives 78--83\% of Peg's output-gap variance; TFP (all $N$ sectors) $<$ 2.2\%
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Why the Margin Grows: Diversification of Sectoral Shocks}
+%==============================================================
+
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{4pt}
+\item \textbf{Risk premium = one aggregate shock}: enters via UIP once, whatever $N$ is $\Rightarrow$ Peg's loss is invariant to resolution
+\item \textbf{Float/Managed loss is 81--92\% sectoral TFP} (price-dispersion term). With every sector given the same 1\% s.d., $N$ small independent shocks replace 3 large correlated ones: $\sum_i\lambda_{D,i}^2$ falls to 28\% / 11\% / 14\% (Chile / Korea / Czechia) --- Gabaix (2011)
+\item \textbf{Test}: rescale sectoral TFP s.d.\ to restore the 3-sector aggregate TFP variance
+\end{itemize}
+
+\vspace{4pt}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & Float & Managed & Peg output-gap term \\
+\midrule
+Korea, baseline $N=33$ & 13.0 & 9.4 & 113.7 \\
+Korea, TFP rescaled    & 88.9 & 65.7 & 121.4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}\setlength{\itemsep}{3pt}
+\item Float/Managed rise several-fold; Peg's risk-premium-driven term moves $\le7\%$ (over-corrects: an upper bound)
+\item \textbf{Caveat}: the \emph{level} of Float/Managed loss depends on how sectoral shock volatility is normalized --- not disciplined by IO data
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \begin{frame}{Robustness: Is Indirect Exposure a General Pattern?}
 %==============================================================
 
@@ -921,6 +982,7 @@ Services & $0.38\;/\;0.15$ & $2.31\;/\;1.33$ & \textcolor{riskred}{$\mathbf{35.1
 % \item \textbf{Peg is dominated by a different mechanism than the textbook story:} not terms-of-trade, but risk-premium/UIP --- zero monetary autonomy forces the shock straight into the output gap
 \item \textbf{Managed float wins} because it dampens the FX pass-through channel without fully reimposing peg's loss of autonomy
 \item \textbf{Robust} across three real-data calibrations (Chile, Korea, Czechia) and a genuine second-order solution
+\item \textbf{Full native resolution ($N=12,33,81$)}: ranking unchanged; Peg's loss invariant to resolution, Float's falls 37--67\% (diversification of sectoral shocks) --- so the Peg/Float \emph{margin} is not pinned down without an estimated risk-premium process
 \end{itemize}}
 
 \end{frame}

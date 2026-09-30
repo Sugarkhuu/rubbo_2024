@@ -24,6 +24,24 @@ finding is that **the risk-premium/UIP penalty against Peg is quantitatively muc
 3-sector proxy suggested — a robustness result that strengthens the original claim — not a reversal
 of it.**
 
+## Mechanism for the full-resolution margin (2026-09-30) — RESOLVES the open question above
+**Correction to the "Peg amplifies eps_rp" framing:** comparing N=3 vs full-N totals (see `dissertation.tex`
+Table `tab:fullres`): Peg is essentially UNCHANGED (Chile 102.05→108.33, Korea 133.81→133.31, Czechia
+84.03→82.05); **Float falls 37–67%, Managed 8–35%**. So the bigger Peg/Float ratio (≈3–4x → 7–10x) is Float
+getting cheaper, not Peg getting worse. Mechanism: eps_rp is one aggregate shock (invariant to N);
+Float/Managed loss is 81–92% sectoral TFP in the price-dispersion term, and with a common 1% s.d. per
+sector, N small independent shocks diversify (Gabaix 2011): sum of squared Domar weights falls to
+28% (Chile) / 11% (Korea) / 14% (Czechia) of its 3-sector value.
+**Test** (`code/make_scaled_tfp_mods.py`, `code/drive_scaled_tfp.sh`, `results/full_calib_welfare_scaledtfp.csv`):
+rescale TFP s.d. to 1.89/3.02/2.72% to restore 3-sector aggregate TFP variance. Float/Managed rise
+several-fold (Korea Float 12.96→88.87, Managed 9.41→65.73) and overshoot the 3-sector values (the
+welfare price-dispersion term is linear in Domar weights, not quadratic, so HHI matching is an upper
+bound); Peg's output-gap term moves only 5–7% (Korea 113.67→121.40). **Caveat for the paper:** the LEVEL of
+Float/Managed loss depends on the sectoral-shock-volatility normalization across N, which no IO table
+disciplines. Chile N=12 shock decomposition (run 2026-09-30, rows in `results/full_calib_shock_decomposition.csv`):
+eps_rp = 94.0/13.2/82.4% of Var(y_gap) under Float/Managed/Peg; Peg's eps_rp contribution is 43x Float's.
+Dissertation (§`sec:fullres`) and deck (2 new slides after Korea/Czechia) updated accordingly.
+
 **Chile (N=12): UNBLOCKED and validated, 2026-08-02.** The user supplied the raw xlsx files
 manually. They turned out to be a 2008-vintage CdeR table with a materially different sheet layout
 than assumed — `build_chile_calibration.py`'s parsing was rewritten accordingly (see
