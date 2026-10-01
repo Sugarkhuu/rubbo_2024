@@ -47,6 +47,7 @@ table pushed to appendix backup — includes the closest competing paper (Qiu, W
 2026, see `literature_notes.md`).
 
 ## Added 2026-09-30
+- **Optimal FX Weight: With vs. Without the Network** and **Regimes at Optimized Rules: What Survives** (after the full-resolution slides; deck 34 pages).
 - **Full Native Resolution: Same Ranking, Bigger Margin** and **Why the Margin Grows: Diversification of Sectoral Shocks**, placed after Korea/Czechia robustness (deck now 32 pages; speech_notes.md updated).
 
 ## Appendix (backup, excluded from page count via `appendixnumberbeamer`)

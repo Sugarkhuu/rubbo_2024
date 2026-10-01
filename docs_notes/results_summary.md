@@ -24,6 +24,22 @@ finding is that **the risk-premium/UIP penalty against Peg is quantitatively muc
 3-sector proxy suggested — a robustness result that strengthens the original claim — not a reversal
 of it.**
 
+## Optimal FX rule with/without network (2026-10-01) — answers Christian/Adam's main ask
+Code: `code/opt_rule_point.m` (+ `_hipi`, `_slice`, `_peg` copies, drivers `drive_opt_rule*.sh`), `code/analysis_opt_rule.py`,
+`code/network_anatomy.py`, figs `figs/make_opt_rule_fig.py`. Output: `results/opt_rule_*.csv`. One `dynare` parse per
+scenario, then 451 `stoch_simul` reruns with changed `M_.params` (policy coefficients don't enter the steady state).
+Baseline cell reproduces 10.17. 3-sector Chile, rho in {0,.5,1,1.5} x rp-shock scale {0,.5,1,2} + ablations.
+- Optimal rule: phi_pi ~ 20-50, phi_y ~ 1 (near strict DC-index targeting); loss flat beyond phi_pi~20. Baseline->optimized:
+  Managed 10.17->6.26 (-38%), Float 25.5->6.65 (-74%).
+- Value of FX term at (20,1): rp=0: 0.4/1.7/5.3/12.3% for rho=0/.5/1/1.5 (phi_s* 0.1/0.3/0.5/1.0); rp=1: 3.3/4.3/5.9/8.4% (phi_s*
+  .2/.2/.3/.3); rp=2: ~11% at every rho (phi_s* ~0.2). Network matters for real shocks, not for the risk-premium shock.
+- Regimes at optimized rules (rp=1): rho=0: Float 3.80, Managed 3.68, Peg 71.9; rho=1: 6.65, 6.26, 102.1. Managed beats
+  Float by 3-6% only; **headline "Managed beats Float 2.5x" was mostly the weak baseline float rule**. Peg 16-20x worse than
+  optimized, 4x worse even with rp off (25.2 vs 6.1).
+- Ablations (rho=1, rp=1) FX value: base 5.9%; uniform delta 4.2; zero imported inputs 3.6; flat+no network 1.7; psi .005/.1: 5.7/5.2.
+  Import-heavy role on Services: loss +12%, FX value 6.6% vs 5.0% on Resource.
+- Written up in `framework_anatomy.tex/pdf` (anatomy + crib sheet), dissertation §`sec:optrule`, 2 deck slides, speech_notes.
+
 ## Mechanism for the full-resolution margin (2026-09-30) — RESOLVES the open question above
 **Correction to the "Peg amplifies eps_rp" framing:** comparing N=3 vs full-N totals (see `dissertation.tex`
 Table `tab:fullres`): Peg is essentially UNCHANGED (Chile 102.05→108.33, Korea 133.81→133.31, Czechia

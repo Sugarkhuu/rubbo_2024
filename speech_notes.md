@@ -533,6 +533,40 @@ un-estimated normalizations -- the ranking is the result.
 
 ---
 
+## Optimal FX Weight: With vs. Without the Network (1:15)
+"This is the question Christian and Adam asked: what's the optimal weight on
+the exchange rate, and does it depend on the network? [point] I optimize the
+whole rule jointly. The optimum is very aggressive on inflation -- close to
+strict targeting of the divine-coincidence index -- and the exchange-rate
+term is a small correction on top. How much it's worth depends on the shock.
+Against real shocks, the network is what makes it worthwhile: nearly
+worthless with no network, twelve percent of the loss with a dense one,
+optimal weight rising from 0.1 to 1. Against the risk-premium shock the
+network is irrelevant -- the shock moves the exchange rate directly, and
+leaning against it is worth about eleven percent whatever the network.
+At baseline shock sizes the gain is only three to eight percent, and the
+loss is flat in the weight, so I'd stress the value, not the exact number."
+
+---
+
+## Regimes at Optimized Rules: What Survives (1:00)
+"This changes how I'd read my own headline. The 'managed beats float by
+2.5 times' result compared a weak float rule with an exchange-rate term that
+was partly substituting for the missing inflation response. [point] Optimize
+both, and managed beats float by three to six percent. What survives is the
+peg: sixteen to twenty times worse than an optimized rule, with or without
+the network, and still four times worse with the risk-premium shock off,
+because a peg gives up the policy rate against real shocks too.
+
+Q&A: "So is managed float pointless?" No -- never hurts, helps most with a
+dense network or big UIP shocks. "Why does the network matter for real shocks
+only?" The DC index cannot remove the exchange-rate cost-push; its size is
+w'Gamma, which grows with inherited imports. UIP shocks hit the exchange rate
+directly. Christian's two-sector example is the intuition: exposure is
+inherited through suppliers. Full crib sheet: framework_anatomy.pdf.
+
+---
+
 ## Robustness: Is Indirect Exposure a General Pattern? (1:00)
 "Adam asked whether the Services story — low direct import, high indirect
 import — is a general downstream-sector pattern or a one-off. Honestly:

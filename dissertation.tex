@@ -57,7 +57,7 @@ policy-rule designs --- confirms the ranking survives essentially everywhere, wh
 that (i) a sufficiently aggressive plain inflation-targeting rule can rival the managed float's
 performance without any explicit exchange-rate term, and (ii) once policy is aggressive, targeting
 domestic (PPI) inflation outperforms targeting the theoretically ``correct'' divine-coincidence
-index. Re-solving the model at each country's full native IO resolution (12, 33 and 81 sectors)
+index. Jointly optimizing the policy rule shows that the optimal rule is close to strict targeting of the divine-coincidence index, that an explicit exchange-rate term adds only 3--8\% to welfare at baseline shock sizes, that its value rises with network density against real shocks but not against financial shocks, and that the managed float's advantage over a float shrinks to 3--6\% once both rules are optimized, while the peg remains 16--20 times worse. Re-solving the model at each country's full native IO resolution (12, 33 and 81 sectors)
 leaves the ranking intact and shows that Peg's loss is invariant to sectoral resolution while Float's
 and Managed's fall by up to two-thirds, a granular-diversification effect of many small sectoral
 shocks, so that Peg's relative penalty grows from about 3--4 times Float's to 7--10 times. I discuss the paper's
@@ -123,7 +123,9 @@ described below --- rather than treating the headline number as settled. A furth
 country's full native input--output resolution, up to 81 sectors, and finds the ranking unchanged but
 the margin very different: Peg's loss does not depend on sectoral resolution, whereas Float's and
 Managed's fall sharply as many small independent sectoral shocks diversify (Section
-\ref{sec:fullres}).
+\ref{sec:fullres}). Finally, I ask directly how the optimal exchange-rate weight depends on the production network
+(Section \ref{sec:optrule}), and find that it matters for real shocks but not for financial ones, and that much of the managed
+float's headline advantage reflects an unaggressive baseline float rule.
 
 The theoretical contribution of this paper sits between two literatures that, until very recently,
 had not been brought together. The first is the closed-economy production-network literature
@@ -1012,6 +1014,102 @@ aggregation of the 2018 table, so some of the Chile gap may reflect structural c
 resolution; the Korea and Czechia comparisons, both from contemporaneous tables for both
 resolutions, show the same pattern.
 
+\subsection{The Optimal Exchange-Rate Response, With and Without the Network}
+\label{sec:optrule}
+
+The regime comparison above fixes the rule's inflation and output coefficients at $\phi_\pi=1.5$ and
+$\phi_y=0.5$ and varies only the exchange-rate weight $\phi_s$ across regimes. A sharper policy question,
+and the one raised repeatedly after the first presentation, is: what is the \emph{optimal} weight on the
+exchange rate, and how does it depend on the production network? I answer it by jointly optimizing
+$(\phi_\pi,\phi_y,\phi_s)$ in the managed-float rule
+$\log(I_t/I^*)=\phi_\pi\pi^{DC}_t+\phi_y\tilde y_t+\phi_s\log S_t$ on the three-sector Chile calibration, over
+a grid of 451 rules per scenario, for network density $\rho\in\{0,0.5,1,1.5\}$ (where $\rho$ scales every
+off-diagonal element of $\Omega^H$, so $\rho=0$ removes the cross-sector network and $\rho=1$ is the Chile
+data) crossed with risk-premium shock sizes of zero, one and two times baseline. The welfare weights
+$\lambda_{D,i}$ are recomputed at each $\rho$. The baseline cell reproduces the headline managed-float loss of
+10.17.
+
+\paragraph{The optimal rule is close to strict divine-coincidence-index targeting.} In every scenario the loss is
+minimized at $\phi_\pi\approx20$--$50$ and $\phi_y\approx1$, and the loss surface is flat beyond $\phi_\pi\approx20$.
+Moving from the baseline rule to this near-optimal rule cuts Managed's loss at the Chile network from 10.17
+to 6.26 (38\%) and Float's from 25.5 to 6.65 (74\%). This is Rubbo's logic surviving in the open economy: targeting
+$\pi^{DC}_t$ removes the productivity cost-push, and what remains is the exchange-rate channel
+$\bm\phi^{DC\top}\Gamma\,\Delta e_t$ of Proposition \ref{prop:dc_breakdown}. The exchange-rate term in the rule
+is a correction for that leftover.
+
+\paragraph{The value of the exchange-rate term depends on the network for real shocks, but not for financial ones.}
+Table \ref{tab:optrule} reports the loss reduction from choosing the optimal $\phi_s$ instead of $\phi_s=0$ at the
+near-optimal Taylor rule ($\phi_\pi=20$, $\phi_y=1$). With the risk-premium shock switched off, the exchange-rate
+term is nearly worthless without a network (0.4\% of the loss) and worth 12.3\% at $\rho=1.5$, with the optimal
+$\phi_s$ rising from 0.1 to 1.0. Under a doubled risk-premium shock the gain is about 11\% at every $\rho$, with
+$\phi_s^*\approx0.2$: a shock that moves the exchange rate directly calls for leaning against it whether or not a
+network exists. At baseline shock sizes the gain is modest ($3.3\%$ to $8.4\%$ across $\rho$), and, because the
+loss is within 1\% of its minimum over a range of $\phi_s$ (for example 0.2--0.3 at $\rho=1$), the optimal
+weight itself is only weakly identified; the \emph{value} of the term is the better-identified object. The
+mechanism for the network dependence is the one of Section \ref{sec:theory}: the part of the exchange-rate
+pass-through that the divine-coincidence index cannot remove, $\bm\phi^{DC\top}\Gamma$, relative to its
+output-gap loading $\bm\phi^{DC\top}\mathcal B$, rises from 0.15 to 0.21 as $\rho$ goes from 0 to 1.5, as
+inherited imports (27\% of Services' import exposure at $\rho=0$, 41\% at $\rho=1$) add to the direct ones.
+
+\begin{table}[H]
+\centering\small
+\caption{Value of the exchange-rate term (\% of loss) and optimal $\phi_s$ at $\phi_\pi=20,\ \phi_y=1$}
+\label{tab:optrule}
+\begin{tabular}{lcccc|cccc}
+\toprule
+ & \multicolumn{4}{c|}{Value of $\phi_s^*$ (\%)} & \multicolumn{4}{c}{Optimal $\phi_s$} \\
+$\rho$ & 0 & 0.5 & 1 & 1.5 & 0 & 0.5 & 1 & 1.5 \\
+\midrule
+No risk-premium shock & 0.4 & 1.7 & 5.3 & 12.3 & 0.1 & 0.3 & 0.5 & 1.0 \\
+Baseline (1\%) & 3.3 & 4.3 & 5.9 & 8.4 & 0.2 & 0.2 & 0.3 & 0.3 \\
+Doubled (2\%) & 10.9 & 11.1 & 11.1 & 11.2 & 0.2 & 0.2 & 0.2 & 0.3 \\
+\midrule
+Optimized loss, baseline shocks & 3.68 & 4.58 & 6.26 & 9.50 & & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Ablations.} Removing one ingredient at a time at $\rho=1$ and baseline shocks, the value of the
+exchange-rate term falls from 5.9\% to 4.2\% with uniform price stickiness, to 3.6\% with no imported inputs, and
+moves only moderately when the import-heavy role is moved between sectors (5.0\% on Resource, 6.6\% on Services) and is little changed by
+the debt elasticity $\Psi$ (5.7\% at 0.005, 5.2\% at 0.1). A fully ``flat'' economy with uniform stickiness,
+uniform import shares and no network has a value of 1.7\%. Putting the import-heavy role on the stickiest
+sector, Services, raises the optimized loss by about 12\% relative to the data allocation, consistent with the
+point that exposure is costliest where prices are most rigid, though the effect is modest in this calibration
+because the data allocation already puts little direct import exposure on Services.
+
+\paragraph{Implication for the regime ranking.} Figure \ref{fig:optrule_regimes} compares regimes at the
+baseline rule and at optimized rules. The headline ``Managed beats Float by a factor of 2.5'' compares a weak
+float rule with a managed rule whose exchange-rate term partly substitutes for the missing inflation response:
+once both are optimized, Managed beats Float by only 3\% (no network) to 6\% (Chile). What survives is that Peg is
+by far the worst regime, 16--20 times worse than an optimized rule with or without the network, and, with the
+risk-premium shock switched off, still about four times worse (25.2 versus 6.1 at $\rho=1$), because a peg
+forfeits the policy rate against real shocks as well. This refines the earlier dual-mandate grid result
+(Section \ref{rob:regime_variants}), where an aggressive plain float appeared to rival the managed float; the
+joint optimization shows that it does, to within a few per cent. I therefore read the paper's contribution as a
+statement about the cost of a peg and about when an explicit exchange-rate term is worth adding, not as a claim
+that a managed float dominates a well-designed float.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figs/opt_rule_regimes.pdf}
+\caption{Welfare loss by regime at the baseline rule ($\phi_\pi=1.5$, $\phi_y=0.5$) and at optimized rules,
+baseline shocks, without ($\rho=0$) and with ($\rho=1$) the production network.}
+\label{fig:optrule_regimes}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figs/opt_rule_network.pdf}
+\caption{Value of the exchange-rate term and optimal $\phi_s$ by network density and risk-premium shock size
+($\phi_\pi=20$, $\phi_y=1$).}
+\label{fig:optrule_network}
+\end{figure}
+
+These results come from the three-sector Chile calibration with equal one-percent shock volatilities; the same
+exercise at full native resolution, with an estimated risk-premium process, is the natural next step. The
+optimized rule also assumes the central bank observes the divine-coincidence index $\pi^{DC}_t$.
+
 %======================================================================
 \section{Robustness Analysis}
 \label{sec:robustness}
@@ -1375,11 +1473,10 @@ output-gap-weight derivation directly in the model section rather than solely as
 citation.
 
 Beyond these gaps required for submission readiness, several extensions raised during the robustness
-campaign (Section \ref{sec:robustness}) but flagged there as preliminary would repay further work: a
-formally re-optimized managed-float rule at the same level of policy aggressiveness as the dual-mandate
-grid search of Section \ref{rob:regime_variants}, to settle whether an aggressive plain float rule
-genuinely rivals (rather than merely appears to rival) the managed float once both are given the same
-optimization effort; and a dominant-currency-pricing extension along the lines of Gopinath and
+campaign (Section \ref{sec:robustness}) would repay further work. The question of whether an aggressive plain
+float rule genuinely rivals the managed float is answered, for the three-sector Chile calibration, in Section
+\ref{sec:optrule} (it does, to within 3--6\%); repeating that joint optimization at full native resolution and under
+an estimated risk-premium process remains to be done. A dominant-currency-pricing extension along the lines of Gopinath and
 Itskhoki (2022), replacing this paper's producer-currency-pricing assumption with a mixed invoicing
 regime, which would alter the exchange-rate pass-through vector $\Gamma$ in ways this paper's current
 model cannot represent.
@@ -1401,7 +1498,7 @@ robustness campaign --- spanning network density and shape, price rigidity, the 
 risk-premium process, and alternative monetary policy rules --- confirms this qualitative ranking is
 remarkably stable, while surfacing two further, more nuanced findings about policy aggressiveness and
 price-index choice that merit further, more careful investigation before being treated as settled.
-Re-solving the model at full native IO resolution (12, 33 and 81 sectors) leaves the ranking intact,
+Jointly optimizing the rule shows that the optimal policy is close to strict targeting of the divine-coincidence index with a small exchange-rate correction, whose value rises with network density against real shocks but is network-independent against risk-premium shocks, and that the managed float's advantage over a float falls to 3--6\% once both are optimized (Section \ref{sec:optrule}). Re-solving the model at full native IO resolution (12, 33 and 81 sectors) leaves the ranking intact,
 shows that the peg's loss is invariant to sectoral resolution, and shows that the float regimes' losses
 are not: they fall as many small independent sectoral shocks diversify, so the margin of the peg's
 disadvantage is a joint product of the risk-premium process and the sectoral shock normalization, neither

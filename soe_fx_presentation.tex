@@ -950,6 +950,45 @@ Korea, TFP rescaled    & 88.9 & 65.7 & 121.4 \\
 \end{frame}
 
 %==============================================================
+\begin{frame}{Optimal FX Weight: With vs.\ Without the Network}
+%==============================================================
+
+\vspace{-4pt}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{figs/opt_rule_network.pdf}
+\end{center}
+
+\vspace{-2pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item Joint optimum over $(\phi_\pi,\phi_y,\phi_s)$: \textbf{$\phi_\pi\approx20$, $\phi_y\approx1$} --- near strict DC-index targeting; $\phi_s$ is a small correction
+\item \textbf{Real shocks}: FX term worth 0.4\% (no network) $\to$ 12\% ($\rho=1.5$); $\phi_s^*$: 0.1 $\to$ 1.0
+\item \textbf{Risk-premium shock}: FX term worth $\approx$11\% (doubled shock) at \emph{every} $\rho$, $\phi_s^*\approx0.2$
+\item Baseline shocks: gain only 3--8\%; loss is flat in $\phi_s$ (0.2--0.3 within 1\%)
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
+\begin{frame}{Regimes at Optimized Rules: What Survives}
+%==============================================================
+
+\vspace{-4pt}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{figs/opt_rule_regimes.pdf}
+\end{center}
+
+\vspace{-2pt}
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\topsep}{0pt}
+\item ``Managed beats Float 2.5$\times$'' compares a \emph{weak} float rule ($\phi_\pi=1.5$) with an FX term that substitutes for it
+\item Both optimized: Managed beats Float by only \textbf{3\% (no network) -- 6\% (Chile)}
+\item \textbf{Peg is 16--20$\times$ worse than an optimized rule}, with or without the network (still 4$\times$ with no risk-premium shock)
+\end{itemize}}
+
+\end{frame}
+
+%==============================================================
 \begin{frame}{Robustness: Is Indirect Exposure a General Pattern?}
 %==============================================================
 
@@ -982,6 +1021,7 @@ Korea, TFP rescaled    & 88.9 & 65.7 & 121.4 \\
 % \item \textbf{Peg is dominated by a different mechanism than the textbook story:} not terms-of-trade, but risk-premium/UIP --- zero monetary autonomy forces the shock straight into the output gap
 \item \textbf{Managed float wins} because it dampens the FX pass-through channel without fully reimposing peg's loss of autonomy
 \item \textbf{Robust} across three real-data calibrations (Chile, Korea, Czechia) and a genuine second-order solution
+\item \textbf{Optimal rule}: near strict DC-index targeting; the FX term is worth 3--8\% at baseline, more with a dense network (real shocks) or large UIP shocks; managed vs.\ float shrinks to 3--6\% when both are optimized, peg stays far worse
 \item \textbf{Full native resolution ($N=12,33,81$)}: ranking unchanged; Peg's loss invariant to resolution, Float's falls 37--67\% (diversification of sectoral shocks) --- so the Peg/Float \emph{margin} is not pinned down without an estimated risk-premium process
 \end{itemize}}
 
